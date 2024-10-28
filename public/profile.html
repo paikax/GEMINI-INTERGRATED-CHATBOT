@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../css/profile.css">
+    <title>Chat bot</title>
+</head>
+<body>
+    <div class="profile-button" onclick="toggleMenu()">
+        <img src="path/to/profile.jpg" alt="Profile" style="width: 100%; border-radius: 50%;">
+    </div>
+    
+    <div class="menu" id="menu">
+        <div class="menu-item" onclick="openOverlay('profile')">Profile</div>
+        <div class="menu-item" onclick="openOverlay('settings')">Settings</div>
+        <div class="menu-item" onclick="openOverlay('customize-chatbot')">Customize Chatbot</div>
+        <div class="menu-item" onclick="openOverlay('upgrade-plan')">Upgrade Plan</div>
+        <div class="menu-item" onclick="openOverlay('logout')">Logout</div>
+    </div>
+    
+    <!-- Overlay and Modal -->
+    <div class="overlay" id="overlay" onclick="closeOverlay()">
+        <div class="modal" onclick="event.stopPropagation()">
+            <!-- Content sections for each fragment -->
+            <div id="profile" class="content-section">Profile Content Here</div>
+            <div id="settings" class="content-section">Settings Content Here</div>
+            <div id="customize-chatbot" class="content-section">Customize Chatbot Content Here</div>
+            <div id="upgrade-plan" class="content-section">Upgrade Plan Content Here</div>
+        </div>
+    </div>
+    <script src="../js/components/profile.js"></script>
+</body>
+</html>

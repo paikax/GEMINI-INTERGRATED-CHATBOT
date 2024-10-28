@@ -1,0 +1,83 @@
+/* Profile Button */
+.profile-button {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    border: 1px solid black;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    transition: box-shadow 0.3s;
+}
+
+.profile-button:hover {
+    box-shadow: 0 0 0 5px rgba(128, 128, 128, 0.2); /* Vòng ngoài khi hover */
+}
+
+.menu {
+    display: none;
+    position: absolute;
+    top: 60px;
+    right: 0;
+    background-color: white;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+    width: 150px;
+    z-index: 10;
+}
+
+.menu.active {
+    display: block;
+}
+
+.menu-item {
+    padding: 10px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.menu-item:hover {
+    background-color: #f0f0f0;
+}
+
+/* Overlay Modal */
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: none;
+    z-index: 5;
+}
+
+.overlay.active {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal {
+    background-color: white;
+    width: 70%;
+    padding: 20px;
+    border-radius: 8px;
+    max-height: 90%;
+    overflow-y: auto;
+    position: relative;
+    z-index: 6;
+}
+
+/* Fragment-based content sections */
+.content-section {
+    display: none;
+}
+
+.content-section.active {
+    display: block;
+}
