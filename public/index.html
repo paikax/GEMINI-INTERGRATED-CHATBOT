@@ -3,9 +3,35 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chat bot</title>
+    <title>Chatbot DEV-G5</title>
+    <!-- Use a specific highlight.js theme for better visibility -->
+     <link rel="stylesheet" href="../css//style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/vs2015.min.css">
 </head>
 <body>
-    
+    <div class="chat-container">
+        <header class="chat-header">
+            <h2>Chatbot</h2>
+        </header>
+        <div class="chat-messages" id="chatMessages">
+            <!-- Chat messages will be appended here -->
+        </div>
+        <div class="chat-input">
+            <input type="text" id="userInput" placeholder="Type your message..." />
+            <button id="sendButton">Send</button>
+        </div>
+    </div>
+
+    <!-- Latest version of highlight.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+    <script src="../js/main.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            hljs.configure({
+                ignoreUnescapedHTML: true
+            });
+            hljs.highlightAll();
+        });
+    </script>
 </body>
 </html>
