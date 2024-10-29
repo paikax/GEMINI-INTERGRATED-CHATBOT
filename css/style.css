@@ -143,3 +143,20 @@ body {
     margin-right: auto;
     margin-bottom: 10px;
 }
+
+
+
+.read-aloud-button {
+    background-color: #007BFF;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 5px 10px;
+    margin-top: 10px;
+    cursor: pointer;
+    font-size: 0.9rem;
+}
+
+.read-aloud-button:hover {
+    background-color: #0056b3;
+}
