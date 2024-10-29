@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat Interface</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=send" />
+    <link rel="stylesheet" href="../css/chatbox.css">
+</head>
+<body>
+    <div class="container">
+        <div class="newchat"></div>
+        <!-- chat list container -->
+         <div class="chatbox">
+            <div class="chat-list">
+                <div class="message outgoing">
+                    <div class="message-content">
+                        <p class="text">what is reactjs</p>
+                    </div>
+                </div>
+                <div class="message incoming">
+                    <div class="message-content">
+                        <img src="../image/restart_alt_24dp_5F6368_FILL0_wght400_GRAD0_opsz24.png" alt="loading image" class="avatar">
+                        <p class="text">reactjs la mot cai gi do</p>
+                        
+                    </div>
+                    <div class="icon material-symbols-rounded">
+                        <img src="../image/content_copy_24dp_5F6368_FILL0_wght400_GRAD0_opsz24.png" alt="iamge copy" class="imagecopy">
+                    </div>
+                </div>
+                <div class="message incoming">
+                    <div class="message-content">
+                        <img src="../image/restart_alt_24dp_5F6368_FILL0_wght400_GRAD0_opsz24.png" alt="loading image" class="avatar">
+                        <p class="text">reactjs la mot cai gi do</p>
+                        <div class="loading-indicator">
+                            <div class="loading-bar"></div>
+                        </div>
+                        
+                    </div>
+                    <div class="icon material-symbols-rounded">
+                        <img src="../image/content_copy_24dp_5F6368_FILL0_wght400_GRAD0_opsz24.png" alt="iamge copy" class="imagecopy">
+                    </div>
+                </div>
+            </div>
+            <div class="typing-area">
+                <form action="#" class="typing-form">
+                    <div class="input-wrapper">
+                        <input type="text" placeholder="Enter prompt here" class="typing-input " required>
+                        <button class="icon material-symbols-rounded">send</button>
+                    </div>
+                </form>
+            </div>
+         </div>
+    </div>
+</body>
+</html>

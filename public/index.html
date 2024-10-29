@@ -3,9 +3,59 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../css/style.css">
     <title>Chat bot</title>
 </head>
 <body>
-    
+    <div class="container">
+        <div class="sidebar">
+            <div class="nav-bar">
+                <div class="logo">
+                    <div class="logo-image">
+                        <img src="../image/ai.png" alt="robot" class="image-robot">
+                        <p class="paragraph">DevG5 Chatbot</p>
+                    </div>
+                </div>
+                <div class="profile-button" onclick="toggleMenu()">
+                    <img src="../image/user.png" alt="user-avatar" >
+                </div>
+                <div class="menu" id="menu">
+                    <div class="menu-item" onclick="openOverlay('profile')">Profile</div>
+                    <div class="menu-item" onclick="openOverlay('settings')">Settings</div>
+                    <div class="menu-item" onclick="openOverlay('customize-chatbot')">Customize Chatbot</div>
+                    <div class="menu-item" onclick="openOverlay('upgrade-plan')">Upgrade Plan</div>
+                    <div class="menu-item" onclick="openOverlay('logout')">Logout</div>
+                </div>
+                <div class="overlay" id="overlay" onclick="closeOverlay()">
+                    <div class="modal" onclick="event.stopPropagation()">
+                        <!-- Content sections for each fragment -->
+                        <div id="profile" class="content-section">Profile Content Here</div>
+                        <div id="settings" class="content-section">Settings Content Here</div>
+                        <div id="customize-chatbot" class="content-section">Customize Chatbot Content Here</div>
+                        <div id="upgrade-plan" class="content-section">Upgrade Plan Content Here</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="Chat-section">
+            <div class="chated">
+                <div class="new-chat">
+                    <img src="../image/add.png" alt="plus" class="image-plus">
+                    <p class="paragraph-1">New chat</p>
+                </div>
+                <div class="item">aa</div>
+                <div class="item">aa</div>
+                <div class="item">aa</div>
+                <div class="item">aa</div>
+                <div class="item">aa</div>
+            </div>
+            <div class="on-chat">
+                
+                <div class="Message">or we could make this?</div>
+                <div class="reply">that looks so gô</div>
+            </div>
+        </div>
+    </div>
+    <script src="../js/components/profile.js"></script>
 </body>
 </html>
