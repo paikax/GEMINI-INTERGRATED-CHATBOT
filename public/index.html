@@ -3,9 +3,41 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../css/style.css">
     <title>Chat bot</title>
 </head>
 <body>
-    
+  <div class="container">
+    <!-- Sidebar -->
+    <aside class="chat-sidebar">
+      <!-- Sticky Top Section for Toggle and New Chat Button -->
+      <div class="sidebar-top">
+        <div class="toggle-sidebar-container">
+          <button class="toggle-sidebar" onclick="toggleSidebar()">‹</button>
+        </div>
+        <div class="new-chat-container">
+          <button class="new-chat-btn" onclick="addNewChat()">+ New Chat</button>
+        </div>
+      </div>
+
+      <!-- Conversation List -->
+      <div class="sidebar-wrapper">
+        <ul id="conversationList" class="conversation-list">
+          <!-- Initial conversation for demonstration -->
+          
+        </ul>
+      </div>
+    </aside>
+
+    <!-- Delete Confirmation Dialog -->
+    <div id="deleteConfirmDialog" class="modal">
+      <div class="modal-content">
+        <p>Xóa đoạn chat?<br>Hành động này sẽ xóa Danh sách hội thoại chat.</p>
+        <button id="confirmDelete" class="btn-confirm">Yes</button>
+        <button id="cancelDelete" class="btn-cancel">No</button>
+      </div>
+    </div>
+  </div>
+  <script src="../js/components/sidebar.js"></script>
 </body>
 </html>

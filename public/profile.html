@@ -10,7 +10,7 @@
     <div class="profile-button" onclick="toggleMenu()">
         <img src="path/to/profile.jpg" alt="Profile" style="width: 100%; border-radius: 50%;">
     </div>
-    
+    <div>aaaaaaaaaa</div>
     <div class="menu" id="menu">
         <div class="menu-item" onclick="openOverlay('profile')">Profile</div>
         <div class="menu-item" onclick="openOverlay('settings')">Settings</div>
@@ -23,10 +23,272 @@
     <div class="overlay" id="overlay" onclick="closeOverlay()">
         <div class="modal" onclick="event.stopPropagation()">
             <!-- Content sections for each fragment -->
-            <div id="profile" class="content-section">Profile Content Here</div>
-            <div id="settings" class="content-section">Settings Content Here</div>
-            <div id="customize-chatbot" class="content-section">Customize Chatbot Content Here</div>
-            <div id="upgrade-plan" class="content-section">Upgrade Plan Content Here</div>
+            <div id="profile" class="content-section">
+                <div class="profile-header">
+                    <div class="profile-avatar">
+                        <img src="default-avatar.jpg" alt="User Avatar" id="avatar-img">
+                        <button id="edit-avatar" class="btn">Edit Avatar</button>
+                    </div>
+                    <div class="status-indicator">
+                        <span class="status online"></span> Online
+                        <span class="status offline"></span> Offline
+                        <span class="status busy"></span> Busy
+                    </div>
+                </div>
+                
+                <div class="location-time">
+                    <h3>Location:</h3>
+                    <p id="user-location">Hanoi, Vietnam (GMT+7)</p>
+                    <h3>Weather:</h3>
+                    <p id="weather-status">Sunny, 25°C</p>
+                </div>
+                
+                <div class="introduction">
+                    <h3>Introduction:</h3>
+                    <textarea id="user-introduction" rows="5" maxlength="1000" placeholder="Tell us about yourself..."></textarea>
+                    <div class="intro-buttons">
+                        <button id="save-introduction" class="btn">Save</button>
+                        <button id="undo-introduction" class="btn">Undo</button>
+                    </div>
+                </div>
+                
+                <div class="contact-info">
+                    <h3>Contact Information:</h3>
+                    <div class="contact-icons">
+                        <span class="icon-phone">📞</span>
+                        <span class="icon-email">✉️</span>
+                        <span class="icon-social">🌐</span>
+                    </div>
+                </div>
+                
+                <div class="hobbies">
+                    <h3>Hobbies/Interests:</h3>
+                    <p id="user-hobbies">Reading, Traveling, Coding</p>
+                </div>
+                
+                <div class="recent-activity">
+                    <h3>Recent Activity:</h3>
+                    <ul id="activity-list">
+                        <li>User updated their status.</li>
+                        <li>User commented on a post.</li>
+                        <li>User uploaded a new avatar.</li>
+                    </ul>
+                </div>
+                
+                <div class="profile-completeness">
+                    <h3>Profile Completeness:</h3>
+                    <div class="completeness-meter">
+                        <div class="meter-fill" style="width: 75%;"></div>
+                    </div>
+                    <p>75% Complete</p>
+                </div>
+            </div>
+            
+            <div id="settings" class="content-section">
+                <h2>Settings</h2>
+            
+                <!-- Theme Options -->
+                <div class="settings-section">
+                    <h3>Theme Options</h3>
+                    <label>
+                        <input type="radio" name="theme" value="light"> Light Mode
+                    </label>
+                    <label>
+                        <input type="radio" name="theme" value="dark"> Dark Mode
+                    </label>
+                    <label>
+                        <input type="radio" name="theme" value="system"> System Default
+                    </label>
+                </div>
+            
+                <!-- Code Visibility Toggle -->
+                <div class="settings-section">
+                    <h3>Code Visibility</h3>
+                    <label>
+                        <input type="checkbox" name="code_visibility"> Always show code when using data analyst
+                    </label>
+                </div>
+            
+                <!-- Language Selection -->
+                <div class="settings-section">
+                    <h3>Language</h3>
+                    <select>
+                        <option value="auto">Auto-detect</option>
+                        <option value="en">English</option>
+                        <option value="vi">Vietnamese</option>
+                        <!-- Add other languages as needed -->
+                    </select>
+                </div>
+            
+                <!-- Account Security -->
+                <div class="settings-section">
+                    <h3>Account Security</h3>
+                    <button>Change Password</button>
+                    <button>Enable Two-Factor Authentication</button>
+                </div>
+            
+                <!-- Notification Preferences -->
+                <div class="settings-section">
+                    <h3>Notification Preferences</h3>
+                    <label>
+                        <input type="checkbox" name="email_notifications"> Email Notifications
+                    </label>
+                    <label>
+                        <input type="checkbox" name="push_notifications"> Push Notifications
+                    </label>
+                </div>
+            
+                <!-- Privacy Settings -->
+                <div class="settings-section">
+                    <h3>Privacy Settings</h3>
+                    <label>
+                        <input type="checkbox" name="public_profile"> Make Profile Public
+                    </label>
+                </div>
+            
+                <!-- Archived Chats Management -->
+                <div class="settings-section">
+                    <h3>Archived Chats</h3>
+                    <button>Manage Archived Chats</button>
+                </div>
+            
+                <!-- Additional Settings Sections -->
+                <!-- Add other sections here as needed -->
+            </div>
+            
+            <div id="customize-chatbot" class="content-section">
+                <h2>Customize Chatbot</h2>
+            
+                <!-- Tone & Personality -->
+                <div class="customize-section" id="tone-personality">
+                    <h3>Tone & Personality</h3>
+                    <label>
+                        Tone of Voice:
+                        <select>
+                            <option>Formal</option>
+                            <option>Friendly</option>
+                            <option>Casual</option>
+                            <option>Professional</option>
+                        </select>
+                    </label>
+                    <label>
+                        Personality Level:
+                        <input type="range" min="1" max="5" value="3" />
+                    </label>
+                </div>
+            
+                <!-- Appearance & Theme -->
+                <div class="customize-section" id="appearance-theme">
+                    <h3>Appearance & Theme</h3>
+                    <label>
+                        Chat Background:
+                        <input type="color" value="#ffffff" />
+                    </label>
+                    <label>
+                        Text Size:
+                        <input type="number" min="12" max="24" value="14" /> px
+                    </label>
+                    <label>
+                        Color Scheme:
+                        <select>
+                            <option>Light</option>
+                            <option>Dark</option>
+                            <option>Custom</option>
+                        </select>
+                    </label>
+                </div>
+            
+                <!-- Response Preferences -->
+                <div class="customize-section" id="response-preferences">
+                    <h3>Response Preferences</h3>
+                    <label>
+                        Response Length:
+                        <select>
+                            <option>Short</option>
+                            <option>Medium</option>
+                            <option>Detailed</option>
+                        </select>
+                    </label>
+                    <label>
+                        Response Speed:
+                        <input type="range" min="1" max="5" value="3" />
+                    </label>
+                    <label>
+                        Notification Tone:
+                        <input type="checkbox" /> Enable Sound
+                    </label>
+                </div>
+            
+                <!-- Content Filters -->
+                <div class="customize-section" id="content-filters">
+                    <h3>Content Filters</h3>
+                    <label>
+                        Language Filter:
+                        <input type="checkbox" /> Enable
+                    </label>
+                    <label>
+                        Sensitive Topics Filter:
+                        <input type="checkbox" /> Enable
+                    </label>
+                </div>
+            
+                <!-- Interest Preferences -->
+                <div class="customize-section" id="interest-preferences">
+                    <h3>Preferred Topics</h3>
+                    <label><input type="checkbox" /> Technology</label>
+                    <label><input type="checkbox" /> Sports</label>
+                    <label><input type="checkbox" /> Music</label>
+                </div>
+            
+                <!-- Advanced Settings -->
+                <div class="customize-section" id="advanced-settings">
+                    <h3>Advanced Settings</h3>
+                    <label>
+                        Offline/Do Not Disturb Mode:
+                        <input type="checkbox" />
+                    </label>
+                    <label>
+                        History Deletion:
+                        <button>Delete Chat History</button>
+                    </label>
+                </div>
+            </div>
+            
+            <div id="upgrade-plan" class="content-section">
+                <div class="plan-wrapper">
+                    <!-- Free Plan -->
+                    <div class="plan-tier free">
+                        <h2>Free</h2>
+                        <p class="price">$0 <span class="frequency">USD/month</span></p>
+                        <p class="description">Explore how AI can help you with everyday tasks</p>
+                        <p class="features">Assistance with writing, problem-solving, and more</p>
+                        <p class="access">Access to GPT-4o mini</p>
+                        <p class="restrictions">Limited access to data analysis, file uploads, vision, web browsing, and image generation</p>
+                        <button class="current-plan">Your current plan</button>
+                    </div>
+            
+                    <!-- Personal Plan -->
+                    <div class="plan-tier personal">
+                        <h2>Personal</h2>
+                        <p class="price">$5 <span class="frequency">USD/month</span></p>
+                        <p class="description">Enhance your AI experience for individual needs</p>
+                        <p class="features">Unlimited access to GPT-4o and Gemini API</p>
+                        <p class="access">Full data analysis, file upload, and image generation features</p>
+                        <button class="select-plan">Upgrade to Personal</button>
+                    </div>
+            
+                    <!-- Team Plan -->
+                    <div class="plan-tier team">
+                        <h2>Team</h2>
+                        <p class="price">$10 <span class="frequency">USD/month</span></p>
+                        <p class="description">AI tools for collaborative and team use</p>
+                        <p class="features">Enhanced access to Gemini API, GPT-4o, and more</p>
+                        <p class="access">Full collaborative features with team management</p>
+                        <button class="select-plan">Upgrade to Team</button>
+                    </div>
+                </div>
+            </div>
+            
         </div>
     </div>
     <script src="../js/components/profile.js"></script>
