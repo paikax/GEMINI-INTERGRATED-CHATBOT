@@ -1,3 +1,9 @@
+function parseMarkdown(text) {
+    // Handle bold text with ** or __
+    text = text.replace(/\*\*(.*?)\*\*|__(.*?)__/g, '<span class="emphasized">$1$2</span>');
+    return text;
+}
+
 async function simulateTyping(container, content, typingSpeed = 30) {
     const messageContent = document.createElement('div');
     messageContent.classList.add('message-content');
@@ -7,12 +13,17 @@ async function simulateTyping(container, content, typingSpeed = 30) {
     
     for (const segment of segments) {
         if (segment.type === 'code') {
-            const codeContainer = createCodeSnippet(segment.language || 'plaintext', '');
+            const fullCode = segment.content.trim();
+            const codeContainer = createCodeSnippet(segment.language || 'plaintext', fullCode);
             messageContent.appendChild(codeContainer);
             const codeElement = codeContainer.querySelector('code');
             
-            for (let i = 0; i < segment.content.length; i++) {
-                codeElement.textContent += segment.content[i];
+            // Clear the code element initially
+            codeElement.textContent = '';
+            
+            // Type out the code
+            for (let i = 0; i < fullCode.length; i++) {
+                codeElement.textContent += fullCode[i];
                 hljs.highlightElement(codeElement);
                 await new Promise(resolve => setTimeout(resolve, typingSpeed / 2));
             }
@@ -21,8 +32,17 @@ async function simulateTyping(container, content, typingSpeed = 30) {
             textBlock.classList.add('text-block');
             messageContent.appendChild(textBlock);
 
-            for (let i = 0; i < segment.content.length; i++) {
-                textBlock.textContent += segment.content[i];
+            const parsedContent = parseMarkdown(segment.content);
+            textBlock.innerHTML = '';
+
+            const temp = document.createElement('div');
+            temp.innerHTML = parsedContent;
+            const textContent = temp.textContent;
+
+            let currentHtml = '';
+            for (let i = 0; i < textContent.length; i++) {
+                currentHtml += textContent[i];
+                textBlock.innerHTML = parseMarkdown(currentHtml);
                 await new Promise(resolve => setTimeout(resolve, typingSpeed));
             }
         }
@@ -87,9 +107,14 @@ function createCodeSnippet(language, code) {
         <span>Copy</span>
     `;
 
+    // Store the code content as a data attribute
+    container.dataset.codeContent = code;
+
     copyButton.addEventListener('click', async () => {
         try {
-            await navigator.clipboard.writeText(code);
+            // Get the code from the data attribute instead of the parameter
+            const codeToCopy = container.dataset.codeContent;
+            await navigator.clipboard.writeText(codeToCopy);
             copyButton.innerHTML = `
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <polyline points="20 6 9 17 4 12"></polyline>
@@ -165,7 +190,8 @@ function appendMessage(message, type) {
         messageElement.textContent = message;
     } else {
         messageElement.classList.add('bot-message');
-        messageElement.textContent = message;
+        const parsedMessage = parseMarkdown(message);
+        messageElement.innerHTML = parsedMessage;
     }
 
     chatMessages.appendChild(messageElement);
