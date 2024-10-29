@@ -1,9 +1,3 @@
-function parseMarkdown(text) {
-    // Handle bold text with ** or __
-    text = text.replace(/\*\*(.*?)\*\*|__(.*?)__/g, '<span class="emphasized">$1$2</span>');
-    return text;
-}
-
 async function simulateTyping(container, content, typingSpeed = 30) {
     const messageContent = document.createElement('div');
     messageContent.classList.add('message-content');
@@ -13,17 +7,12 @@ async function simulateTyping(container, content, typingSpeed = 30) {
     
     for (const segment of segments) {
         if (segment.type === 'code') {
-            const fullCode = segment.content.trim();
-            const codeContainer = createCodeSnippet(segment.language || 'plaintext', fullCode);
+            const codeContainer = createCodeSnippet(segment.language || 'plaintext', '');
             messageContent.appendChild(codeContainer);
             const codeElement = codeContainer.querySelector('code');
             
-            // Clear the code element initially
-            codeElement.textContent = '';
-            
-            // Type out the code
-            for (let i = 0; i < fullCode.length; i++) {
-                codeElement.textContent += fullCode[i];
+            for (let i = 0; i < segment.content.length; i++) {
+                codeElement.textContent += segment.content[i];
                 hljs.highlightElement(codeElement);
                 await new Promise(resolve => setTimeout(resolve, typingSpeed / 2));
             }
@@ -32,17 +21,8 @@ async function simulateTyping(container, content, typingSpeed = 30) {
             textBlock.classList.add('text-block');
             messageContent.appendChild(textBlock);
 
-            const parsedContent = parseMarkdown(segment.content);
-            textBlock.innerHTML = '';
-
-            const temp = document.createElement('div');
-            temp.innerHTML = parsedContent;
-            const textContent = temp.textContent;
-
-            let currentHtml = '';
-            for (let i = 0; i < textContent.length; i++) {
-                currentHtml += textContent[i];
-                textBlock.innerHTML = parseMarkdown(currentHtml);
+            for (let i = 0; i < segment.content.length; i++) {
+                textBlock.textContent += segment.content[i];
                 await new Promise(resolve => setTimeout(resolve, typingSpeed));
             }
         }
@@ -56,7 +36,6 @@ function parseContent(content) {
     let match;
 
     while ((match = codeBlockRegex.exec(content)) !== null) {
-        // Add text before code block if exists
         if (match.index > lastIndex) {
             segments.push({
                 type: 'text',
@@ -64,7 +43,6 @@ function parseContent(content) {
             });
         }
 
-        // Add code block
         segments.push({
             type: 'code',
             language: match[1],
@@ -74,7 +52,6 @@ function parseContent(content) {
         lastIndex = match.index + match[0].length;
     }
 
-    // Add remaining text if exists
     if (lastIndex < content.length) {
         segments.push({
             type: 'text',
@@ -107,14 +84,9 @@ function createCodeSnippet(language, code) {
         <span>Copy</span>
     `;
 
-    // Store the code content as a data attribute
-    container.dataset.codeContent = code;
-
     copyButton.addEventListener('click', async () => {
         try {
-            // Get the code from the data attribute instead of the parameter
-            const codeToCopy = container.dataset.codeContent;
-            await navigator.clipboard.writeText(codeToCopy);
+            await navigator.clipboard.writeText(code);
             copyButton.innerHTML = `
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <polyline points="20 6 9 17 4 12"></polyline>
@@ -174,6 +146,9 @@ async function handleBotResponse(response) {
 
         await simulateTyping(messageElement, combinedResponse);
         messageElement.scrollIntoView({ behavior: 'smooth' });
+
+        // Show quick replies related to the response
+        showQuickReplies(['Tell me more', 'Give me a solution', 'Make a new chat']);
     } catch (error) {
         console.error('Error parsing response:', error);
         appendMessage("Sorry, there was an error retrieving the response.", 'bot');
@@ -190,12 +165,47 @@ function appendMessage(message, type) {
         messageElement.textContent = message;
     } else {
         messageElement.classList.add('bot-message');
-        const parsedMessage = parseMarkdown(message);
-        messageElement.innerHTML = parsedMessage;
+        messageElement.textContent = message;
     }
 
     chatMessages.appendChild(messageElement);
     messageElement.scrollIntoView({ behavior: 'smooth' });
+}
+
+//quick reply function
+function showQuickReplies(options) {
+    const quickReplyContainer = document.createElement('div');
+    quickReplyContainer.classList.add('quick-reply-container');
+
+    options.forEach(option => {
+        const quickReplyButton = document.createElement('button');
+        quickReplyButton.classList.add('quick-reply-button');
+        quickReplyButton.textContent = option;
+        
+        quickReplyButton.addEventListener('click', async () => {
+            appendMessage(option, 'user');
+
+            try {
+                const response = await fetch('http://localhost:3000/api/chat', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ input: option }),
+                });
+
+                await handleBotResponse(response);
+            } catch (error) {
+                console.error('Error:', error);
+                appendMessage('Sorry, there was an error.', 'bot');
+            }
+        });
+
+        quickReplyContainer.appendChild(quickReplyButton);
+    });
+
+    document.getElementById('chatMessages').appendChild(quickReplyContainer);
+    quickReplyContainer.scrollIntoView({ behavior: 'smooth' });
 }
 
 // Event listeners
