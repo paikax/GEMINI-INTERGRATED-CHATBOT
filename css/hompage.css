@@ -63,9 +63,7 @@ body.dark-mode .login-button, body.dark-mode .add-button, body.dark-mode .toggle
     color: black;
 }
 
-nav {
-    
-}
+
 
 nav ul {
     list-style: none;
@@ -166,6 +164,9 @@ nav ul li a {
     border-radius: 5px;
     cursor: pointer;
     transition: background-color 0.3s;
+    white-space: nowrap;       /* Giữ văn bản trên một dòng duy nhất */
+    overflow: hidden;          /* Ẩn phần văn bản vượt quá */
+    text-overflow: ellipsis;   /* Thêm dấu "..." vào cuối văn bản bị cắt */
 }
 
 .chat-label:hover {
