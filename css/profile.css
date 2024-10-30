@@ -1,0 +1,150 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap');
+*{
+    font-family: "Poppins", sans-serif;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+body{
+    display: flex;
+}
+.left{
+    width: 30%;
+}
+.right{
+    width: 70%;
+}
+
+/* Navbar */
+.navbar{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 20px;
+}
+.navbar-logo img{
+    width: 120px;
+    height: 80px;
+}
+.navbar-profile img{
+    width: 70px;
+    height: 70px;
+}
+.navbar-profile{
+    position: relative;
+}
+.dropdown-content{
+    position: absolute;
+    top: 75px;
+    right: 10px;
+    background-color: white;
+    display: none;
+    z-index: 1;
+    border-radius: 10px;
+}
+.dropdown-item button{
+    display: flex;
+    justify-content: center;
+    width: 90px;
+    padding: 10px 12px;
+    border: none;
+    cursor: pointer;
+    background-color: white;
+    border-radius: 10px;
+}
+.dropdown-item button:hover{
+    background-color: #f1edeb;
+}
+
+/* Profile */
+.profile{
+    position: fixed;
+    top: 12%;
+    left: 35%;
+    width: 30%;
+    margin: 0 auto;
+    display: none;
+    flex-direction: column;
+    box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.5);
+    border-radius: 10px;
+    padding: 10px;
+}
+.profile-btnSubmit{
+    padding: 8px 12px;
+    border-radius: 10px;
+    align-self: center;
+    background-color: rgb(0, 128, 0);
+    color: white;
+    cursor: pointer;
+    border: none;
+    margin-bottom: 10px;
+}
+.profile-btnSubmit:hover{
+    background-color: rgba(0, 128, 0, 0.9);
+    transition: ease 0.2s;
+}
+.profile-btnClose{
+    padding: 6px 12px;
+    border-radius: 10px;
+    align-self: flex-end;
+    font-size: 16px;
+    background-color: rgba(255, 0, 0, 0.932);
+    color: white;
+    cursor: pointer;
+    border: none;
+}
+.profile-btnClose:hover{
+    background-color: rgba(255, 0, 0, 0.8);
+    transition: ease 0.2s;
+}
+.profile-content{
+    display: flex;
+    justify-content: center;
+}
+.profile-info h3{   
+    padding: 10px;
+    font-weight: 600;
+}
+.profile-info input{
+    width: 100%;
+    padding: 12px 20px;
+    border-radius: 10px;
+    border: none;
+    box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.35);
+}
+.profile-item{
+    margin: 10px 0;
+}
+.profile-gender{
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 0;
+}
+.profile-gender select{
+    width: 35%;
+    padding: 0 10px;
+    border-radius: 10px;
+    border: none;
+    box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.35);
+}
+.profile-avatar{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.profile-avatar img{
+    width: 120px;
+    height: 120px;
+    object-fit: cover;
+    border-radius: 50%;
+    box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.35);
+}
+.profile-avatar form{
+    width: 100%;
+    padding: 10px 0;
+}
+
+.show {
+    display: block;
+}

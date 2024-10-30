@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile</title>
+    <link rel="stylesheet" href="../css/profile.css">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
+        integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+</head>
+
+<body>
+    <div class="left">
+    </div>
+    <div class="right">
+        <div class="navbar">
+            <div class="navbar-logo">
+                <img src="../img/Google Ai Gemini.png" alt="">
+            </div>
+            <div class="navbar-profile">
+                <img onclick="myFunction()" class="dropbtn"
+                    src="https://png.pngtree.com/png-clipart/20200224/original/pngtree-cartoon-color-simple-male-avatar-png-image_5230557.jpg"
+                    alt="">
+                <div class="navbar-dropdown">
+                    <div class="dropdown-content" id="myDropdown">
+                        <div class="dropdown-item">
+                            <button onclick="openPopup()">
+                                My profile
+                            </button>
+                        </div>
+                        <div class="dropdown-item">
+                            <button>
+                                Setting
+                            </button>
+                        </div>
+                        <div class="dropdown-item">
+                            <button>
+                                Logout
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- popup profile -->
+    <div class="profile" id="popup_profile">
+        <button class="profile-btnClose" onclick="closePopup()">
+            <i class="fa-solid fa-xmark"></i>
+        </button>
+        <div class="profile-content">
+            <div class="profile-info">
+                <div class="profile-avatar">
+                    <img id="avatarImage"
+                        src="https://png.pngtree.com/png-clipart/20200224/original/pngtree-cartoon-color-simple-male-avatar-png-image_5230557.jpg"
+                        alt="Profile Avatar">
+                    <form action="/upload" method="post" enctype="multipart/form-data">
+                        <input type="file" name="image" accept="image/*" onchange="previewImage(event)">
+                    </form>
+                </div>
+                <div class="profile-item">
+                    <h3>Full Name:</h3>
+                    <input type="text" name="" id="" placeholder="Nguyen Van Phuoc">
+                </div>
+                <div class="profile-item">
+                    <h3>Email:</h3>
+                    <input type="text" name="" id="" placeholder="email@gmail.com">
+                </div>
+                <div class="profile-gender">
+                    <h3>Gender:</h3>
+                    <select id="gender" name="gender" required>
+                        <option value="male">Male</option>
+                        <option value="female">Female</option>
+                    </select>
+                </div>
+            </div>
+
+        </div>
+        <button class="profile-btnSubmit">
+            Submit
+        </button>
+
+    </div>
+
+   <script src="../js/components/profile.js"></script>
+</body>
+
+</html>
