@@ -1,0 +1,388 @@
+@font-face {
+    font-family: 'CustomFont';
+    src: url('../font/custom-font.woff2') format('woff2'),
+         url('../font/custom-font.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+
+p{
+    text-align: justify;
+}
+body {
+    font-family: 'CustomFont', Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: white; /* Màu nền trắng */
+    color: black; /* Màu chữ đen */
+    background-color: white;
+    color: black;
+}
+
+header {
+    background-color: white; /* Màu nền trắng */
+    color: black; /* Màu chữ đen */
+    padding: 1rem 0;
+    border-bottom: 1px solid #ccc; /* Đường viền dưới để phân cách */
+}
+header, footer {
+    background-color: white;
+    color: black;
+}
+chat-history, .chatbox, .left-panel, .right-panel {
+    background-color: white;
+    color: black;
+}
+
+.login-button, .add-button, .toggle-button, .toggle-mode-button, .send-button {
+    background-color: #007bff;
+    color: white;
+}
+
+/* Dark Mode Styles */
+body.dark-mode {
+    background-color: #121212;
+    color: white;
+}
+
+body.dark-mode header, body.dark-mode footer {
+    background-color: #1e1e1e;
+    color: white;
+}
+
+body.dark-mode .chat-history, body.dark-mode .chatbox, body.dark-mode .left-panel, body.dark-mode .right-panel {
+    background-color: #1e1e1e;
+    color: white;
+}
+
+body.dark-mode .login-button, body.dark-mode .add-button, body.dark-mode .toggle-button, body.dark-mode .toggle-mode-button, body.dark-mode .send-button {
+    background-color: #bb86fc;
+    color: black;
+}
+
+
+nav ul {
+    list-style: none;
+    display: flex;
+    justify-content: flex-end; /* Căn phần tử về phía bên phải */
+    align-items: center; /* Căn giữa theo chiều dọc */
+    padding: 0;
+    margin: 0;
+}
+
+nav ul li {
+    margin: 0 1rem;
+}
+
+nav ul li a {
+    color: black; /* Màu chữ đen */
+    text-decoration: none;
+}
+
+.login-button {
+    background-color: #007bff; /* Màu nền của button */
+    color: white; /* Màu chữ của button */
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 12px; /* Bo tròn các góc của button */
+    cursor: pointer;
+    font-size: 16px;
+    text-decoration: none;
+    margin-right: 2rem;
+}
+
+.login-button:hover {
+    background-color: #0056b3; /* Màu nền của button khi hover */
+}
+
+.robot-image {
+    width: 50px; /* Điều chỉnh kích thước của hình ảnh */
+    height: auto; /* Đảm bảo tỷ lệ khung hình không bị thay đổi */
+    position: absolute; /* Đặt hình ảnh ở vị trí tuyệt đối */
+    top: 10px; /* Cách phía trên 10px */
+    left: 10px; /* Cách phía trái 10px */
+    margin-left: 2rem;
+}
+
+.logo-heading {
+    width: 50px; /* Điều chỉnh kích thước của hình ảnh */
+    height: auto; /* Đảm bảo tỷ lệ khung hình không bị thay đổi */
+    position: absolute; /* Đặt hình ảnh ở vị trí tuyệt đối */
+    top: 10px; /* Cách phía trên 10px */
+    left: 10px; /* Cách phía trái 10px */
+    margin-left: 6.5rem;
+    font-family: 'CustomFont', Arial, sans-serif;
+}
+
+.chat-container {
+    display: flex;
+    height: calc(100vh - 100px); /* Chiều cao trừ đi chiều cao của header và footer */
+    position: relative;
+}
+
+.chat-history {
+    width: 25%; /* Chiếm 25% chiều rộng */
+    border-right: 1px solid #ccc; /* Đường viền phải */
+    padding: 1rem;
+    overflow-y: auto; /* Cuộn dọc nếu nội dung quá dài */
+    transition: width 0.3s ease, padding 0.3s ease; /* Hiệu ứng chuyển đổi khi ẩn/hiện */
+    position: relative; /* Để nút toggle dính vào thanh lịch sử chat */
+}
+
+.chat-history.hidden {
+    width: 50px; /* Thu nhỏ phần lịch sử chat */
+    padding: 0; /* Loại bỏ padding khi ẩn */
+    overflow: hidden; /* Ẩn nội dung khi ẩn */
+}
+
+.chat-history.hidden .button-container,
+.chat-history.hidden ul {
+    display: none; /* Ẩn nút thêm mới và danh sách lịch sử chat khi thu nhỏ */
+}
+
+.chat-history h2 {
+    margin-bottom: 1rem;
+}
+
+.chat-history ul {
+    list-style: none;
+    padding: 0;
+}
+
+.chat-history li {
+    margin-bottom: 0.5rem;
+}
+
+.chat-label {
+    display: block;
+    padding: 0.5rem;
+    background-color: #f0f0f0;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.chat-label:hover {
+    background-color: #e0e0e0;
+}
+
+.button-container {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+}
+
+.add-button {
+    flex-grow: 1;
+    padding: 0.5rem;
+    background-color: #4145458b; /* Màu nền của button */
+    color: white; /* Màu chữ của button */
+    border: none;
+    border-radius: 5px; /* Bo tròn các góc của button */
+    cursor: pointer;
+    text-align: center;
+    margin-right: 0.5rem;
+}
+
+.add-button:hover {
+    background-color: #333435; /* Màu nền của button khi hover */
+}
+
+.toggle-button {
+    padding: 0.5rem;
+    background-color: transparent; /* Nền trong suốt */
+    border: none;
+    cursor: pointer;
+    position: absolute;
+    top: 1rem;
+    right: 0; /* Đặt nút ở vị trí bên phải của phần lịch sử chat */
+    transform: translateX(50%);
+}
+
+.toggle-icon {
+    width: 24px; /* Kích thước của icon */
+    height: 24px;
+}
+
+.chatbox {
+    display: flex;
+    width: 100%;
+    height: 100%;
+}
+
+.left-panel, .right-panel {
+    flex: 1; /* Chiếm 1 phần của chiều rộng */
+    background-color: #f0f0f0; /* Màu nền của panel */
+    padding: 1rem;
+}
+
+.center-panel {
+    flex: 3; /* Chiếm 3 phần của chiều rộng */
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 1rem;
+}
+    
+.messages {
+    flex-grow: 1;
+    overflow-y: auto; /* Cuộn dọc nếu nội dung quá dài */
+    border-bottom: 1px solid #ccc; /* Đường viền dưới */
+    padding-bottom: 1rem;
+    height: 100%; /* Kích thước cố định cho .messages */
+    width: 100%;
+}
+
+.input-container {
+    display: flex;
+    align-items: center;
+}
+
+.chat-input {
+    flex-grow: 1;
+    padding: 0.5rem;
+    border: 1px solid #ccc;
+    border-radius: 20px;
+    margin-right: 1rem;
+}
+
+.send-button {
+    background-color: #f7f8f9; /* Màu nền của button */
+    color: white; /* Màu chữ của button */
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 5px; /* Bo tròn các góc của button */
+    cursor: pointer;
+}
+
+.send-button:hover {
+    background-color: #525353; /* Màu nền của button khi hover */
+}
+
+.message-container {
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: 1rem;
+    padding: 0.5rem;
+    border-radius: 5px;
+    max-width: 90%;
+    position: relative; /* Để sử dụng cho các đường nối */
+    width: 100%;
+    height: auto;
+}
+.message-container.question {
+    background-color: #e0f7fa; /* Màu nền cho câu hỏi */
+    align-self: flex-end; /* Căn về phía bên phải */
+    width: auto; /* Chiều rộng bằng với div messages */
+    max-width: 90%; /* Đảm bảo không vượt quá chiều rộng của messages */
+    height: auto;
+    border-radius: 30px;
+    padding: 10px; /* Thêm padding để nội dung không chạm vào viền */
+    box-sizing: border-box; /* Đảm bảo padding không ảnh hưởng đến chiều rộng */
+    display: flex;
+    flex-direction: row-reverse; /* Đảo ngược thứ tự các phần tử con */
+    margin: 10px auto; /* Căn giữa và thêm khoảng cách giữa các tin nhắn */
+}
+
+.message-container.answer {
+    background-color: #e0e0e0; /* Màu nền cho câu trả lời */
+    align-self: flex-end; /* Căn về phía bên phải */
+    width: auto; /* Chiều rộng bằng với div messages */
+    max-width: 90%; /* Đảm bảo không vượt quá chiều rộng của messages */
+    height: auto;
+    border-radius: 30px;
+    padding: 10px; /* Thêm padding để nội dung không chạm vào viền */
+    box-sizing: border-box; /* Đảm bảo padding không ảnh hưởng đến chiều rộng */
+    display: flex;
+    margin: 10px auto; /* Căn giữa và thêm khoảng cách giữa các tin nhắn */
+}
+
+.message-content {
+    margin-left: 20px; /* Thay đổi từ margin-right sang margin-left */
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    word-wrap: break-word; /* Tự động xuống dòng nếu quá dài */
+    overflow-wrap: break-word; /* Tự động xuống dòng nếu quá dài */
+    position: relative; /* Để định vị các button */
+}
+
+.avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    margin-left: 10px; /* Thay đổi từ margin-right sang margin-left */
+}
+
+
+.message-connector {
+    position: absolute;
+    width: 2px;
+    background-color: #007bff;
+}
+
+.message-container.question .message-connector {
+    top: 50%;
+    left: 100%;
+    height: 50%;
+}
+
+.message-container.answer .message-connector {
+    top: 50%;
+    right: 100%;
+    height: 50%;
+}
+
+
+
+ .copy-button, .re-answer-button {
+    background-color: #f5f6f800;
+    color: white;
+    border: none;
+    padding: 0.25rem 0.5rem;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 12px;
+    float: left; /* Hiển thị bên trái */
+    position: absolute;
+    margin-right: 5px; /* Khoảng cách với button khác */
+    bottom: 5px;
+    margin-bottom: -17px;
+
+    
+}
+.copy-button {
+    left: 35px; /* Đặt button copy cách button re-answer */
+}
+
+.re-answer-button {
+    left: 1px; /* Đặt button re-answer ở góc dưới bên phải */
+}
+.edit-button {
+    background-color: #f5f6f800;
+    color: white;
+    border: none;
+    padding: 0.25rem 0.5rem;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 12px;
+    position: absolute;
+    bottom: 2px;
+    right: 55px;
+}
+.button-icon {
+    width: 16px; /* Adjust the size as needed */
+    height: 16px; /* Adjust the size as needed */
+}
+
+
+
+.edit-button:hover, .copy-button:hover, .re-answer-button:hover {
+    background-color: #6b6d6e;
+}
+
+.answer-buttons {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 5px;
+}

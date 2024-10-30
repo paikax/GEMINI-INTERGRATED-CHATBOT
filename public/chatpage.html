@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat Page</title>
+    <link rel="stylesheet" href="../css/styleChatBox.css">
+</head>
+<body>
+    <header>
+        <nav>
+            <ul>
+                <li><button class="login-button">Login</button></li>
+                <li><img src="../src/img/robot-assistant.png" alt="" class="robot-image"></li>
+                <h2 class="logo-heading">DevG5</h2>
+            </ul>
+        </nav>
+    </header>
+    <main class="chat-container">
+        <aside class="chat-history">
+            <div class="button-container">
+                <button class="add-button">Thêm mới</button>
+                <button class="toggle-mode-button">Dark Mode</button>
+            </div>
+            <ul>
+                <li><label class="chat-label">Chat 1</label></li>
+                <li><label class="chat-label">Chat 2</label></li>
+                <li><label class="chat-label">Chat 3</label></li>
+                <!-- Thêm nhiều lịch sử chat hơn nếu cần -->
+            </ul>
+            <button class="toggle-button">
+                <img src="../src/img/HideIcon.webp" alt="Ẩn lịch sử chat" class="toggle-icon">
+            </button>
+        </aside>
+        <section class="chatbox">
+            <div class="left-panel">
+                <!-- Nội dung của phần bên trái -->
+            </div>
+            <div class="center-panel">
+                <div class="messages">
+                    <!-- Tin nhắn sẽ được hiển thị ở đây -->
+                    <div class="message-container question">
+                        <img src="../src/img/profile.png" alt="User Avatar" class="avatar">
+                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nemo quo harum ratione distinctio ipsa saepe aliquam eaque eius atque nam nostrum, minima molestiae excepturi aperiam voluptas impedit cupiditate corporis ut optio earum nihil autem alias. Perferendis, suscipit sed at temporibus dolorem, commodi omnis alias quisquam odit facere modi officia quaerat?</p>
+                        <div class="message-buttons">
+                            <button class="edit-button">
+                                <img src="../src/img/editing.png" alt="Edit" class="button-icon">
+                            </button>
+                        </div>
+                        
+                    </div>
+                    <div class="message-container answer">
+                        <img src="../src/img/robot-assistant.png" alt="AI Avatar" class="avatar">
+                        <div class="message-content">
+                            <p>Đây là câu trả lời từ AI.</p>
+                            <div class="message-buttons">
+                                <button class="copy-button">
+                                    <img src="../src/img/copy.png" alt="Copy" class="button-icon">
+                                </button>
+                                <button class="re-answer-button">
+                                    <img src="../src/img/redo.png" alt="Re-answer" class="button-icon">
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="input-container">
+                    <input type="text" placeholder="Nhập tin nhắn..." class="chat-input">
+                    <button class="send-button">Gửi</button>
+                </div>
+            </div>
+            <div class="right-panel">
+                <!-- Nội dung của phần bên phải -->
+            </div>
+        </section>
+    </main>
+    <footer>
+        <p>&copy; 2023 Your Company. All rights reserved.</p>
+    </footer>
+    <script>
+        document.querySelector('.toggle-button').addEventListener('click', function() {
+            const chatHistory = document.querySelector('.chat-history');
+            const toggleIcon = this.querySelector('.toggle-icon');
+            if (chatHistory.classList.contains('hidden')) {
+                chatHistory.classList.remove('hidden');
+                toggleIcon.src = '../src/img/HideIcon.webp';
+                toggleIcon.alt = 'Ẩn lịch sử chat';
+            } else {
+                chatHistory.classList.add('hidden');
+                toggleIcon.src = '../src/img/ShowIcon.webp';
+                toggleIcon.alt = 'Hiện lịch sử chat';
+            }
+        });
+
+        document.querySelector('.toggle-mode-button').addEventListener('click', function() {
+            const body = document.body;
+            if (body.classList.contains('dark-mode')) {
+                body.classList.remove('dark-mode');
+                this.textContent = 'Dark Mode';
+            } else {
+                body.classList.add('dark-mode');
+                this.textContent = 'Light Mode';
+            }
+        });
+    </script>
+</body>
+</html>
