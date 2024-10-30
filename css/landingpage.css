@@ -10,6 +10,12 @@ body {
     padding: 0;
     background-color: white; /* Màu nền trắng */
     color: black; /* Màu chữ đen */
+    height: 100vh;
+    overflow: hidden;
+}
+
+main{
+    height: 100%;
 }
 
 header {
@@ -17,6 +23,8 @@ header {
     color: black; /* Màu chữ đen */
     padding: 1rem 0;
     border-bottom: 1px solid #ccc; /* Đường viền dưới để phân cách */
+    position: fixed;
+    width: 100%;
 }
 
 nav ul {
@@ -95,20 +103,21 @@ nav ul li a {
     background-color: #c8d4ec; /* Màu nền của button khi hover */
 }
 
-.hero {
+/* .hero {
     background-image: url('hero-background.jpg');
     background-size: cover;
     background-position: center;
-    color: black; /* Màu chữ đen */
+    color: black; Màu chữ đen 
     text-align: center;
     padding: 5rem 1rem;
-}
+} */
 
 .features {
     display: flex;
     justify-content: center; /* Căn phần tử ở giữa */
     align-items: center; /* Căn giữa theo chiều dọc */
     padding: 2rem 1rem;
+    height: 100%;
 }
 
 .feature {
@@ -126,7 +135,7 @@ nav ul li a {
     height: 100%;
     object-fit: cover; /* Đảm bảo hình ảnh bao phủ toàn bộ slide */
     border-radius: 15px; /* Bo tròn các góc của hình ảnh */
-    margin-top: -8rem; /* Dịch chuyển hình ảnh lên trên */
+    margin-top: auto; /* Dịch chuyển hình ảnh lên trên */
 }
 .feature.gemini {
     margin-left: -15rem; /* Dịch chuyển toàn bộ phần này sang trái */
@@ -159,11 +168,3 @@ nav ul li a {
     margin-right: 7;
 }
 
-footer {
-    background-color: white; /* Màu nền trắng */
-    color: black; /* Màu chữ đen */
-    text-align: center;
-    padding: 0.5rem 0; /* Giảm padding để làm footer nhỏ lại */
-    font-size: 14px; /* Giảm kích thước chữ */
-    border-top: 1px solid #ccc; /* Đường viền trên để phân cách */
-}
