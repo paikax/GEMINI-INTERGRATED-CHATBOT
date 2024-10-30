@@ -228,6 +228,12 @@ async function handleBotResponse(response) {
 
 function appendMessage(message, type) {
     const chatMessages = document.getElementById('chatMessages');
+    
+    // Create a new parent div
+    const parentDiv = document.createElement('div');
+    parentDiv.classList.add('message-wrapper'); // Optional: Add a class for styling
+
+    // Create the message element
     const messageElement = document.createElement('div');
     messageElement.classList.add('chat-message');
 
@@ -240,8 +246,11 @@ function appendMessage(message, type) {
         messageElement.innerHTML = parsedMessage;
     }
 
-    chatMessages.appendChild(messageElement);
-    messageElement.scrollIntoView({ behavior: 'smooth' });
+    // Append the messageElement to the parentDiv
+    parentDiv.appendChild(messageElement);
+
+    // Append the parentDiv to the chatMessages container
+    chatMessages.appendChild(parentDiv);
 }
 
 // Event listeners

@@ -8,7 +8,7 @@
 
 * {
     box-sizing: border-box;
-    margin: 9;
+    margin: 0;
     padding: 0;
 }
 
@@ -245,10 +245,15 @@ nav ul li a {
 .messages {
     flex-grow: 1;
     overflow-y: auto; /* Cuộn dọc nếu nội dung quá dài */
-    border-bottom: 1px solid #ccc; /* Đường viền dưới */
     padding-bottom: 1rem;
     height: 100%; /* Kích thước cố định cho .messages */
     width: 100%;
+}
+
+.message-wrapper {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 1rem;
 }
 
 .input-container {
@@ -277,22 +282,6 @@ nav ul li a {
     background-color: #525353; /* Màu nền của button khi hover */
 }
 
-.message-container {
-    display: flex;
-    align-items: flex-start;
-    margin-bottom: 1rem;
-    padding: 0.5rem;
-    border-radius: 5px;
-    max-width: 90%;
-    position: relative; /* Để sử dụng cho các đường nối */
-    width: 100%;
-    height: auto;
-}
-.message-container {
-    display: flex;
-    justify-content: flex-end; /* Align children to the right */
-    margin-top: 5px;
-}
 .message-container.question {
     background-color: #e0f7fa; /* Màu nền cho câu hỏi */
     align-self: flex-end; /* Căn về phía bên phải */
@@ -388,21 +377,25 @@ nav ul li a {
     justify-content: flex-end;
     margin-top: 5px;
 }
+.message-container {
+    display: flex;
+    justify-content: flex-end; /* Align children to the right */
+    margin-top: 5px;
+}
 
 .user-message {
     background-color: #e0f7fa; /* Màu nền cho câu hỏi */
- /* Căn về phía bên phải */
-    width: auto; /* Chiều rộng bằng với div messages */
+    width: auto; /* Chiều rộng tự động vừa với nội dung */
     max-width: 90%; /* Đảm bảo không vượt quá chiều rộng của messages */
     height: auto;
     border-radius: 30px;
     padding: 10px; /* Thêm padding để nội dung không chạm vào viền */
     box-sizing: border-box; /* Đảm bảo padding không ảnh hưởng đến chiều rộng */
-    display: flex;
+    display: inline-flex; /* Sử dụng inline-flex để kích thước tự động vừa với nội dung */
     flex-direction: row-reverse; /* Đảo ngược thứ tự các phần tử con */
-    margin: 10px 0; 
-    display: inline-flex;
-    margin-left: auto;
+    margin: 10px 0; /* Điều chỉnh margin để không ảnh hưởng đến căn lề phải */
+    margin-left: auto; /* Căn sang bên phải */
+    align-self: flex-end; /* Đảm bảo căn lề phải */
 }
 
 .bot-message {
@@ -423,7 +416,7 @@ nav ul li a {
     margin-left: 20px;
     margin-top: 10px;
     cursor: pointer;
-    font-size: 0.9rem;
+    font-size: 0.7rem;
 }
 
 .read-aloud-button:hover {
