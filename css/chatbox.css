@@ -55,6 +55,7 @@
 
 .chat-list .message.incoming{
     margin-top: 1.5rem;
+
 }
 
 .chat-list .message .icon{
@@ -94,6 +95,17 @@
     justify-content: center;
 }
 
+.typing-control{
+    display: flex;
+    
+}
+
+.typing-control .icon{
+    width: 10px;
+}
+
+
+
 
 /* .chat-list .message .message-content{
     display: flex;
@@ -118,6 +130,7 @@
     height: 56px;
     width: 100%;
     display: flex;
+    position: relative;
 }
 
 .typing-area .typing-input{
