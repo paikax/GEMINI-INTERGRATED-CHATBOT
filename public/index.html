@@ -6,12 +6,16 @@
     <title>Chatbot DEV-G5</title>
     <link rel="stylesheet" href="../css/hompage.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/vs2015.min.css">
+    <script src="https://apis.google.com/js/platform.js" async defer></script>
+    <meta name="google-signin-client_id" content="YOUR_GOOGLE_CLIENT_ID.apps.googleusercontent.com">
 </head>
 <body>
     <header>
         <nav>
             <ul>
-                <li><button class="login-button">Login</button></li>
+                <li>
+                    <button class="login-button" id="loginButton" onclick="handleGoogleSignIn()">Login with Google</button>
+                </li>
                 <li><img src="../src/img/robot-assistant.png" alt="" class="robot-image"></li>
                 <h2 class="logo-heading">DevG5</h2>
             </ul>

@@ -1,3 +1,5 @@
+
+const conversationHistory = [];
 function parseMarkdown(text) {
     // Handle bold text with ** or __
     text = text.replace(/\*\*(.*?)\*\*|__(.*?)__/g, '<span class="emphasized">$1$2</span>');
@@ -210,16 +212,13 @@ async function handleBotResponse(response) {
         messageElement.classList.add('chat-message', 'bot-message');
         document.getElementById('chatMessages').appendChild(messageElement);
 
-        // // Add "Read Aloud" button
-        // const readButton = document.createElement('button');
-        // readButton.textContent = "🔊";
-        // readButton.classList.add('read-aloud-button');
-        // readButton.addEventListener('click', () => readAloud(combinedResponse));
-        // messageElement.appendChild(readButton);
 
         await simulateTyping(messageElement, combinedResponse);
         messageElement.scrollIntoView({ behavior: 'smooth' });
         addReadAloudAndCopyButtons(messageElement, combinedResponse);
+
+         // Add bot response to history
+         conversationHistory.push({ role: 'bot', content: combinedResponse });
     } catch (error) {
         console.error('Error parsing response:', error);
         appendMessage("Sorry, there was an error retrieving the response.", 'bot');
@@ -262,13 +261,20 @@ document.getElementById('sendButton').addEventListener('click', async function()
         appendMessage(message, 'user');
         userInput.value = '';
 
+        // Add user message to history
+        conversationHistory.push({ role: 'user', content: message });
+        console.log('Conversation History:', conversationHistory);
+
         try {
             const response = await fetch('http://localhost:3000/api/chat', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ input: message }),
+                body: JSON.stringify({ 
+                    input: message, 
+                    history: conversationHistory // Send history as part of the request
+                }),
             });
 
             await handleBotResponse(response);

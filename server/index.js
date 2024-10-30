@@ -14,6 +14,16 @@ app.use(express.json());
 app.use(express.static("public")); // Serve static files from the 'public' directory
 const genAI = new GoogleGenerativeAI('AIzaSyD9ff9i9UzVshdB9xR1xnNx3fQDy0uqACA');
 
+// Helper function to format history for Gemini
+function formatHistory(history) {
+    if (!history || !Array.isArray(history)) return [];
+    
+    return history.map(msg => ({
+        role: msg.role === 'user' ? 'user' : 'model',
+        parts: msg.content
+    }));
+}
+
 
 // MongoDB connection setup
 const mongoUrl = "mongodb+srv://nguyentb1148:PPhCj6Vm7DDQWatq@geminichatboxclonedb.q6ybh.mongodb.net/?retryWrites=true&w=majority&appName=GeminiChatboxCloneDb";
@@ -41,13 +51,15 @@ async function connectDB() {
 
 app.post("/api/chat", async (req, res) => {
     const userInput = req.body.input;
+    const history = req.body.history || [];
     const model = genAI.getGenerativeModel({ model: "gemini-pro" });
     const start = Date.now();
     let responseText = ""; // Initialize an empty string to accumulate responses
 
     try {
+        const allHistory = history.map((item) => item.content);
         // Using generateContentStream to collect all parts into one string
-        const result = await model.generateContentStream([userInput]);
+        const result = await model.generateContentStream([...allHistory, userInput]);
 
         // Collect all chunks into responseText
         for await (const chunk of result.stream) {
@@ -66,6 +78,7 @@ app.post("/api/chat", async (req, res) => {
         res.status(500).json({ error: "Internal Server Error" }); // hi
     }
 });
+
 // Start the server
 app.listen(PORT, () => {
     console.log(`Server is running on http://localhost:${PORT}`);
