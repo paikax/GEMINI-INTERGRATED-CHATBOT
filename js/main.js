@@ -165,13 +165,13 @@ function addReadAloudAndCopyButtons(messageElement, text) {
     // Create the Read Aloud button
     const readButton = document.createElement('button');
     readButton.classList.add('read-aloud-button');
-    readButton.textContent = "🔊 Read Aloud";
+    readButton.textContent = "🔊";
     readButton.addEventListener('click', () => readAloud(text));
     
     // Create the Copy button
     const copyButton = document.createElement('button');
     copyButton.classList.add('copy-button');
-    copyButton.textContent = "📋 Copy";
+    copyButton.textContent = "📋";
     copyButton.addEventListener('click', () => copyToClipboard(text, copyButton));
     
     // Append both buttons to the message element

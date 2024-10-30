@@ -1,0 +1,169 @@
+@font-face{
+    font-family: 'Digital';
+    src: url('./font/ARCADECLASSIC.TTF') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: white; /* Màu nền trắng */
+    color: black; /* Màu chữ đen */
+}
+
+header {
+    background-color: white; /* Màu nền trắng */
+    color: black; /* Màu chữ đen */
+    padding: 1rem 0;
+    border-bottom: 1px solid #ccc; /* Đường viền dưới để phân cách */
+}
+
+nav ul {
+    list-style: none;
+    display: flex;
+    justify-content: flex-end; /* Căn phần tử về phía bên phải */
+    align-items: center; /* Căn giữa theo chiều dọc */
+    padding: 0;
+    margin: 0;
+}
+
+nav ul li {
+    margin: 0 1rem;
+}
+
+nav ul li a {
+    color: black; /* Màu chữ đen */
+    text-decoration: none;
+}
+
+.login-button {
+    background-color: #1054d4; /* Màu nền của button */
+    color: white; /* Màu chữ của button */
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 12px; /* Bo tròn các góc của button */
+    cursor: pointer;
+    font-size: 16px;
+    text-decoration: none;
+    margin-right: 2rem;
+}
+
+.login-button:hover {
+    background-color: #0056b3; /* Màu nền của button khi hover */
+}
+
+.robot-image {
+    width: 50px; /* Điều chỉnh kích thước của hình ảnh */
+    height: auto; /* Đảm bảo tỷ lệ khung hình không bị thay đổi */
+    position: absolute; /* Đặt hình ảnh ở vị trí tuyệt đối */
+    top: 10px; /* Cách phía trên 10px */
+    left: 10px; /* Cách phía trái 10px */
+    margin-left: 2rem;
+}
+.logo-heading {
+    width: 100px; /* Điều chỉnh kích thước của hình ảnh */
+    height: auto; /* Đảm bảo tỷ lệ khung hình không bị thay đổi */
+    position: absolute; /* Đặt hình ảnh ở vị trí tuyệt đối */
+    top: 10px; /* Cách phía trên 10px */
+    left: 10px; /* Cách phía trái 10px */
+    margin-left: 6.5rem;
+    font-family: 'Digital', sans-serif;
+    background-image: linear-gradient(to right, #3507c0, hsl(277, 51%, 31%));
+    -webkit-background-clip: text;
+    -moz-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+    font-size: 2rem;
+    margin-top: auto;
+}
+
+.login-button-2 {
+    background-color: #d8e4fc; /* Màu nền của button */
+    color: black; /* Màu chữ của button */
+    border: none;
+    padding: 1rem 2rem;
+    border-radius: 12px; /* Bo tròn các góc của button */
+    cursor: pointer;
+    font-size: 16px;
+    text-decoration: none;
+    margin-left: 4rem;
+}
+
+.login-button-2:hover {
+    background-color: #c8d4ec; /* Màu nền của button khi hover */
+}
+
+.hero {
+    background-image: url('hero-background.jpg');
+    background-size: cover;
+    background-position: center;
+    color: black; /* Màu chữ đen */
+    text-align: center;
+    padding: 5rem 1rem;
+}
+
+.features {
+    display: flex;
+    justify-content: center; /* Căn phần tử ở giữa */
+    align-items: center; /* Căn giữa theo chiều dọc */
+    padding: 2rem 1rem;
+}
+
+.feature {
+    text-align: left; /* Căn chữ về phía bên trái */
+    max-width: 300px;
+    color: black; /* Màu chữ đen */
+    font-size: 25px;
+    margin-top: -2rem;
+    flex: 1; /* Chia đều không gian cho các phần tử */
+    margin: 0 1rem; /* Khoảng cách giữa các phần tử */
+}
+
+.feature-image {
+    width: 150%;
+    height: 100%;
+    object-fit: cover; /* Đảm bảo hình ảnh bao phủ toàn bộ slide */
+    border-radius: 15px; /* Bo tròn các góc của hình ảnh */
+    margin-top: -8rem; /* Dịch chuyển hình ảnh lên trên */
+}
+.feature.gemini {
+    margin-left: -15rem; /* Dịch chuyển toàn bộ phần này sang trái */
+}
+
+.feature.nitro {
+    margin-left: 15rem; /* Dịch chuyển toàn bộ phần này sang phải */
+}
+.gemini-heading {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 5rem;
+    font-weight: bold;
+    text-align: center;
+    background-image: linear-gradient(to right, #5884ec, #d0647c);
+    -webkit-background-clip: text;
+    -moz-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+    margin-top: -3rem;
+}
+
+.gemini-description {
+    margin-top: -2rem; /* Dịch chuyển đoạn văn bản lên trên */
+    text-align: center;
+}
+.swiper-container {
+    width: auto;
+    height: auto; /* Điều chỉnh chiều cao của slide */
+    margin-right: 7;
+}
+
+footer {
+    background-color: white; /* Màu nền trắng */
+    color: black; /* Màu chữ đen */
+    text-align: center;
+    padding: 0.5rem 0; /* Giảm padding để làm footer nhỏ lại */
+    font-size: 14px; /* Giảm kích thước chữ */
+    border-top: 1px solid #ccc; /* Đường viền trên để phân cách */
+}
