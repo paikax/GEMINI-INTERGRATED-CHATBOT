@@ -2,6 +2,7 @@ const express = require("express");
 const cors = require("cors");
 const { GoogleGenerativeAI } = require("@google/generative-ai");
 const dotenv = require("dotenv");
+const { MongoClient, ServerApiVersion } = require("mongodb");
 
 dotenv.config();
 
@@ -12,6 +13,30 @@ app.use(cors());
 app.use(express.json());
 app.use(express.static("public")); // Serve static files from the 'public' directory
 const genAI = new GoogleGenerativeAI('AIzaSyD9ff9i9UzVshdB9xR1xnNx3fQDy0uqACA');
+
+
+// MongoDB connection setup
+const mongoUrl = "mongodb+srv://nguyentb1148:PPhCj6Vm7DDQWatq@geminichatboxclonedb.q6ybh.mongodb.net/?retryWrites=true&w=majority&appName=GeminiChatboxCloneDb";
+const client = new MongoClient(mongoUrl, {
+    serverApi: {
+        version: ServerApiVersion.v1,
+        strict: true,
+        deprecationErrors: true,
+    }
+});
+
+// Function to connect to MongoDB
+async function connectDB() {
+    try {
+        console.log("Connecting to MongoDB.");
+        await client.connect();
+        console.log("Connected to MongoDB");
+    } catch (error) {
+        console.error("Error connecting to MongoDB:", error);
+    }
+}
+
+// ------------------------------------------------------------------
 
 
 app.post("/api/chat", async (req, res) => {
@@ -44,4 +69,5 @@ app.post("/api/chat", async (req, res) => {
 // Start the server
 app.listen(PORT, () => {
     console.log(`Server is running on http://localhost:${PORT}`);
+    connectDB(); // Connect to MongoDB when server starts
 });

@@ -8,7 +8,7 @@
 
 * {
     box-sizing: border-box;
-    margin: 9;
+    margin: 0;
     padding: 0;
 }
 
@@ -136,9 +136,16 @@ nav ul li a {
 }
 
 .chat-history.hidden {
-    width: 50px; /* Thu nhỏ phần lịch sử chat */
+    width: 120px; /* Thu nhỏ phần lịch sử chat */
     padding: 0; /* Loại bỏ padding khi ẩn */
     overflow: hidden; /* Ẩn nội dung khi ẩn */
+}
+.chat-list {
+    margin-top: 100px; /* Adjust the value as needed */
+}
+
+.chat-list li {
+    margin-top: 10px; /* Add margin to each list item */
 }
 
 .chat-history.hidden .button-container,
@@ -188,6 +195,11 @@ nav ul li a {
     cursor: pointer;
     text-align: center;
     margin-right: 0.5rem;
+    position: absolute; /* Positioning the button absolutely */
+    top: 40px; /* Positioning it 10px from the bottom */
+    left: 10px; /* Positioning it 10px from the left */
+    right: 10px; /* Positioning it 10px from the right */
+    margin-top: 40px; /* Adjust the value as needed */
 }
 
 .add-button:hover {
@@ -233,10 +245,15 @@ nav ul li a {
 .messages {
     flex-grow: 1;
     overflow-y: auto; /* Cuộn dọc nếu nội dung quá dài */
-    border-bottom: 1px solid #ccc; /* Đường viền dưới */
     padding-bottom: 1rem;
     height: 100%; /* Kích thước cố định cho .messages */
     width: 100%;
+}
+
+.message-wrapper {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 1rem;
 }
 
 .input-container {
@@ -265,17 +282,6 @@ nav ul li a {
     background-color: #525353; /* Màu nền của button khi hover */
 }
 
-.message-container {
-    display: flex;
-    align-items: flex-start;
-    margin-bottom: 1rem;
-    padding: 0.5rem;
-    border-radius: 5px;
-    max-width: 90%;
-    position: relative; /* Để sử dụng cho các đường nối */
-    width: 100%;
-    height: auto;
-}
 .message-container.question {
     background-color: #e0f7fa; /* Màu nền cho câu hỏi */
     align-self: flex-end; /* Căn về phía bên phải */
@@ -371,19 +377,25 @@ nav ul li a {
     justify-content: flex-end;
     margin-top: 5px;
 }
+.message-container {
+    display: flex;
+    justify-content: flex-end; /* Align children to the right */
+    margin-top: 5px;
+}
 
 .user-message {
     background-color: #e0f7fa; /* Màu nền cho câu hỏi */
-    align-self: flex-end; /* Căn về phía bên phải */
-    width: auto; /* Chiều rộng bằng với div messages */
+    width: auto; /* Chiều rộng tự động vừa với nội dung */
     max-width: 90%; /* Đảm bảo không vượt quá chiều rộng của messages */
     height: auto;
     border-radius: 30px;
     padding: 10px; /* Thêm padding để nội dung không chạm vào viền */
     box-sizing: border-box; /* Đảm bảo padding không ảnh hưởng đến chiều rộng */
-    display: flex;
+    display: inline-flex; /* Sử dụng inline-flex để kích thước tự động vừa với nội dung */
     flex-direction: row-reverse; /* Đảo ngược thứ tự các phần tử con */
-    margin: 10px auto; 
+    margin: 10px 0; /* Điều chỉnh margin để không ảnh hưởng đến căn lề phải */
+    margin-left: auto; /* Căn sang bên phải */
+    align-self: flex-end; /* Đảm bảo căn lề phải */
 }
 
 .bot-message {
@@ -404,7 +416,7 @@ nav ul li a {
     margin-left: 20px;
     margin-top: 10px;
     cursor: pointer;
-    font-size: 0.9rem;
+    font-size: 0.7rem;
 }
 
 .read-aloud-button:hover {
@@ -482,4 +494,28 @@ nav ul li a {
     margin: 5px 0;
     line-height: 1.5;
     white-space: pre-wrap;
+}
+.toggle-mode-button {
+    position: absolute;
+    bottom: 10px;
+    left: 30px;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #4d4e4f;
+}
+.toggle-button {
+    position: absolute;
+    top: 10px;
+    left: 0px;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #4d4e4f;
 }
