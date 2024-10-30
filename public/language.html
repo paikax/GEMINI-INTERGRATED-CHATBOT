@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Multilingual Support</title>
+    <link rel="stylesheet" href="../css/language.css">
+</head>
+<body>
+    <div class="container">
+        <h1 class="translatable" data-translate="hello">Hi there, welcome to our website!</h1>
+        <div class="translatable">
+           1. Hi, I’m building a chat app with Streamlit and want to make it really chatGPT like.
+        </div>
+        
+       
+        <div>
+            <label for="languageSelect" class="translatable">Choose a language:</label>
+            <select id="languageSelect">
+                <option value="en" class="translatable" data-icon="https://upload.wikimedia.org/wikipedia/en/b/b9/Flag_of_the_United_States.svg">EN</option>
+                <option value="vi"  class="translatable" data-icon="https://upload.wikimedia.org/wikipedia/commons/3/3c/Flag_of_Vietnam.svg">VN</option>
+                <option value="zh" class="translatable" data-icon="https://upload.wikimedia.org/wikipedia/commons/0/0f/Flag_of_China.svg">CN</option>
+                <option value="fr" class="translatable" data-icon="https://upload.wikimedia.org/wikipedia/commons/c/c3/Flag_of_France.svg">FR</option>
+                <option value="ko" class="translatable" data-icon="https://upload.wikimedia.org/wikipedia/commons/0/09/Flag_of_South_Korea.svg">KR</option>
+            </select>
+        </div>
+    </div>
+    <script src="../js/components/language.js"></script>
+</body>
+</html>
