@@ -21,7 +21,6 @@ function saveChatToLocalStorage(chatId, conversation) {
     };
     localStorage.setItem('allChats', JSON.stringify(allChats));
 }
-
 // Function to get a title from the first user message
 function getConversationTitle(conversation) {
     const firstUserMessage = conversation.find(msg => msg.role === 'user');
@@ -31,12 +30,10 @@ function getConversationTitle(conversation) {
     }
     return 'New Chat';
 }
-
 // Function to load chat history from local storage
 function loadChatsFromLocalStorage() {
     return JSON.parse(localStorage.getItem('allChats') || '{}');
 }
-
 // Function to render chat list
 function renderChatList() {
     chatList.innerHTML = '';
@@ -70,7 +67,6 @@ function renderChatList() {
             chatList.appendChild(chatElement);
         });
 }
-
 function loadChat(chatId) {
     const allChats = loadChatsFromLocalStorage();
     const chat = allChats[chatId];
@@ -131,8 +127,6 @@ function loadChat(chatId) {
         chatMessages.scrollTop = chatMessages.scrollHeight;
     }
 }
-
-
 // Function to delete a chat
 function deleteChat(chatId) {
     const allChats = loadChatsFromLocalStorage();
@@ -147,7 +141,6 @@ function deleteChat(chatId) {
     
     renderChatList();
 }
-
 // Function to start a new chat
 function startNewChat() {
     currentChatId = generateChatId();
@@ -155,8 +148,6 @@ function startNewChat() {
     document.getElementById('chatMessages').innerHTML = '';
     renderChatList();
 }
-
-
 function parseMarkdown(text) {
     // Handle bold text with ** or __
     text = text.replace(/\*\*(.*?)\*\*|__(.*?)__/g, '<span class="emphasized">$1$2</span>');
@@ -164,8 +155,6 @@ function parseMarkdown(text) {
     text = text.replace(/\*(.*?)\*|_(.*?)_/g, '<span class="italicized">$1$2</span>');
     return text;
 }
-
- 
 async function simulateTyping(container, content, typingSpeed = 30) {
     const messageContent = document.createElement('div');
     messageContent.classList.add('message-content');
@@ -210,7 +199,6 @@ async function simulateTyping(container, content, typingSpeed = 30) {
         }
     }
 }
-
 function parseContent(content) {
     const segments = [];
     const codeBlockRegex = /```(\w*)\n([\s\S]*?)```/g;
@@ -246,7 +234,6 @@ function parseContent(content) {
 
     return segments;
 }
-
 function createCodeSnippet(language, code) {
     const container = document.createElement('div');
     container.classList.add('code-snippet-container');
@@ -319,7 +306,6 @@ function createCodeSnippet(language, code) {
 
     return container;
 }
-
 function addReadAloudAndCopyButtons(messageElement, text) {
     // Create the Read Aloud button
     const readButton = document.createElement('button');
@@ -337,7 +323,6 @@ function addReadAloudAndCopyButtons(messageElement, text) {
     messageElement.appendChild(readButton);
     messageElement.appendChild(copyButton);
 }
-
 function copyToClipboard(text, button) {
     // Check if the Clipboard API is supported
     if (navigator.clipboard && navigator.clipboard.writeText) {
@@ -366,53 +351,12 @@ function copyToClipboard(text, button) {
         }
     }
 }
-
 function readAloud(text) {
     const synth = window.speechSynthesis;
     const utterance = new SpeechSynthesisUtterance(text);
     utterance.rate = 1.25; // Adjust the rate of speech if needed
     synth.speak(utterance);
 }
-
-function saveToLocalStorage(history = []) {
-    localStorage.setItem('conversation', JSON.stringify(history));
-}
-
-async function handleBotResponse(response) {
-    const text = await response.text();
-    console.log('Raw Response:', text);
-
-    try {
-        const segments = text.match(/{"response":".*?"}/g);
-        const combinedResponse = segments
-            .map(segment => JSON.parse(segment).response)
-            .join(' ');
-
-        const messageElement = document.createElement('div');
-        messageElement.classList.add('chat-message', 'bot-message');
-        document.getElementById('chatMessages').appendChild(messageElement);
-
-
-        await simulateTyping(messageElement, combinedResponse);
-        messageElement.scrollIntoView({ behavior: 'smooth' });
-        addReadAloudAndCopyButtons(messageElement, combinedResponse);
-
-         // Add bot response to history
-         conversationHistory.push({ role: 'bot', content: combinedResponse, datetime: new Date().toISOString() });
-
-         // Save to local storage
-         saveToLocalStorage(conversationHistory);
-    } catch (error) {
-        console.error('Error parsing response:', error);
-        appendMessage("Sorry, there was an error retrieving the response.", 'bot');
-    }
-
-    if (currentChatId) {
-        saveChatToLocalStorage(currentChatId, conversationHistory);
-        renderChatList();
-    }
-}
-
 function appendMessage(message, type) {
     const chatMessages = document.getElementById('chatMessages');
     
@@ -465,9 +409,44 @@ function appendMessage(message, type) {
         renderChatList();
     }
 }
+function saveToLocalStorage(history = []) {
+    localStorage.setItem('conversation', JSON.stringify(history));
+}
+async function handleBotResponse(response) {
+    const text = await response.text();
+    console.log('Raw Response:', text);
+    try {
+        const segments = text.match(/{"response":".*?"}/g);
+        const combinedResponse = segments
+            .map(segment => JSON.parse(segment).response)
+            .join(' ');
+
+        const messageElement = document.createElement('div');
+        messageElement.classList.add('chat-message', 'bot-message');
+        document.getElementById('chatMessages').appendChild(messageElement);
 
 
-// Optional: Add a function to clean up code blocks in stored messages
+        await simulateTyping(messageElement, combinedResponse);
+        messageElement.scrollIntoView({ behavior: 'smooth' });
+        addReadAloudAndCopyButtons(messageElement, combinedResponse);
+
+         // Add bot response to history
+         conversationHistory.push({ 
+            role: 'bot',
+            content: combinedResponse,
+            datetime: new Date().toISOString() });
+
+         saveToLocalStorage(conversationHistory);
+    } catch (error) {
+        console.error('Error parsing response:', error);
+        appendMessage("Sorry, there was an error retrieving the response.", 'bot');
+    }
+
+    if (currentChatId) {
+        saveChatToLocalStorage(currentChatId, conversationHistory);
+        renderChatList();
+    }
+}
 function sanitizeStoredMessages() {
     const allChats = loadChatsFromLocalStorage();
     let hasChanges = false;
@@ -493,7 +472,6 @@ function sanitizeStoredMessages() {
         localStorage.setItem('allChats', JSON.stringify(allChats));
     }
 }
-
 document.addEventListener('DOMContentLoaded', () => {
     // Set up new chat button
     newChatButton.addEventListener('click', startNewChat);
@@ -506,7 +484,6 @@ document.addEventListener('DOMContentLoaded', () => {
     // Render existing chats
     renderChatList();
 });
-
 // Event listeners
 document.getElementById('sendButton').addEventListener('click', async function() {
     const userInput = document.getElementById('userInput');
@@ -517,7 +494,10 @@ document.getElementById('sendButton').addEventListener('click', async function()
         userInput.value = '';
 
         // Add user message to history
-        conversationHistory.push({ role: 'user', content: message, datetime: new Date().toISOString() });
+        conversationHistory.push({
+            role: 'user', 
+            content: message, 
+            datetime: new Date().toISOString() });
 
         try {
             const response = await fetch('http://localhost:3000/api/chat', {
@@ -527,7 +507,7 @@ document.getElementById('sendButton').addEventListener('click', async function()
                 },
                 body: JSON.stringify({ 
                     input: message, 
-                    history: conversationHistory // Send history as part of the request
+                    history: conversationHistory
                 }),
             });
 
@@ -544,7 +524,3 @@ document.getElementById('userInput').addEventListener('keypress', function(e) {
         document.getElementById('sendButton').click();
     }
 });
-
-
-
-// History
