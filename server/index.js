@@ -4,6 +4,8 @@ const { GoogleGenerativeAI } = require("@google/generative-ai");
 const dotenv = require("dotenv");
 const { MongoClient, ServerApiVersion } = require("mongodb");
 
+
+
 dotenv.config();
 
 const app = express();
@@ -83,4 +85,35 @@ app.post("/api/chat", async (req, res) => {
 app.listen(PORT, () => {
     console.log(`Server is running on http://localhost:${PORT}`);
     connectDB(); // Connect to MongoDB when server starts
+});
+
+app.post("/api/saveUser", async (req, res) => {
+    const userInfo = req.body;
+
+    try {
+        const database = client.db("DEV-G5"); // replace with your database name
+        const usersCollection = database.collection("users"); // replace with your collection name
+
+        // Check if user already exists
+        const existingUser = await usersCollection.findOne({ googleId: userInfo.id });
+
+        if (existingUser) {
+            // User already exists, return existing user data
+            return res.status(200).json(existingUser);
+        } else {
+            // Insert new user
+            const newUser = {
+                googleId: userInfo.id,
+                name: userInfo.name,
+                email: userInfo.email,
+                imageUrl: userInfo.imageUrl,
+            };
+
+            const result = await usersCollection.insertOne(newUser);
+            res.status(201).json(result.ops[0]); // Return the newly created user
+        }
+    } catch (error) {
+        console.error("Error saving user info:", error);
+        res.status(500).json({ error: "Internal Server Error" });
+    }
 });

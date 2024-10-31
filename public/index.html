@@ -6,8 +6,9 @@
     <title>Chatbot DEV-G5</title>
     <link rel="stylesheet" href="../css/hompage.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/vs2015.min.css">
-    <script src="https://apis.google.com/js/platform.js" async defer></script>
-    <meta name="google-signin-client_id" content="YOUR_GOOGLE_CLIENT_ID.apps.googleusercontent.com">
+ <!-- Google API for Sign-In -->
+ <script src="https://apis.google.com/js/platform.js" async defer onload="onLoad()"></script>
+ <meta name="google-signin-client_id" content="932017646849-37s7h70tcggvtkidb8v1u9hipqaa0q1p.apps.googleusercontent.com">
 </head>
 <body>
     <header>
@@ -115,7 +116,36 @@
 
         
 
-        // chat history 
+        function handleGoogleSignIn() {
+            const auth2 = gapi.auth2.getAuthInstance();
+            if (!auth2) {
+                console.error("Google Auth instance not available.");
+                return;
+            }
+
+            auth2.signIn().then((user) => {
+                const profile = user.getBasicProfile();
+                const userInfo = {
+                    id: profile.getId(),
+                    name: profile.getName(),
+                    email: profile.getEmail(),
+                    imageUrl: profile.getImageUrl()
+                };
+
+                // Save user info to MongoDB via your backend
+                saveUserInfoToDB(userInfo);
+            }).catch((error) => {
+                console.error("Error signing in: ", error);
+            });
+        }
+
+        function onLoad() {
+            gapi.load('auth2', function() {
+                gapi.auth2.init({
+                    client_id: '932017646849-37s7h70tcggvtkidb8v1u9hipqaa0q1p.apps.googleusercontent.com'
+                });
+            });
+        }
         
         
     </script>
@@ -124,6 +154,7 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
     <script src="../js/main.js"></script>
+
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             hljs.configure({
