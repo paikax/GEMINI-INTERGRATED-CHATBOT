@@ -166,7 +166,7 @@ function parseMarkdown(text) {
 }
 
  
-async function simulateTyping(container, content, typingSpeed = 30) {
+async function simulateTyping(container, content, typingSpeed = 10) {
     const messageContent = document.createElement('div');
     messageContent.classList.add('message-content');
     container.appendChild(messageContent);
@@ -366,6 +366,8 @@ function copyToClipboard(text, button) {
         }
     }
 }
+
+
 
 function readAloud(text) {
     const synth = window.speechSynthesis;

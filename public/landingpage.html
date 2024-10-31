@@ -6,12 +6,13 @@
     <title>Basic Home Page</title>
     <link rel="stylesheet" href="../css/landingpage.css">
     <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css">
+    <meta name="google-signin-client_id" content="932017646849-ulovcd8ed6v4o43bn0kqjab5gg28pvcr.apps.googleusercontent.com">
 </head>
-<body>
+<body onload="onLoad()">
     <header>
         <nav>
             <ul>
-                <li><button class="login-button">Login</button></li>
+                <li><button class="login-button" onclick="signIn()">Login with Google</button></li>
                 <li><img src="../src/img/robot-assistant.png" alt="" class="robot-image"></li>
                 <h2 class="logo-heading">DevG5</h2>
             </ul>
@@ -63,5 +64,9 @@
             }
         });
     </script>
+
+    
+    <script src="../js/utils/googleLogin.js"></script>
+    <script src="https://apis.google.com/js/platform.js" async defer></script>
 </body>
 </html>
