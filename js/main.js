@@ -512,6 +512,17 @@ document.getElementById('sendButton').addEventListener('click', async function()
     const userInput = document.getElementById('userInput');
     const message = userInput.value.trim();
 
+    const messageElement = document.createElement('div');
+        document.getElementById('chatMessages').appendChild(messageElement);
+        const loadingAnimation = document.createElement('dotlottie-player');
+        loadingAnimation.src = "https://lottie.host/2058cb37-e662-47ef-b20b-b33972803913/QayEIxoE9G.json";
+        loadingAnimation.style.width = "50px";
+        loadingAnimation.style.height = "50px";
+        loadingAnimation.setAttribute("background", "transparent");
+        loadingAnimation.setAttribute("loop", "true");
+        loadingAnimation.setAttribute("autoplay", "true");
+        messageElement.appendChild(loadingAnimation);
+
     if (message !== "") {
         appendMessage(message, 'user');
         userInput.value = '';
@@ -531,11 +542,15 @@ document.getElementById('sendButton').addEventListener('click', async function()
                 }),
             });
 
-            await handleBotResponse(response);
+            messageElement.removeChild(loadingAnimation);
+            await handleBotResponse(response); 
         } catch (error) {
             console.error('Error:', error);
             appendMessage('Sorry, there was an error.', 'bot');
+            messageElement.removeChild(loadingAnimation); 
         }
+
+        messageElement.scrollIntoView({ behavior: 'smooth' });
     }
 });
 
