@@ -7,6 +7,9 @@
     <title>Chatbot DEV-G5</title>
     <link rel="stylesheet" href="../css/hompage.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/vs2015.min.css">
+    <!-- Google API for Sign-In -->
+    <script src="https://apis.google.com/js/platform.js" async defer onload="onLoad()"></script>
+    <meta name="google-signin-client_id" content="932017646849-37s7h70tcggvtkidb8v1u9hipqaa0q1p.apps.googleusercontent.com">
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
         integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg=="
@@ -27,7 +30,6 @@
                         <i class="fa-regular fa-sun"></i>
                     </button>
                     <i class="fa-solid fa-globe"></i>
-                    
                     <img onclick="myFunction()" class="dropbtn"
                         src="https://png.pngtree.com/png-clipart/20200224/original/pngtree-cartoon-color-simple-male-avatar-png-image_5230557.jpg"
                         alt="">
@@ -54,7 +56,6 @@
             </div>
         </div>
     </header>
-    <!-- popup profile -->
     <div class="profile" id="popup_profile">
         <button class="profile-btnClose" onclick="closePopup()">
             <i class="fa-solid fa-xmark"></i>
@@ -85,19 +86,17 @@
                     </select>
                 </div>
             </div>
-
         </div>
         <button class="profile-btnSubmit">
             Submit
         </button>
-
     </div>
     <main class="chat-container">
         <aside class="chat-history">
             <div class="button-container">
-                <button class="add-button ">New Chat</button>
+                <button class="add-button" id="newChatButton">New chat</button>
             </div>
-            <ul class="chat-list">
+            <ul class="chat-list" id="chatList">
             </ul>
             <button class="toggle-button">
                 <i class="fa-solid fa-bars"></i>
@@ -112,7 +111,7 @@
                     </div>
                 </div>
                 <div class="input-container">
-                    <input type="text" id="userInput" placeholder="How Can I Help You?" class="chat-input ">
+                    <input type="text" id="userInput" placeholder="What can I help you?" class="chat-input">
                     <button class="input-void">
                         <i class="fa-solid fa-microphone"></i>
                     </button>
@@ -141,7 +140,39 @@
                 toggleIcon.alt = 'Hiện lịch sử chat';
             }
         });
+        
+        function handleGoogleSignIn() {
+            const auth2 = gapi.auth2.getAuthInstance();
+            if (!auth2) {
+                console.error("Google Auth instance not available.");
+                return;
+            }
 
+            auth2.signIn().then((user) => {
+                const profile = user.getBasicProfile();
+                const userInfo = {
+                    id: profile.getId(),
+                    name: profile.getName(),
+                    email: profile.getEmail(),
+                    imageUrl: profile.getImageUrl()
+                };
+
+                // Save user info to MongoDB via your backend
+                saveUserInfoToDB(userInfo);
+            }).catch((error) => {
+                console.error("Error signing in: ", error);
+            });
+        }
+
+        function onLoad() {
+            gapi.load('auth2', function() {
+                gapi.auth2.init({
+                    client_id: '932017646849-37s7h70tcggvtkidb8v1u9hipqaa0q1p.apps.googleusercontent.com'
+                });
+            });
+        }
+        
+        
     </script>
     <script src="https://unpkg.com/@dotlottie/player-component@latest/dist/dotlottie-player.mjs" type="module"></script>
 

@@ -1,3 +1,162 @@
+
+const conversationHistory = [];
+let currentChatId = null;
+const chatList = document.getElementById('chatList');
+const newChatButton = document.getElementById('newChatButton');
+
+
+// Conversation list
+function generateChatId() {
+    return 'chat_' + Date.now();
+}
+
+// Function to save chat history to local storage
+function saveChatToLocalStorage(chatId, conversation) {
+    const allChats = JSON.parse(localStorage.getItem('allChats') || '{}');
+    allChats[chatId] = {
+        id: chatId,
+        title: getConversationTitle(conversation),
+        messages: conversation,
+        timestamp: Date.now()
+    };
+    localStorage.setItem('allChats', JSON.stringify(allChats));
+}
+
+// Function to get a title from the first user message
+function getConversationTitle(conversation) {
+    const firstUserMessage = conversation.find(msg => msg.role === 'user');
+    if (firstUserMessage) {
+        const title = firstUserMessage.content.slice(0, 30);
+        return title.length < firstUserMessage.content.length ? title + '...' : title;
+    }
+    return 'New Chat';
+}
+
+// Function to load chat history from local storage
+function loadChatsFromLocalStorage() {
+    return JSON.parse(localStorage.getItem('allChats') || '{}');
+}
+
+// Function to render chat list
+function renderChatList() {
+    chatList.innerHTML = '';
+    const allChats = loadChatsFromLocalStorage();
+    
+    Object.values(allChats)
+        .sort((a, b) => b.timestamp - a.timestamp)
+        .forEach(chat => {
+            const chatElement = document.createElement('li');
+            chatElement.classList.add('chat-item');
+            if (chat.id === currentChatId) {
+                chatElement.classList.add('active');
+            }
+            
+            chatElement.innerHTML = `
+                <span class="chat-title">${chat.title}</span>
+                <button class="delete-chat-btn">×</button>
+            `;
+            
+            chatElement.addEventListener('click', (e) => {
+                if (!e.target.classList.contains('delete-chat-btn')) {
+                    loadChat(chat.id);
+                }
+            });
+            
+            chatElement.querySelector('.delete-chat-btn').addEventListener('click', (e) => {
+                e.stopPropagation();
+                deleteChat(chat.id);
+            });
+            
+            chatList.appendChild(chatElement);
+        });
+}
+
+function loadChat(chatId) {
+    const allChats = loadChatsFromLocalStorage();
+    const chat = allChats[chatId];
+    if (chat) {
+        currentChatId = chatId;
+        conversationHistory.length = 0;
+        conversationHistory.push(...chat.messages);
+        
+        const chatMessages = document.getElementById('chatMessages');
+        chatMessages.innerHTML = '';
+        
+        chat.messages.forEach(message => {
+            // Create wrapper for message alignment
+            const messageWrapper = document.createElement('div');
+            messageWrapper.classList.add('message-wrapper');
+            
+            const messageElement = document.createElement('div');
+            messageElement.classList.add('chat-message', 
+                message.role === 'user' ? 'user-message' : 'bot-message');
+            
+            if (message.role === 'user') {
+                messageElement.textContent = message.content;
+            } else {
+                const messageContainer = document.createElement('div');
+                messageContainer.classList.add('message-content');
+                
+                const segments = parseContent(message.content);
+                
+                segments.forEach(segment => {
+                    if (segment.type === 'code') {
+                        const codeContainer = createCodeSnippet(
+                            segment.language || 'plaintext',
+                            segment.content.trim()
+                        );
+                        messageContainer.appendChild(codeContainer);
+                        
+                        const codeElement = codeContainer.querySelector('code');
+                        if (codeElement) {
+                            hljs.highlightElement(codeElement);
+                        }
+                    } else {
+                        const textBlock = document.createElement('div');
+                        textBlock.classList.add('text-block');
+                        textBlock.innerHTML = parseMarkdown(segment.content);
+                        messageContainer.appendChild(textBlock);
+                    }
+                });
+                
+                messageElement.appendChild(messageContainer);
+                addReadAloudAndCopyButtons(messageElement, message.content);
+            }
+            
+            messageWrapper.appendChild(messageElement);
+            chatMessages.appendChild(messageWrapper);
+        });
+        
+        renderChatList();
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
+}
+
+
+// Function to delete a chat
+function deleteChat(chatId) {
+    const allChats = loadChatsFromLocalStorage();
+    delete allChats[chatId];
+    localStorage.setItem('allChats', JSON.stringify(allChats));
+    
+    if (currentChatId === chatId) {
+        currentChatId = null;
+        conversationHistory.length = 0;
+        document.getElementById('chatMessages').innerHTML = '';
+    }
+    
+    renderChatList();
+}
+
+// Function to start a new chat
+function startNewChat() {
+    currentChatId = generateChatId();
+    conversationHistory.length = 0;
+    document.getElementById('chatMessages').innerHTML = '';
+    renderChatList();
+}
+
+
 function parseMarkdown(text) {
     // Handle bold text with ** or __
     text = text.replace(/\*\*(.*?)\*\*|__(.*?)__/g, '<span class="emphasized">$1$2</span>');
@@ -181,13 +340,32 @@ function addReadAloudAndCopyButtons(messageElement, text) {
 }
 
 function copyToClipboard(text, button) {
-    navigator.clipboard.writeText(text).then(() => {
-        button.textContent = "✅ Copied!";
-        setTimeout(() => (button.textContent = "📋 Copy"), 2000); // Reset text after 2 seconds
-    }).catch(err => {
-        console.error('Failed to copy text: ', err);
-        alert("Failed to copy text.");
-    });
+    // Check if the Clipboard API is supported
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(() => {
+            button.textContent = "✅ Copied!";
+            setTimeout(() => (button.textContent = "📋 Copy"), 2000); // Reset text after 2 seconds
+        }).catch(err => {
+            console.error('Failed to copy text: ', err);
+            alert("Failed to copy text.");
+        });
+    } else {
+        // Fallback for browsers that do not support the Clipboard API
+        const textarea = document.createElement("textarea");
+        textarea.value = text;
+        document.body.appendChild(textarea);
+        textarea.select();
+        try {
+            document.execCommand("copy");
+            button.textContent = "✅ Copied!";
+            setTimeout(() => (button.textContent = "📋 Copy"), 2000); // Reset text after 2 seconds
+        } catch (err) {
+            console.error('Failed to copy text: ', err);
+            alert("Failed to copy text.");
+        } finally {
+            document.body.removeChild(textarea); // Clean up
+        }
+    }
 }
 
 function readAloud(text) {
@@ -195,6 +373,10 @@ function readAloud(text) {
     const utterance = new SpeechSynthesisUtterance(text);
     utterance.rate = 1.25; // Adjust the rate of speech if needed
     synth.speak(utterance);
+}
+
+function saveToLocalStorage(history = []) {
+    localStorage.setItem('conversation', JSON.stringify(history));
 }
 
 async function handleBotResponse(response) {
@@ -215,29 +397,116 @@ async function handleBotResponse(response) {
 
         messageElement.scrollIntoView({ behavior: 'smooth' });
         addReadAloudAndCopyButtons(messageElement, combinedResponse);
+
+         // Add bot response to history
+         conversationHistory.push({ role: 'bot', content: combinedResponse, datetime: new Date().toISOString() });
+
+         // Save to local storage
+         saveToLocalStorage(conversationHistory);
     } catch (error) {
         console.error('Error parsing response:', error);
         appendMessage("Sorry, there was an error retrieving the response.", 'bot');
+    }
+
+    if (currentChatId) {
+        saveChatToLocalStorage(currentChatId, conversationHistory);
+        renderChatList();
     }
 }
 
 function appendMessage(message, type) {
     const chatMessages = document.getElementById('chatMessages');
+    
+    // Create wrapper for message alignment
+    const messageWrapper = document.createElement('div');
+    messageWrapper.classList.add('message-wrapper');
+    
+    // Create message element
     const messageElement = document.createElement('div');
-    messageElement.classList.add('chat-message');
+    messageElement.classList.add('chat-message', `${type}-message`);
 
     if (type === 'user') {
-        messageElement.classList.add('user-message');
         messageElement.textContent = message;
     } else {
-        messageElement.classList.add('bot-message');
-        const parsedMessage = parseMarkdown(message);
-        messageElement.innerHTML = parsedMessage;
+        const messageContainer = document.createElement('div');
+        messageContainer.classList.add('message-content');
+        
+        const segments = parseContent(message);
+        
+        segments.forEach(segment => {
+            if (segment.type === 'code') {
+                const codeContainer = createCodeSnippet(
+                    segment.language || 'plaintext',
+                    segment.content.trim()
+                );
+                messageContainer.appendChild(codeContainer);
+                
+                const codeElement = codeContainer.querySelector('code');
+                if (codeElement) {
+                    hljs.highlightElement(codeElement);
+                }
+            } else {
+                const textBlock = document.createElement('div');
+                textBlock.classList.add('text-block');
+                textBlock.innerHTML = parseMarkdown(segment.content);
+                messageContainer.appendChild(textBlock);
+            }
+        });
+        
+        messageElement.appendChild(messageContainer);
+        addReadAloudAndCopyButtons(messageElement, message);
     }
 
-    chatMessages.appendChild(messageElement);
-    messageElement.scrollIntoView({ behavior: 'smooth' });
+    messageWrapper.appendChild(messageElement);
+    chatMessages.appendChild(messageWrapper);
+    messageWrapper.scrollIntoView({ behavior: 'smooth' });
+
+    if (currentChatId) {
+        saveChatToLocalStorage(currentChatId, conversationHistory);
+        renderChatList();
+    }
 }
+
+
+// Optional: Add a function to clean up code blocks in stored messages
+function sanitizeStoredMessages() {
+    const allChats = loadChatsFromLocalStorage();
+    let hasChanges = false;
+
+
+    sanitizeStoredMessages();
+
+    Object.keys(allChats).forEach(chatId => {
+        const chat = allChats[chatId];
+        chat.messages = chat.messages.map(message => {
+            if (message.role === 'bot') {
+                const cleanContent = ensureCodeBlockFormat(message.content);
+                if (cleanContent !== message.content) {
+                    hasChanges = true;
+                    return { ...message, content: cleanContent };
+                }
+            }
+            return message;
+        });
+    });
+
+    if (hasChanges) {
+        localStorage.setItem('allChats', JSON.stringify(allChats));
+    }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    // Set up new chat button
+    newChatButton.addEventListener('click', startNewChat);
+    
+    // Initialize with a new chat if none exists
+    if (!currentChatId) {
+        startNewChat();
+    }
+    
+    // Render existing chats
+    renderChatList();
+});
 
 // Event listeners
 // document.getElementById('sendButton').addEventListener('click', async function () {
@@ -268,13 +537,8 @@ document.getElementById('sendButton').addEventListener('click', async function()
     const userInput = document.getElementById('userInput');
     const message = userInput.value.trim();
 
-    if (message !== "") {
-        appendMessage(message, 'user');
-        userInput.value = '';
-
-        const messageElement = document.createElement('div');
+    const messageElement = document.createElement('div');
         document.getElementById('chatMessages').appendChild(messageElement);
-
         const loadingAnimation = document.createElement('dotlottie-player');
         loadingAnimation.src = "https://lottie.host/2058cb37-e662-47ef-b20b-b33972803913/QayEIxoE9G.json";
         loadingAnimation.style.width = "50px";
@@ -282,8 +546,14 @@ document.getElementById('sendButton').addEventListener('click', async function()
         loadingAnimation.setAttribute("background", "transparent");
         loadingAnimation.setAttribute("loop", "true");
         loadingAnimation.setAttribute("autoplay", "true");
-
         messageElement.appendChild(loadingAnimation);
+
+    if (message !== "") {
+        appendMessage(message, 'user');
+        userInput.value = '';
+
+        // Add user message to history
+        conversationHistory.push({ role: 'user', content: message, datetime: new Date().toISOString() });
 
         try {
             const response = await fetch('http://localhost:3000/api/chat', {
@@ -291,7 +561,10 @@ document.getElementById('sendButton').addEventListener('click', async function()
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ input: message }),
+                body: JSON.stringify({ 
+                    input: message, 
+                    history: conversationHistory // Send history as part of the request
+                }),
             });
 
             messageElement.removeChild(loadingAnimation);
@@ -311,3 +584,7 @@ document.getElementById('userInput').addEventListener('keypress', function (e) {
         document.getElementById('sendButton').click();
     }
 });
+
+
+
+// History
