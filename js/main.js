@@ -1,5 +1,120 @@
 
 const conversationHistory = [];
+let currentChatId = null;
+const chatList = document.getElementById('chatList');
+const newChatButton = document.getElementById('newChatButton');
+
+
+// Conversation list
+function generateChatId() {
+    return 'chat_' + Date.now();
+}
+
+// Function to save chat history to local storage
+function saveChatToLocalStorage(chatId, conversation) {
+    const allChats = JSON.parse(localStorage.getItem('allChats') || '{}');
+    allChats[chatId] = {
+        id: chatId,
+        title: getConversationTitle(conversation),
+        messages: conversation,
+        timestamp: Date.now()
+    };
+    localStorage.setItem('allChats', JSON.stringify(allChats));
+}
+
+// Function to get a title from the first user message
+function getConversationTitle(conversation) {
+    const firstUserMessage = conversation.find(msg => msg.role === 'user');
+    if (firstUserMessage) {
+        const title = firstUserMessage.content.slice(0, 30);
+        return title.length < firstUserMessage.content.length ? title + '...' : title;
+    }
+    return 'New Chat';
+}
+
+// Function to load chat history from local storage
+function loadChatsFromLocalStorage() {
+    return JSON.parse(localStorage.getItem('allChats') || '{}');
+}
+
+// Function to render chat list
+function renderChatList() {
+    chatList.innerHTML = '';
+    const allChats = loadChatsFromLocalStorage();
+    
+    Object.values(allChats)
+        .sort((a, b) => b.timestamp - a.timestamp)
+        .forEach(chat => {
+            const chatElement = document.createElement('li');
+            chatElement.classList.add('chat-item');
+            if (chat.id === currentChatId) {
+                chatElement.classList.add('active');
+            }
+            
+            chatElement.innerHTML = `
+                <span class="chat-title">${chat.title}</span>
+                <button class="delete-chat-btn">×</button>
+            `;
+            
+            chatElement.addEventListener('click', (e) => {
+                if (!e.target.classList.contains('delete-chat-btn')) {
+                    loadChat(chat.id);
+                }
+            });
+            
+            chatElement.querySelector('.delete-chat-btn').addEventListener('click', (e) => {
+                e.stopPropagation();
+                deleteChat(chat.id);
+            });
+            
+            chatList.appendChild(chatElement);
+        });
+}
+
+// Function to load a specific chat
+function loadChat(chatId) {
+    const allChats = loadChatsFromLocalStorage();
+    const chat = allChats[chatId];
+    if (chat) {
+        currentChatId = chatId;
+        conversationHistory.length = 0;
+        conversationHistory.push(...chat.messages);
+        
+        // Clear and reload messages in the chat window
+        const chatMessages = document.getElementById('chatMessages');
+        chatMessages.innerHTML = '';
+        
+        chat.messages.forEach(message => {
+            appendMessage(message.content, message.role);
+        });
+        
+        renderChatList(); // Update active state in the list
+    }
+}
+
+// Function to delete a chat
+function deleteChat(chatId) {
+    const allChats = loadChatsFromLocalStorage();
+    delete allChats[chatId];
+    localStorage.setItem('allChats', JSON.stringify(allChats));
+    
+    if (currentChatId === chatId) {
+        currentChatId = null;
+        conversationHistory.length = 0;
+        document.getElementById('chatMessages').innerHTML = '';
+    }
+    
+    renderChatList();
+}
+
+// Function to start a new chat
+function startNewChat() {
+    currentChatId = generateChatId();
+    conversationHistory.length = 0;
+    document.getElementById('chatMessages').innerHTML = '';
+    renderChatList();
+}
+
 
 function parseMarkdown(text) {
     // Handle bold text with ** or __
@@ -250,6 +365,11 @@ async function handleBotResponse(response) {
         console.error('Error parsing response:', error);
         appendMessage("Sorry, there was an error retrieving the response.", 'bot');
     }
+
+    if (currentChatId) {
+        saveChatToLocalStorage(currentChatId, conversationHistory);
+        renderChatList();
+    }
 }
 
 function appendMessage(message, type) {
@@ -277,7 +397,26 @@ function appendMessage(message, type) {
 
     // Append the parentDiv to the chatMessages container
     chatMessages.appendChild(parentDiv);
+
+    if (currentChatId) {
+        saveChatToLocalStorage(currentChatId, conversationHistory);
+        renderChatList(); // Update the chat list to show new title
+    }
+    
 }
+
+document.addEventListener('DOMContentLoaded', () => {
+    // Set up new chat button
+    newChatButton.addEventListener('click', startNewChat);
+    
+    // Initialize with a new chat if none exists
+    if (!currentChatId) {
+        startNewChat();
+    }
+    
+    // Render existing chats
+    renderChatList();
+});
 
 // Event listeners
 document.getElementById('sendButton').addEventListener('click', async function() {
