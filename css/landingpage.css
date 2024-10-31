@@ -167,3 +167,27 @@ footer {
     font-size: 14px; /* Giảm kích thước chữ */
     border-top: 1px solid #ccc; /* Đường viền trên để phân cách */
 }
+
+.chat-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px;
+    cursor: pointer;
+    border-bottom: 1px solid #eee;
+}
+
+.chat-item.active {
+    background-color: #e6f3ff;
+}
+
+.delete-chat-button {
+    opacity: 0.5;
+    border: none;
+    background: none;
+    cursor: pointer;
+}
+
+.delete-chat-button:hover {
+    opacity: 1;
+}

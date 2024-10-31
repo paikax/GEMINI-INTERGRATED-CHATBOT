@@ -1,5 +1,6 @@
 
 const conversationHistory = [];
+
 function parseMarkdown(text) {
     // Handle bold text with ** or __
     text = text.replace(/\*\*(.*?)\*\*|__(.*?)__/g, '<span class="emphasized">$1$2</span>');
@@ -182,13 +183,32 @@ function addReadAloudAndCopyButtons(messageElement, text) {
 }
 
 function copyToClipboard(text, button) {
-    navigator.clipboard.writeText(text).then(() => {
-        button.textContent = "✅ Copied!";
-        setTimeout(() => (button.textContent = "📋 Copy"), 2000); // Reset text after 2 seconds
-    }).catch(err => {
-        console.error('Failed to copy text: ', err);
-        alert("Failed to copy text.");
-    });
+    // Check if the Clipboard API is supported
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(() => {
+            button.textContent = "✅ Copied!";
+            setTimeout(() => (button.textContent = "📋 Copy"), 2000); // Reset text after 2 seconds
+        }).catch(err => {
+            console.error('Failed to copy text: ', err);
+            alert("Failed to copy text.");
+        });
+    } else {
+        // Fallback for browsers that do not support the Clipboard API
+        const textarea = document.createElement("textarea");
+        textarea.value = text;
+        document.body.appendChild(textarea);
+        textarea.select();
+        try {
+            document.execCommand("copy");
+            button.textContent = "✅ Copied!";
+            setTimeout(() => (button.textContent = "📋 Copy"), 2000); // Reset text after 2 seconds
+        } catch (err) {
+            console.error('Failed to copy text: ', err);
+            alert("Failed to copy text.");
+        } finally {
+            document.body.removeChild(textarea); // Clean up
+        }
+    }
 }
 
 function readAloud(text) {
@@ -196,6 +216,10 @@ function readAloud(text) {
     const utterance = new SpeechSynthesisUtterance(text);
     utterance.rate = 1.25; // Adjust the rate of speech if needed
     synth.speak(utterance);
+}
+
+function saveToLocalStorage(history = []) {
+    localStorage.setItem('conversation', JSON.stringify(history));
 }
 
 async function handleBotResponse(response) {
@@ -219,6 +243,9 @@ async function handleBotResponse(response) {
 
          // Add bot response to history
          conversationHistory.push({ role: 'bot', content: combinedResponse });
+
+         // Save to local storage
+         saveToLocalStorage(conversationHistory);
     } catch (error) {
         console.error('Error parsing response:', error);
         appendMessage("Sorry, there was an error retrieving the response.", 'bot');
@@ -263,7 +290,6 @@ document.getElementById('sendButton').addEventListener('click', async function()
 
         // Add user message to history
         conversationHistory.push({ role: 'user', content: message });
-        console.log('Conversation History:', conversationHistory);
 
         try {
             const response = await fetch('http://localhost:3000/api/chat', {
@@ -290,3 +316,7 @@ document.getElementById('userInput').addEventListener('keypress', function(e) {
         document.getElementById('sendButton').click();
     }
 });
+
+
+
+// History
