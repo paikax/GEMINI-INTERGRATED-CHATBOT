@@ -52,7 +52,7 @@ async function connectDB() {
 app.post("/api/chat", async (req, res) => {
     const userInput = req.body.input;
     const history = req.body.history || [];
-    const model = genAI.getGenerativeModel({ model: "gemini-pro" });
+    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
     const start = Date.now();
     let responseText = ""; // Initialize an empty string to accumulate responses
 

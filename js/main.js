@@ -71,7 +71,6 @@ function renderChatList() {
         });
 }
 
-// Function to load a specific chat
 function loadChat(chatId) {
     const allChats = loadChatsFromLocalStorage();
     const chat = allChats[chatId];
@@ -80,17 +79,59 @@ function loadChat(chatId) {
         conversationHistory.length = 0;
         conversationHistory.push(...chat.messages);
         
-        // Clear and reload messages in the chat window
         const chatMessages = document.getElementById('chatMessages');
         chatMessages.innerHTML = '';
         
         chat.messages.forEach(message => {
-            appendMessage(message.content, message.role);
+            // Create wrapper for message alignment
+            const messageWrapper = document.createElement('div');
+            messageWrapper.classList.add('message-wrapper');
+            
+            const messageElement = document.createElement('div');
+            messageElement.classList.add('chat-message', 
+                message.role === 'user' ? 'user-message' : 'bot-message');
+            
+            if (message.role === 'user') {
+                messageElement.textContent = message.content;
+            } else {
+                const messageContainer = document.createElement('div');
+                messageContainer.classList.add('message-content');
+                
+                const segments = parseContent(message.content);
+                
+                segments.forEach(segment => {
+                    if (segment.type === 'code') {
+                        const codeContainer = createCodeSnippet(
+                            segment.language || 'plaintext',
+                            segment.content.trim()
+                        );
+                        messageContainer.appendChild(codeContainer);
+                        
+                        const codeElement = codeContainer.querySelector('code');
+                        if (codeElement) {
+                            hljs.highlightElement(codeElement);
+                        }
+                    } else {
+                        const textBlock = document.createElement('div');
+                        textBlock.classList.add('text-block');
+                        textBlock.innerHTML = parseMarkdown(segment.content);
+                        messageContainer.appendChild(textBlock);
+                    }
+                });
+                
+                messageElement.appendChild(messageContainer);
+                addReadAloudAndCopyButtons(messageElement, message.content);
+            }
+            
+            messageWrapper.appendChild(messageElement);
+            chatMessages.appendChild(messageWrapper);
         });
         
-        renderChatList(); // Update active state in the list
+        renderChatList();
+        chatMessages.scrollTop = chatMessages.scrollHeight;
     }
 }
+
 
 // Function to delete a chat
 function deleteChat(chatId) {
@@ -357,7 +398,7 @@ async function handleBotResponse(response) {
         addReadAloudAndCopyButtons(messageElement, combinedResponse);
 
          // Add bot response to history
-         conversationHistory.push({ role: 'bot', content: combinedResponse });
+         conversationHistory.push({ role: 'bot', content: combinedResponse, datetime: new Date().toISOString() });
 
          // Save to local storage
          saveToLocalStorage(conversationHistory);
@@ -375,34 +416,82 @@ async function handleBotResponse(response) {
 function appendMessage(message, type) {
     const chatMessages = document.getElementById('chatMessages');
     
-    // Create a new parent div
-    const parentDiv = document.createElement('div');
-    parentDiv.classList.add('message-wrapper'); // Optional: Add a class for styling
-
-    // Create the message element
+    // Create wrapper for message alignment
+    const messageWrapper = document.createElement('div');
+    messageWrapper.classList.add('message-wrapper');
+    
+    // Create message element
     const messageElement = document.createElement('div');
-    messageElement.classList.add('chat-message');
+    messageElement.classList.add('chat-message', `${type}-message`);
 
     if (type === 'user') {
-        messageElement.classList.add('user-message');
         messageElement.textContent = message;
     } else {
-        messageElement.classList.add('bot-message');
-        const parsedMessage = parseMarkdown(message);
-        messageElement.innerHTML = parsedMessage;
+        const messageContainer = document.createElement('div');
+        messageContainer.classList.add('message-content');
+        
+        const segments = parseContent(message);
+        
+        segments.forEach(segment => {
+            if (segment.type === 'code') {
+                const codeContainer = createCodeSnippet(
+                    segment.language || 'plaintext',
+                    segment.content.trim()
+                );
+                messageContainer.appendChild(codeContainer);
+                
+                const codeElement = codeContainer.querySelector('code');
+                if (codeElement) {
+                    hljs.highlightElement(codeElement);
+                }
+            } else {
+                const textBlock = document.createElement('div');
+                textBlock.classList.add('text-block');
+                textBlock.innerHTML = parseMarkdown(segment.content);
+                messageContainer.appendChild(textBlock);
+            }
+        });
+        
+        messageElement.appendChild(messageContainer);
+        addReadAloudAndCopyButtons(messageElement, message);
     }
 
-    // Append the messageElement to the parentDiv
-    parentDiv.appendChild(messageElement);
-
-    // Append the parentDiv to the chatMessages container
-    chatMessages.appendChild(parentDiv);
+    messageWrapper.appendChild(messageElement);
+    chatMessages.appendChild(messageWrapper);
+    messageWrapper.scrollIntoView({ behavior: 'smooth' });
 
     if (currentChatId) {
         saveChatToLocalStorage(currentChatId, conversationHistory);
-        renderChatList(); // Update the chat list to show new title
+        renderChatList();
     }
-    
+}
+
+
+// Optional: Add a function to clean up code blocks in stored messages
+function sanitizeStoredMessages() {
+    const allChats = loadChatsFromLocalStorage();
+    let hasChanges = false;
+
+
+    sanitizeStoredMessages();
+
+    Object.keys(allChats).forEach(chatId => {
+        const chat = allChats[chatId];
+        chat.messages = chat.messages.map(message => {
+            if (message.role === 'bot') {
+                const cleanContent = ensureCodeBlockFormat(message.content);
+                if (cleanContent !== message.content) {
+                    hasChanges = true;
+                    return { ...message, content: cleanContent };
+                }
+            }
+            return message;
+        });
+    });
+
+    if (hasChanges) {
+        localStorage.setItem('allChats', JSON.stringify(allChats));
+    }
 }
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -428,7 +517,7 @@ document.getElementById('sendButton').addEventListener('click', async function()
         userInput.value = '';
 
         // Add user message to history
-        conversationHistory.push({ role: 'user', content: message });
+        conversationHistory.push({ role: 'user', content: message, datetime: new Date().toISOString() });
 
         try {
             const response = await fetch('http://localhost:3000/api/chat', {
