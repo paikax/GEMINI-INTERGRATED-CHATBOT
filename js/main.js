@@ -1,3 +1,9 @@
+function parseMarkdown(text) {
+    // Handle bold text with ** or __
+    text = text.replace(/\*\*(.*?)\*\*|__(.*?)__/g, '<span class="emphasized">$1$2</span>');
+    return text;
+}
+
 async function simulateTyping(container, content, typingSpeed = 30) {
     const messageContent = document.createElement('div');
     messageContent.classList.add('message-content');
@@ -130,6 +136,41 @@ function createCodeSnippet(language, code) {
     return container;
 }
 
+function addReadAloudAndCopyButtons(messageElement, text) {
+    // Create the Read Aloud button
+    const readButton = document.createElement('button');
+    readButton.classList.add('read-aloud-button');
+    readButton.textContent = "🔊";
+    readButton.addEventListener('click', () => readAloud(text));
+    
+    // Create the Copy button
+    const copyButton = document.createElement('button');
+    copyButton.classList.add('copy-button');
+    copyButton.textContent = "📋";
+    copyButton.addEventListener('click', () => copyToClipboard(text, copyButton));
+    
+    // Append both buttons to the message element
+    messageElement.appendChild(readButton);
+    messageElement.appendChild(copyButton);
+}
+
+function copyToClipboard(text, button) {
+    navigator.clipboard.writeText(text).then(() => {
+        button.textContent = "✅ Copied!";
+        setTimeout(() => (button.textContent = "📋 Copy"), 2000); // Reset text after 2 seconds
+    }).catch(err => {
+        console.error('Failed to copy text: ', err);
+        alert("Failed to copy text.");
+    });
+}
+
+function readAloud(text) {
+    const synth = window.speechSynthesis;
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.rate = 1.25; // Adjust the rate of speech if needed
+    synth.speak(utterance);
+}
+
 async function handleBotResponse(response) {
     const text = await response.text();
     console.log('Raw Response:', text);
@@ -144,11 +185,15 @@ async function handleBotResponse(response) {
         messageElement.classList.add('chat-message', 'bot-message');
         document.getElementById('chatMessages').appendChild(messageElement);
 
+        // // Add "Read Aloud" button
+        // const readButton = document.createElement('button');
+        // readButton.textContent = "🔊";
+        // readButton.classList.add('read-aloud-button');
+        // readButton.addEventListener('click', () => readAloud(combinedResponse));
+        // messageElement.appendChild(readButton);
+
         await simulateTyping(messageElement, combinedResponse);
         messageElement.scrollIntoView({ behavior: 'smooth' });
-
-        // Show quick replies related to the response
-        showQuickReplies(['Tell me more', 'Give me a solution', 'Make a new chat']);
     } catch (error) {
         console.error('Error parsing response:', error);
         appendMessage("Sorry, there was an error retrieving the response.", 'bot');
