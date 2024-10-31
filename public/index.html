@@ -6,78 +6,120 @@
     <title>Chatbot DEV-G5</title>
     <link rel="stylesheet" href="../css/hompage.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/vs2015.min.css">
+    <!-- Google API for Sign-In -->
+    <script src="https://apis.google.com/js/platform.js" async defer onload="onLoad()"></script>
+    <meta name="google-signin-client_id" content="932017646849-37s7h70tcggvtkidb8v1u9hipqaa0q1p.apps.googleusercontent.com">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
+        integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
 </head>
 <body>
     <header>
-        <nav>
-            <ul>
-                <li><button class="login-button">Login</button></li>
-                <li><img src="../src/img/robot-assistant.png" alt="" class="robot-image"></li>
-                <h2 class="logo-heading">DevG5</h2>
-            </ul>
-        </nav>
+        <div class="navbar">
+            <div class="navbar-logo">
+                <img src="../src/img/robot-assistant.png" alt="">
+                <h2>DevG5</h2>
+            </div>
+            <div class="navbar-profile">
+                <div class="navbar-option">
+                    <button id="theme-switch">
+                        <i class="fa-regular fa-moon"></i>
+                        <i class="fa-regular fa-sun"></i>
+                    </button>
+                    <i class="fa-solid fa-globe"></i>
+                    <img onclick="myFunction()" class="dropbtn"
+                        src="https://png.pngtree.com/png-clipart/20200224/original/pngtree-cartoon-color-simple-male-avatar-png-image_5230557.jpg"
+                        alt="">
+                </div>
+                <div class="profile-dropdown">
+                    <div class="dropdown-content" id="myDropdown">
+                        <div class="dropdown-item">
+                            <button onclick="openPopup()">
+                                My profile
+                            </button>
+                        </div>
+                        <div class="dropdown-item">
+                            <button>
+                                Setting
+                            </button>
+                        </div>
+                        <div class="dropdown-item">
+                            <button>
+                                Logout
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </header>
+    <div class="profile" id="popup_profile">
+        <button class="profile-btnClose" onclick="closePopup()">
+            <i class="fa-solid fa-xmark"></i>
+        </button>
+        <div class="profile-content">
+            <div class="profile-info">
+                <div class="profile-avatar">
+                    <img id="avatarImage"
+                        src="https://png.pngtree.com/png-clipart/20200224/original/pngtree-cartoon-color-simple-male-avatar-png-image_5230557.jpg"
+                        alt="Profile Avatar">
+                    <form action="/upload" method="post" enctype="multipart/form-data">
+                        <input type="file" name="image" accept="image/*" onchange="previewImage(event)">
+                    </form>
+                </div>
+                <div class="profile-item">
+                    <h3>Full Name:</h3>
+                    <input type="text" name="" id="" placeholder="Nguyen Van Phuoc">
+                </div>
+                <div class="profile-item">
+                    <h3>Email:</h3>
+                    <input type="text" name="" id="" placeholder="email@gmail.com">
+                </div>
+                <div class="profile-gender">
+                    <h3>Gender:</h3>
+                    <select id="gender" name="gender" required>
+                        <option value="male">Male</option>
+                        <option value="female">Female</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <button class="profile-btnSubmit">
+            Submit
+        </button>
+    </div>
     <main class="chat-container">
         <aside class="chat-history">
             <div class="button-container">
-                <button class="add-button">New chat</button>
-                <button class="toggle-mode-button">Dark Mode</button>
+                <button class="add-button" id="newChatButton">New chat</button>
             </div>
-            <ul>
-                <li><label class="chat-label">Chat 1</label></li>
-                <li><label class="chat-label">Chat 2</label></li>
-                <li><label class="chat-label">Chat 3</label></li>
-                <!-- Thêm nhiều lịch sử chat hơn nếu cần -->
+            <ul class="chat-list" id="chatList">
             </ul>
             <button class="toggle-button">
-                <img src="../src/img/HideIcon.webp" alt="Ẩn lịch sử chat" class="toggle-icon">
+                <i class="fa-solid fa-bars"></i>
             </button>
         </aside>
         <section class="chatbox">
             <div class="left-panel">
-                <!-- Nội dung của phần bên trái -->
             </div>
             <div class="center-panel">
                 <div class="messages">
-                    <!-- User message request -->
-                    <!-- <div class="message-container question">
-                        <img src="../src/img/profile.png" alt="User Avatar" class="avatar">
-                        <p>User messages go here</p>
-                        <div class="message-buttons">
-                            <button class="edit-button">
-                                <img src="../src/img/editing.png" alt="Edit" class="button-icon">
-                            </button>
-                        </div>
-                        
-                    </div> -->
-
                     <div class="chat-messages" id="chatMessages">
                         <!-- Chat messages will be appended here -->
                     </div>
-
-                    <!-- Bot answer -->
-                    <!-- <div class="message-container answer">
-                        <img src="../src/img/robot-assistant.png" alt="AI Avatar" class="avatar">
-                        <div class="message-content">
-                            
-                            <div class="message-buttons">
-                                <button class="copy-button">
-                                    <img src="../src/img/copy.png" alt="Copy" class="button-icon">
-                                </button>
-                                <button class="re-answer-button">
-                                    <img src="../src/img/redo.png" alt="Re-answer" class="button-icon">
-                                </button>
-                            </div>
-                        </div>
-                    </div> -->
                 </div>
                 <div class="input-container">
                     <input type="text" id="userInput" placeholder="What can I help you?" class="chat-input">
-                    <button id="sendButton" class="send-button">Send</button>
+                    <button class="input-void">
+                        <i class="fa-solid fa-microphone"></i>
+                    </button>
+                    <button id="sendButton" class="input-send">
+                        <i class="fa-solid fa-paper-plane"></i>
+                    </button>
                 </div>
             </div>
             <div class="right-panel">
-                <!-- Nội dung của phần bên phải -->
             </div>
         </section>
     </main>
@@ -85,7 +127,7 @@
         <p>&copy; 2024 DEV G5. All rights reserved.</p>
     </footer>
     <script>
-        document.querySelector('.toggle-button').addEventListener('click', function() {
+        document.querySelector('.toggle-button').addEventListener('click', function () {
             const chatHistory = document.querySelector('.chat-history');
             const toggleIcon = this.querySelector('.toggle-icon');
             if (chatHistory.classList.contains('hidden')) {
@@ -98,22 +140,45 @@
                 toggleIcon.alt = 'Hiện lịch sử chat';
             }
         });
-
-        document.querySelector('.toggle-mode-button').addEventListener('click', function() {
-            const body = document.body;
-            if (body.classList.contains('dark-mode')) {
-                body.classList.remove('dark-mode');
-                this.textContent = 'Dark Mode';
-            } else {
-                body.classList.add('dark-mode');
-                this.textContent = 'Light Mode';
+        
+        function handleGoogleSignIn() {
+            const auth2 = gapi.auth2.getAuthInstance();
+            if (!auth2) {
+                console.error("Google Auth instance not available.");
+                return;
             }
-        });
-    </script>
 
+            auth2.signIn().then((user) => {
+                const profile = user.getBasicProfile();
+                const userInfo = {
+                    id: profile.getId(),
+                    name: profile.getName(),
+                    email: profile.getEmail(),
+                    imageUrl: profile.getImageUrl()
+                };
+
+                // Save user info to MongoDB via your backend
+                saveUserInfoToDB(userInfo);
+            }).catch((error) => {
+                console.error("Error signing in: ", error);
+            });
+        }
+
+        function onLoad() {
+            gapi.load('auth2', function() {
+                gapi.auth2.init({
+                    client_id: '932017646849-37s7h70tcggvtkidb8v1u9hipqaa0q1p.apps.googleusercontent.com'
+                });
+            });
+        }
+        
+        
+    </script>
+    <script src="https://unpkg.com/@dotlottie/player-component@latest/dist/dotlottie-player.mjs" type="module"></script>
 
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+    <script src="../js/components/profile.js"></script>
     <script src="../js/main.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', () => {

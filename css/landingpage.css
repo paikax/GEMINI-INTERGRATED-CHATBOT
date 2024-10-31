@@ -167,3 +167,151 @@ footer {
     font-size: 14px; /* Giảm kích thước chữ */
     border-top: 1px solid #ccc; /* Đường viền trên để phân cách */
 }
+
+.message-wrapper {
+    width: 100%;
+    padding: 8px 15px;
+    display: flex;
+    flex-direction: column;
+}
+
+.chat-message {
+    max-width: 70%;
+    padding: 10px;
+    border-radius: 8px;
+    margin: 4px 0;
+}
+
+.user-message {
+    background-color: #007bff;
+    color: white;
+    align-self: flex-end;
+    margin-left: auto;
+}
+
+.bot-message {
+    background-color: #f8f9fa;
+    color: #212529;
+    align-self: flex-start;
+    margin-right: auto;
+}
+
+.message-content {
+    width: 100%;
+}
+
+.text-block {
+    margin-bottom: 8px;
+}
+
+.text-block:last-child {
+    margin-bottom: 0;
+}
+
+/* Code snippet container styles */
+.code-snippet-container {
+    margin: 10px 0;
+    background: #2d2d2d;
+    border-radius: 6px;
+    overflow: hidden;
+}
+
+.code-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 12px;
+    background: #1e1e1e;
+}
+
+.code-language {
+    color: #abb2bf;
+    font-size: 0.9em;
+}
+
+.copy-button {
+    background: none;
+    border: none;
+    color: #abb2bf;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 8px;
+    border-radius: 4px;
+    transition: background-color 0.2s;
+}
+
+.copy-button:hover {
+    background-color: #363636;
+}
+
+.code-content {
+    padding: 12px;
+    overflow-x: auto;
+}
+
+.code-content pre {
+    margin: 0;
+}
+
+.code-content code {
+    font-family: 'Fira Code', monospace;
+    font-size: 0.9em;
+    line-height: 1.5;
+}
+
+/* Chat container styles */
+.chat-container {
+    display: flex;
+    height: calc(100vh - 60px); /* Adjust based on your header height */
+}
+
+/* Message container styles */
+.chat-messages {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    padding: 20px;
+}
+
+.message-wrapper {
+    display: flex;
+    width: 100%;
+}
+
+/* User message styling */
+.user-message {
+    margin-left: auto;
+    margin-right: 20px;
+    background-color: #007bff;
+    color: white;
+    border-radius: 15px 15px 0 15px;
+    padding: 10px 15px;
+    max-width: 70%;
+    word-wrap: break-word;
+}
+
+/* Bot message styling */
+.bot-message {
+    margin-right: auto;
+    margin-left: 20px;
+    background-color: #f1f1f1;
+    color: black;
+    border-radius: 15px 15px 15px 0;
+    padding: 10px 15px;
+    max-width: 70%;
+    word-wrap: break-word;
+}
+
+/* Message content container */
+.message-content {
+    width: 100%;
+}
+
+/* Code snippet container adjustments */
+.code-snippet-container {
+    margin: 10px 0;
+    border-radius: 8px;
+    overflow: hidden;
+}

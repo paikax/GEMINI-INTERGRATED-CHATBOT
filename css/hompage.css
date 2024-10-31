@@ -1,149 +1,249 @@
-/* @font-face {
-    font-family: 'CustomFont';
-    src: url('../font/custom-font.woff2') format('woff2'),
-         url('../font/custom-font.woff') format('woff');
-    font-weight: normal;
-    font-style: normal;
-} */
-
 * {
-    box-sizing: border-box;
-    margin: 9;
-    padding: 0;
-}
-
-body {
     font-family: 'Arial', sans-serif;
+    box-sizing: border-box;
     margin: 0;
     padding: 0;
-    background-color: white; /* Màu nền trắng */
-    color: black; /* Màu chữ đen */
-    background-color: white;
-    color: black;
 }
 
-header {
-    background-color: white; /* Màu nền trắng */
-    color: black; /* Màu chữ đen */
-    padding: 1rem 0;
-    border-bottom: 1px solid #ccc; /* Đường viền dưới để phân cách */
-}
-header, footer {
-    background-color: white;
-    color: black;
-}
-chat-history, .chatbox, .left-panel, .right-panel {
-    background-color: white;
-    color: black;
-}
-
-.login-button, .add-button, .toggle-button, .toggle-mode-button, .send-button {
-    background-color: #007bff;
-    color: white;
+:root {
+    --text-color: #0d0d0d;
+    --bg-icon-color: #f9f9f9;
+    --bg-icon-hover: #e3e3e3;
+    --bg-iconchat-color: #f4f4f4;
+    --bg-iconchat-hover:#e3e3e3;
+    --bg-button-color: #0d79b8;
+    --bg-button-hover: #0d79b8d8;
+    --bg-sidebar-color: #f9f9f9;
+    --bg-sidebar-hover: #ececec;
+    --bg-messages-color: #f4f4f4;
+    --bg-chat-color: white;
 }
 
-/* Dark Mode Styles */
-body.dark-mode {
-    background-color: #121212;
-    color: white;
+.darkmode {
+    --text-color: white;
+    --bg-icon-color: #171717;
+    --bg-icon-hover: #4b4949;
+    --bg-iconchat-color: #2f2f2f;
+    --bg-iconchat-hover:#171717;
+    --bg-button-color: #333435;
+    --bg-button-hover: #3334357e;
+    --bg-sidebar-color: #171717;
+    --bg-messages-color: #2f2f2f;
+    --bg-chat-color: #212121;
 }
 
-body.dark-mode header, body.dark-mode footer {
-    background-color: #1e1e1e;
-    color: white;
-}
-
-body.dark-mode .chat-history, body.dark-mode .chatbox, body.dark-mode .left-panel, body.dark-mode .right-panel {
-    background-color: #1e1e1e;
-    color: white;
-}
-
-body.dark-mode .login-button, body.dark-mode .add-button, body.dark-mode .toggle-button, body.dark-mode .toggle-mode-button, body.dark-mode .send-button {
-    background-color: #bb86fc;
-    color: black;
-}
-
-nav {
-    
-}
-
-nav ul {
-    list-style: none;
+/* Navbar */
+.navbar {
     display: flex;
-    justify-content: flex-end; /* Căn phần tử về phía bên phải */
-    align-items: center; /* Căn giữa theo chiều dọc */
-    padding: 0;
-    margin: 0;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 50px;
+    background-color: var(--bg-sidebar-color);
+    color: var(--text-color);
 }
 
-nav ul li {
-    margin: 0 1rem;
-}
-
-nav ul li a {
-    color: black; /* Màu chữ đen */
-    text-decoration: none;
-}
-
-.login-button {
-    background-color: #007bff; /* Màu nền của button */
-    color: white; /* Màu chữ của button */
-    border: none;
-    padding: 0.5rem 1rem;
-    border-radius: 12px; /* Bo tròn các góc của button */
-    cursor: pointer;
-    font-size: 16px;
-    text-decoration: none;
-    margin-right: 2rem;
-}
-
-.login-button:hover {
-    background-color: #0056b3; /* Màu nền của button khi hover */
-}
-
-.robot-image {
-    width: 50px; /* Điều chỉnh kích thước của hình ảnh */
-    height: auto; /* Đảm bảo tỷ lệ khung hình không bị thay đổi */
-    position: absolute; /* Đặt hình ảnh ở vị trí tuyệt đối */
-    top: 10px; /* Cách phía trên 10px */
-    left: 10px; /* Cách phía trái 10px */
-    margin-left: 2rem;
-}
-
-.logo-heading {
-    width: 50px; /* Điều chỉnh kích thước của hình ảnh */
-    height: auto; /* Đảm bảo tỷ lệ khung hình không bị thay đổi */
-    position: absolute; /* Đặt hình ảnh ở vị trí tuyệt đối */
-    top: 10px; /* Cách phía trên 10px */
-    left: 10px; /* Cách phía trái 10px */
-    margin-left: 6.5rem;
-    font-family: 'CustomFont', Arial, sans-serif;
-}
-
-.chat-container {
+.navbar-logo {
     display: flex;
-    height: calc(100vh - 100px); /* Chiều cao trừ đi chiều cao của header và footer */
+    align-items: center;
+}
+
+.navbar-logo h2 {
+    margin-left: 10px;
+}
+
+.navbar-logo img {
+    width: 50px;
+    height: 50px;
+}
+
+.navbar-profile img {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+}
+
+.navbar-profile {
     position: relative;
 }
 
+.navbar-option {
+    display: flex;
+    align-items: center;
+}
+
+.navbar-option i {
+    font-size: 20px;
+    padding: 10px;
+    border-radius: 50%;
+    margin: 0 5px;
+    background-color: var(--bg-icon-color);
+}
+.navbar-option i:hover{
+    background-color: var(--bg-icon-hover);
+}
+
+.dropdown-content {
+    position: absolute;
+    top: 75px;
+    right: 10px;
+    background-color: white;
+    display: none;
+    z-index: 1;
+    border-radius: 10px;
+}
+
+.dropdown-item button {
+    display: flex;
+    justify-content: center;
+    width: 90px;
+    padding: 10px 12px;
+    border: none;
+    cursor: pointer;
+    background-color: white;
+    border-radius: 10px;
+}
+
+.dropdown-item button:hover {
+    background-color: #f1edeb;
+}
+
+/* Profile */
+.profile {
+    position: fixed;
+    top: 12%;
+    left: 35%;
+    width: 30%;
+    margin: 0 auto;
+    display: none;
+    flex-direction: column;
+    box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.3);
+    background-color: whitesmoke;
+    border-radius: 10px;
+    padding: 10px;
+    z-index: 10;
+}
+
+.profile-btnSubmit {
+    padding: 8px 12px;
+    border-radius: 10px;
+    align-self: center;
+    background-color: rgb(0, 128, 0);
+    color: white;
+    cursor: pointer;
+    border: none;
+    margin-bottom: 10px;
+}
+
+.profile-btnSubmit:hover {
+    background-color: rgba(0, 128, 0, 0.9);
+    transition: ease 0.2s;
+}
+
+.profile-btnClose {
+    padding: 6px 12px;
+    border-radius: 10px;
+    align-self: flex-end;
+    font-size: 16px;
+    background-color: rgba(255, 0, 0, 0.932);
+    color: white;
+    cursor: pointer;
+    border: none;
+}
+
+.profile-btnClose:hover {
+    background-color: rgba(255, 0, 0, 0.8);
+    transition: ease 0.2s;
+}
+
+.profile-content {
+    display: flex;
+    justify-content: center;
+}
+
+.profile-info h3 {
+    padding: 10px;
+    font-weight: 600;
+}
+
+.profile-info input {
+    width: 100%;
+    padding: 12px 20px;
+    border-radius: 10px;
+    border: none;
+    box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.15);
+}
+
+.profile-item {
+    margin: 10px 0;
+}
+
+.profile-gender {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 0;
+}
+
+.profile-gender select {
+    width: 35%;
+    padding: 0 10px;
+    border-radius: 10px;
+    border: none;
+    box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.15);
+}
+
+.profile-avatar {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.profile-avatar img {
+    width: 120px;
+    height: 120px;
+    object-fit: cover;
+    border-radius: 50%;
+    box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.15);
+}
+
+.profile-avatar form {
+    width: 100%;
+    padding: 10px 0;
+}
+
+
+/* Chat */
+.chat-container {
+    display: flex;
+    height: calc(100vh - 70px);
+}
+
 .chat-history {
-    width: 25%; /* Chiếm 25% chiều rộng */
-    border-right: 1px solid #ccc; /* Đường viền phải */
+    width: 25%;
     padding: 1rem;
-    overflow-y: auto; /* Cuộn dọc nếu nội dung quá dài */
-    transition: width 0.3s ease, padding 0.3s ease; /* Hiệu ứng chuyển đổi khi ẩn/hiện */
-    position: relative; /* Để nút toggle dính vào thanh lịch sử chat */
+    overflow-y: auto;
+    transition: width 0.3s ease, padding 0.3s ease;
+    position: relative;
+    background-color: var(--bg-sidebar-color);
 }
 
 .chat-history.hidden {
-    width: 50px; /* Thu nhỏ phần lịch sử chat */
-    padding: 0; /* Loại bỏ padding khi ẩn */
-    overflow: hidden; /* Ẩn nội dung khi ẩn */
+    width: 120px;
+    padding: 0;
+    overflow: hidden;
+}
+
+.chat-list {
+    margin-top: 100px;
+}
+
+.chat-list li {
+    margin-top: 10px;
 }
 
 .chat-history.hidden .button-container,
 .chat-history.hidden ul {
-    display: none; /* Ẩn nút thêm mới và danh sách lịch sử chat khi thu nhỏ */
+    display: none;
 }
 
 .chat-history h2 {
@@ -181,32 +281,40 @@ nav ul li a {
 .add-button {
     flex-grow: 1;
     padding: 0.5rem;
-    background-color: #4145458b; /* Màu nền của button */
-    color: white; /* Màu chữ của button */
+    background-color: var(--bg-button-color);
+    color: white;
     border: none;
-    border-radius: 5px; /* Bo tròn các góc của button */
+    border-radius: 5px;
     cursor: pointer;
     text-align: center;
-    margin-right: 0.5rem;
+    position: absolute;
+    top: 40px;
+    left: 10px;
+    right: 10px;
+    margin-top: 40px;
 }
 
 .add-button:hover {
-    background-color: #333435; /* Màu nền của button khi hover */
+    background-color: var(--bg-button-hover);
 }
 
 .toggle-button {
     padding: 0.5rem;
-    background-color: transparent; /* Nền trong suốt */
+    color: var(--text-color);
+    background-color: var(--bg-icon-color);
     border: none;
     cursor: pointer;
     position: absolute;
     top: 1rem;
-    right: 0; /* Đặt nút ở vị trí bên phải của phần lịch sử chat */
+    right: 0;
     transform: translateX(50%);
+}
+.toggle-button:hover{
+    background-color: var(--bg-icon-hover);
 }
 
 .toggle-icon {
-    width: 24px; /* Kích thước của icon */
+    width: 24px;
     height: 24px;
 }
 
@@ -214,55 +322,72 @@ nav ul li a {
     display: flex;
     width: 100%;
     height: 100%;
+    background-color: var(--bg-chat-color);
 }
 
-.left-panel, .right-panel {
-    flex: 1; /* Chiếm 1 phần của chiều rộng */
-    background-color: #f0f0f0; /* Màu nền của panel */
+.left-panel,
+.right-panel {
+    flex: 1;
     padding: 1rem;
 }
 
 .center-panel {
-    flex: 3; /* Chiếm 3 phần của chiều rộng */
+    flex: 3;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
     padding: 1rem;
 }
-    
+
 .messages {
     flex-grow: 1;
-    overflow-y: auto; /* Cuộn dọc nếu nội dung quá dài */
-    border-bottom: 1px solid #ccc; /* Đường viền dưới */
+    overflow-y: auto;
     padding-bottom: 1rem;
-    height: 100%; /* Kích thước cố định cho .messages */
+    height: 100%;
     width: 100%;
 }
 
 .input-container {
-    display: flex;
-    align-items: center;
+    position: relative;
 }
 
 .chat-input {
     flex-grow: 1;
-    padding: 0.5rem;
-    border: 1px solid #ccc;
+    width: 100%;
+    padding: 15px 50px;
     border-radius: 20px;
-    margin-right: 1rem;
-}
-
-.send-button {
-    background-color: #307fcd; /* Màu nền của button */
-    color: white; /* Màu chữ của button */
+    color: var(--text-color);
+    background-color: var(--bg-messages-color);
     border: none;
-    padding: 0.5rem 1rem;
-    border-radius: 5px; /* Bo tròn các góc của button */
-    cursor: pointer;
 }
-
-.send-button:hover {
-    background-color: #525353; /* Màu nền của button khi hover */
+.chat-input:focus{
+    border: none;
+    outline: none;
+}
+.input-void{
+    position: absolute ;
+    top: 5px;
+    left: 9px;
+    font-size: 20px;
+    padding: 4px 8px;
+    border-radius: 10px;
+    background-color: var(--bg-iconchat-color);
+    color: var(--text-color);
+    border: none;
+}
+.input-send{
+    position: absolute ;
+    top: 5px;
+    right: 9px;
+    font-size: 18px;
+    padding: 5.5px 8px;
+    border-radius: 10px;
+    background-color: var(--bg-iconchat-color);
+    color: var(--text-color);
+    border: none;
+}
+.input-send:hover, .input-void:hover{
+    background-color: var(--bg-iconchat-hover);
 }
 
 .message-container {
@@ -272,54 +397,64 @@ nav ul li a {
     padding: 0.5rem;
     border-radius: 5px;
     max-width: 90%;
-    position: relative; /* Để sử dụng cho các đường nối */
+    position: relative;
     width: 100%;
     height: auto;
 }
+
+.message-container {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 5px;
+}
+
 .message-container.question {
-    background-color: #e0f7fa; /* Màu nền cho câu hỏi */
-    align-self: flex-end; /* Căn về phía bên phải */
-    width: auto; /* Chiều rộng bằng với div messages */
-    max-width: 90%; /* Đảm bảo không vượt quá chiều rộng của messages */
+    background-color: #e0f7fa;
+    align-self: flex-end;
+    width: auto;
+    max-width: 90%;
     height: auto;
     border-radius: 30px;
-    padding: 10px; /* Thêm padding để nội dung không chạm vào viền */
-    box-sizing: border-box; /* Đảm bảo padding không ảnh hưởng đến chiều rộng */
+    padding: 10px;
+    box-sizing: border-box;
     display: flex;
-    flex-direction: row-reverse; /* Đảo ngược thứ tự các phần tử con */
-    margin: 10px auto; /* Căn giữa và thêm khoảng cách giữa các tin nhắn */
+    flex-direction: row-reverse;
+    margin: 10px auto;
 }
 
 .message-container.answer {
-    background-color: #e0e0e0; /* Màu nền cho câu trả lời */
-    align-self: flex-end; /* Căn về phía bên phải */
-    width: auto; /* Chiều rộng bằng với div messages */
-    max-width: 90%; /* Đảm bảo không vượt quá chiều rộng của messages */
+    background-color: #e0e0e0;
+    /* Màu nền cho câu trả lời */
+    align-self: flex-end;
+    /* Căn về phía bên phải */
+    width: auto;
+    /* Chiều rộng bằng với div messages */
+    max-width: 90%;
+    /* Đảm bảo không vượt quá chiều rộng của messages */
     height: auto;
     border-radius: 30px;
-    padding: 10px; /* Thêm padding để nội dung không chạm vào viền */
-    box-sizing: border-box; /* Đảm bảo padding không ảnh hưởng đến chiều rộng */
+    padding: 10px;
+    /* Thêm padding để nội dung không chạm vào viền */
+    box-sizing: border-box;
+    /* Đảm bảo padding không ảnh hưởng đến chiều rộng */
     display: flex;
-    margin: 10px auto; /* Căn giữa và thêm khoảng cách giữa các tin nhắn */
+    margin: 10px auto;
+    /* Căn giữa và thêm khoảng cách giữa các tin nhắn */
 }
 
 .message-content {
-    margin-left: 20px; /* Thay đổi từ margin-right sang margin-left */
+    margin-left: 20px;
+    /* Thay đổi từ margin-right sang margin-left */
     flex-grow: 1;
     display: flex;
     flex-direction: column;
-    word-wrap: break-word; /* Tự động xuống dòng nếu quá dài */
-    overflow-wrap: break-word; /* Tự động xuống dòng nếu quá dài */
-    position: relative; /* Để định vị các button */
+    word-wrap: break-word;
+    /* Tự động xuống dòng nếu quá dài */
+    overflow-wrap: break-word;
+    /* Tự động xuống dòng nếu quá dài */
+    position: relative;
+    /* Để định vị các button */
 }
-
-.avatar {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    margin-left: 10px; /* Thay đổi từ margin-right sang margin-left */
-}
-
 
 .message-connector {
     position: absolute;
@@ -341,8 +476,10 @@ nav ul li a {
 
 
 .re-answer-button {
-    left: 1px; /* Đặt button re-answer ở góc dưới bên phải */
+    left: 1px;
+    /* Đặt button re-answer ở góc dưới bên phải */
 }
+
 .edit-button {
     background-color: #f5f6f800;
     color: white;
@@ -355,14 +492,18 @@ nav ul li a {
     bottom: 2px;
     right: 55px;
 }
+
 .button-icon {
-    width: 16px; /* Adjust the size as needed */
-    height: 16px; /* Adjust the size as needed */
+    width: 16px;
+    /* Adjust the size as needed */
+    height: 16px;
+    /* Adjust the size as needed */
 }
 
 
-
-.edit-button:hover, .copy-button:hover, .re-answer-button:hover {
+.edit-button:hover,
+.copy-button:hover,
+.re-answer-button:hover {
     background-color: #6b6d6e;
 }
 
@@ -373,26 +514,25 @@ nav ul li a {
 }
 
 .user-message {
-    background-color: #e0f7fa; /* Màu nền cho câu hỏi */
-    align-self: flex-end; /* Căn về phía bên phải */
-    width: auto; /* Chiều rộng bằng với div messages */
-    max-width: 90%; /* Đảm bảo không vượt quá chiều rộng của messages */
+    background-color: var(--bg-messages-color);
+    color: var(--text-color);
+    width: auto;
+    max-width: 90%;
     height: auto;
     border-radius: 30px;
-    padding: 10px; /* Thêm padding để nội dung không chạm vào viền */
-    box-sizing: border-box; /* Đảm bảo padding không ảnh hưởng đến chiều rộng */
-    display: flex;
-    flex-direction: row-reverse; /* Đảo ngược thứ tự các phần tử con */
-    margin: 10px auto; 
+    padding: 10px;
+    margin: 5px auto;
+    display: inline-flex;
 }
 
 .bot-message {
+    background-color: var(--bg-messages-color);
+    color: var(--text-color);
     padding: 15px;
-    background-color: #f0f0f0;
     border-radius: 8px;
     max-width: 85%;
-    margin: auto;
-    color: #333;
+    margin: 10px auto;
+    position: relative;
 }
 
 .read-aloud-button {
@@ -416,7 +556,8 @@ nav ul li a {
     margin-right: 5px;
 
 }
-.copy-button:hover{
+
+.copy-button:hover {
     margin-left: 5px;
     margin-right: 5px;
 
@@ -470,16 +611,88 @@ nav ul li a {
     color: #d4d4d4 !important;
 }
 
-.hljs-keyword { color: #569cd6 !important; }
-.hljs-string { color: #ce9178 !important; }
-.hljs-number { color: #b5cea8 !important; }
-.hljs-comment { color: #6a9955 !important; }
-.hljs-function { color: #dcdcaa !important; }
-.hljs-class { color: #4ec9b0 !important; }
-.hljs-variable { color: #9cdcfe !important; }
+.hljs-keyword {
+    color: #569cd6 !important;
+}
+
+.hljs-string {
+    color: #ce9178 !important;
+}
+
+.hljs-number {
+    color: #b5cea8 !important;
+}
+
+.hljs-comment {
+    color: #6a9955 !important;
+}
+
+.hljs-function {
+    color: #dcdcaa !important;
+}
+
+.hljs-class {
+    color: #4ec9b0 !important;
+}
+
+.hljs-variable {
+    color: #9cdcfe !important;
+}
 
 .text-block {
     margin: 5px 0;
     line-height: 1.5;
     white-space: pre-wrap;
+}
+
+.toggle-button {
+    position: absolute;
+    top: 10px;
+    left: 0px;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    font-size: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+
+#theme-switch {
+    height: 50px;
+    width: 50px;
+    border: none;
+    border-radius: 50%;
+    background-color: var(--bg-sidebar-color);
+    color: var(--text-color);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#theme-switch i {
+    fill: var(--primary-color);
+}
+
+#theme-switch i:last-child {
+    display: none;
+}
+
+.darkmode #theme-switch i:first-child {
+    display: none;
+}
+
+.darkmode #theme-switch i:last-child {
+    display: block;
+}
+
+.animation-loading{
+    position: absolute;
+    left: -50px;
+    top: -5px;
+}
+
+.show {
+    display: block;
 }
