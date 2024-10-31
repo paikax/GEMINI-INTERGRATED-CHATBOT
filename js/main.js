@@ -6,24 +6,25 @@ function parseMarkdown(text) {
     return text;
 }
 
- 
+
 async function simulateTyping(container, content, typingSpeed = 30) {
+
     const messageContent = document.createElement('div');
     messageContent.classList.add('message-content');
     container.appendChild(messageContent);
 
     const segments = parseContent(content);
-    
+
     for (const segment of segments) {
         if (segment.type === 'code') {
             const fullCode = segment.content.trim();
             const codeContainer = createCodeSnippet(segment.language || 'plaintext', fullCode);
             messageContent.appendChild(codeContainer);
             const codeElement = codeContainer.querySelector('code');
-            
+
             // Clear the code element initially
             codeElement.textContent = '';
-            
+
             // Type out the code
             for (let i = 0; i < fullCode.length; i++) {
                 codeElement.textContent += fullCode[i];
@@ -125,7 +126,7 @@ function createCodeSnippet(language, code) {
                 <span>Copied!</span>
             `;
             copyButton.classList.add('copied');
-            
+
             setTimeout(() => {
                 copyButton.innerHTML = `
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -167,13 +168,13 @@ function addReadAloudAndCopyButtons(messageElement, text) {
     readButton.classList.add('read-aloud-button');
     readButton.textContent = "🔊";
     readButton.addEventListener('click', () => readAloud(text));
-    
+
     // Create the Copy button
     const copyButton = document.createElement('button');
     copyButton.classList.add('copy-button');
     copyButton.textContent = "📋";
     copyButton.addEventListener('click', () => copyToClipboard(text, copyButton));
-    
+
     // Append both buttons to the message element
     messageElement.appendChild(readButton);
     messageElement.appendChild(copyButton);
@@ -210,14 +211,8 @@ async function handleBotResponse(response) {
         messageElement.classList.add('chat-message', 'bot-message');
         document.getElementById('chatMessages').appendChild(messageElement);
 
-        // // Add "Read Aloud" button
-        // const readButton = document.createElement('button');
-        // readButton.textContent = "🔊";
-        // readButton.classList.add('read-aloud-button');
-        // readButton.addEventListener('click', () => readAloud(combinedResponse));
-        // messageElement.appendChild(readButton);
-
         await simulateTyping(messageElement, combinedResponse);
+
         messageElement.scrollIntoView({ behavior: 'smooth' });
         addReadAloudAndCopyButtons(messageElement, combinedResponse);
     } catch (error) {
@@ -245,6 +240,30 @@ function appendMessage(message, type) {
 }
 
 // Event listeners
+// document.getElementById('sendButton').addEventListener('click', async function () {
+//     const userInput = document.getElementById('userInput');
+//     const message = userInput.value.trim();
+
+//     if (message !== "") {
+//         appendMessage(message, 'user');
+//         userInput.value = '';
+//         try {
+//             const response = await fetch('http://localhost:3000/api/chat', {
+//                 method: 'POST',
+//                 headers: {
+//                     'Content-Type': 'application/json',
+//                 },
+//                 body: JSON.stringify({ input: message }),
+//             });
+
+//             await handleBotResponse(response);
+//         } catch (error) {
+//             console.error('Error:', error);
+//             appendMessage('Sorry, there was an error.', 'bot');
+//         }
+//     }
+// });
+
 document.getElementById('sendButton').addEventListener('click', async function() {
     const userInput = document.getElementById('userInput');
     const message = userInput.value.trim();
@@ -252,6 +271,19 @@ document.getElementById('sendButton').addEventListener('click', async function()
     if (message !== "") {
         appendMessage(message, 'user');
         userInput.value = '';
+
+        const messageElement = document.createElement('div');
+        document.getElementById('chatMessages').appendChild(messageElement);
+
+        const loadingAnimation = document.createElement('dotlottie-player');
+        loadingAnimation.src = "https://lottie.host/2058cb37-e662-47ef-b20b-b33972803913/QayEIxoE9G.json";
+        loadingAnimation.style.width = "50px";
+        loadingAnimation.style.height = "50px";
+        loadingAnimation.setAttribute("background", "transparent");
+        loadingAnimation.setAttribute("loop", "true");
+        loadingAnimation.setAttribute("autoplay", "true");
+
+        messageElement.appendChild(loadingAnimation);
 
         try {
             const response = await fetch('http://localhost:3000/api/chat', {
@@ -262,15 +294,19 @@ document.getElementById('sendButton').addEventListener('click', async function()
                 body: JSON.stringify({ input: message }),
             });
 
-            await handleBotResponse(response);
+            messageElement.removeChild(loadingAnimation);
+            await handleBotResponse(response); 
         } catch (error) {
             console.error('Error:', error);
             appendMessage('Sorry, there was an error.', 'bot');
+            messageElement.removeChild(loadingAnimation); 
         }
+
+        messageElement.scrollIntoView({ behavior: 'smooth' });
     }
 });
 
-document.getElementById('userInput').addEventListener('keypress', function(e) {
+document.getElementById('userInput').addEventListener('keypress', function (e) {
     if (e.key === 'Enter') {
         document.getElementById('sendButton').click();
     }
