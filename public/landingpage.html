@@ -6,12 +6,14 @@
     <title>Basic Home Page</title>
     <link rel="stylesheet" href="../css/landingpage.css">
     <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css">
+    <script src="https://apis.google.com/js/platform.js" async defer></script> <!-- Google API Script -->
+    <meta name="google-signin-client_id" content="932017646849-ulovcd8ed6v4o43bn0kqjab5gg28pvcr.apps.googleusercontent.com">
 </head>
 <body>
     <header>
         <nav>
             <ul>
-                <li><button class="login-button">Login</button></li>
+                <li><button class="login-button" onclick="signIn()">Login</button></li>
                 <li><img src="../src/img/robot-assistant.png" alt="" class="robot-image"></li>
                 <h2 class="logo-heading">DevG5</h2>
             </ul>
@@ -25,7 +27,7 @@
             <div class="feature gemini">
                 <h2 class="gemini-heading">Gemini</h2>
                 <p class="gemini-description">Enhance your ability to create and enhance conversational activities with Google AI to start writing content, planning, learning, and more</p>
-                <button class="login-button-2">Sign in</button>
+                <button class="login-button-2" onclick="signIn()">Sign in</button>
             </div>
             <div class="feature nitro">
                 <div class="swiper-container">
@@ -62,6 +64,52 @@
                 crossFade: true
             }
         });
+    </script>
+    <script>
+        var swiper = new Swiper('.swiper-container', {
+            pagination: {
+                el: '.swiper-pagination',
+                clickable: true,
+            },
+            loop: true,
+            autoplay: {
+                delay: 3000, // Thời gian chuyển tiếp giữa các slide (3000ms = 3 giây)
+                disableOnInteraction: false, // Tiếp tục tự động chuyển tiếp sau khi tương tác
+            },
+            effect: 'fade', // Hiệu ứng chuyển tiếp fade
+            fadeEffect: {
+                crossFade: true
+            }
+        });
+
+        // Google Sign-In function
+        function signIn() {
+            const params = {
+                prompt: 'select_account',
+            };
+            gapi.auth2.getAuthInstance().signIn(params).then(function(googleUser) {
+                // Successful sign-in
+                const profile = googleUser.getBasicProfile();
+                console.log('ID: ' + profile.getId()); // Do not send to your backend! Use an ID token instead.
+                console.log('Name: ' + profile.getName());
+                console.log('Image URL: ' + profile.getImageUrl());
+                console.log('Email: ' + profile.getEmail());
+                // You can also redirect the user or do something with the received user info
+            }).catch(function(error) {
+                console.error('Error signing in:', error);
+            });
+        }
+
+        // Initialize Google Auth
+        function initClient() {
+            gapi.load('auth2', function() {
+                gapi.auth2.init({
+                    client_id: 'YOUR_GOOGLE_CLIENT_ID.apps.googleusercontent.com', // Replace with your client ID
+                });
+            });
+        }
+
+        window.onload = initClient; // Initialize Google Auth on window load
     </script>
 </body>
 </html>
