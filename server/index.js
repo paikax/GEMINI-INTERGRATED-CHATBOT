@@ -2,7 +2,7 @@ const express = require("express");
 const cors = require("cors");
 const { GoogleGenerativeAI } = require("@google/generative-ai");
 const dotenv = require("dotenv");
-const { MongoClient, ServerApiVersion } = require("mongodb");
+const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
 
 
 
@@ -16,15 +16,7 @@ app.use(express.json());
 app.use(express.static("public")); // Serve static files from the 'public' directory
 const genAI = new GoogleGenerativeAI('AIzaSyD9ff9i9UzVshdB9xR1xnNx3fQDy0uqACA');
 
-// Helper function to format history for Gemini
-function formatHistory(history) {
-    if (!history || !Array.isArray(history)) return [];
-    
-    return history.map(msg => ({
-        role: msg.role === 'user' ? 'user' : 'model',
-        parts: msg.content
-    }));
-}
+
 
 
 // MongoDB connection setup
@@ -50,34 +42,86 @@ async function connectDB() {
 
 // ------------------------------------------------------------------
 
+async function insertMessageToMongoDB(userId, sessionId, message) {
+    try {
+        const database = client.db("conversationHistory");
+        const collection = database.collection("conversation");
+        
+        const existingConversation = await collection.findOne({ sessionId });
+        
+        if (existingConversation) {
+            await collection.updateOne(
+                { sessionId },
+                { $push: { messages: message } }
+            );
+            console.log("New message added to existing conversation");
+        } else {
+            const newConversation = {
+                _id: new ObjectId(),
+                sessionId,
+                userId,
+                messages: [message],
+                timestamp: new Date().toISOString(),
+            };
+            await collection.insertOne(newConversation);
+            console.log("New conversation created");
+        }
+    } catch (error) {
+        console.error("Error inserting message into conversation:", error);
+    }
+}
+
+async function fetchMessagesFromMongoDB(sessionId) {
+    try {
+        const database = client.db("conversationHistory");
+        const collection = database.collection("conversation");
+        
+        const conversation = await collection.findOne({ sessionId });
+        return conversation ? conversation.messages : [];
+    } catch (error) {
+        console.error("Error fetching messages from MongoDB:", error);
+        return [];
+    }
+}
+
+function generateRandomString(length) {
+    return Math.random().toString(36).substring(2, 2 + length);
+}
+
+
+
+// ------------------------------------------------------------------
+
 
 app.post("/api/chat", async (req, res) => {
     const userInput = req.body.input;
-    const history = req.body.history || [];
+    const sessionId = req.body.sessionId; // Expecting sessionId from client
+    const history = await fetchMessagesFromMongoDB(sessionId); // Fetching chat history
     const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
     const start = Date.now();
-    let responseText = ""; // Initialize an empty string to accumulate responses
+    let responseText = "";
 
     try {
         const allHistory = history.map((item) => item.content);
-        // Using generateContentStream to collect all parts into one string
         const result = await model.generateContentStream([...allHistory, userInput]);
 
-        // Collect all chunks into responseText
         for await (const chunk of result.stream) {
-            responseText += chunk.text(); // Concatenate text from each chunk
+            responseText += chunk.text();
         }
 
-        // Send the complete response once all chunks are processed
         res.json({ response: responseText });
-
         console.log("Full Response:", responseText);
+        
+        // Save user message to MongoDB
+        await insertMessageToMongoDB(req.body.userId, sessionId, { content: userInput, fromUser: true });
+        // Save AI response to MongoDB
+        await insertMessageToMongoDB(req.body.userId, sessionId, { content: responseText, fromUser: false });
 
         const end = Date.now();
         console.log("Response time (ms):", end - start);
     } catch (error) {
         console.error("Error:", error);
-        res.status(500).json({ error: "Internal Server Error" }); // hi
+        res.status(500).json({ error: "Internal Server Error" });
     }
 });
 
@@ -94,14 +138,11 @@ app.post("/api/saveUser", async (req, res) => {
         const database = client.db("DEV-G5"); // replace with your database name
         const usersCollection = database.collection("users"); // replace with your collection name
 
-        // Check if user already exists
         const existingUser = await usersCollection.findOne({ googleId: userInfo.id });
 
         if (existingUser) {
-            // User already exists, return existing user data
             return res.status(200).json(existingUser);
         } else {
-            // Insert new user
             const newUser = {
                 googleId: userInfo.id,
                 name: userInfo.name,
@@ -110,7 +151,7 @@ app.post("/api/saveUser", async (req, res) => {
             };
 
             const result = await usersCollection.insertOne(newUser);
-            res.status(201).json(result.ops[0]); // Return the newly created user
+            res.status(201).json(result.ops[0]);
         }
     } catch (error) {
         console.error("Error saving user info:", error);
