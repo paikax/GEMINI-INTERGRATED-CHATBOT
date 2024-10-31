@@ -94,7 +94,7 @@ app.post("/api/chat", async (req, res) => {
     let responseText = ""; // Initialize an empty string to accumulate responses
 
     try {
-        const conversation = await fetchConversationById(client, '6723041bd1a8c20f697f528d'); 
+        const conversation = await fetchConversationById(client, '672331c164ef017334b92faf'); 
         const allHistory = conversation ? conversation.messages.map(msg => `${msg.role}: ${msg.content}`) : [];
         const userMessage = { role: 'user', content: userInput, datetime: new Date().toISOString() };
         const prompt = [...allHistory, `user: ${userInput}`]; 
@@ -123,7 +123,7 @@ app.post("/api/chat", async (req, res) => {
 
 
 app.get("/api/conversation/:id", async (req, res) => {
-    const { id } = req.params||'6723041bd1a8c20f697f528d';
+    const { id } = req.params||'672331c164ef017334b92faf';
 
     try {
         const conversation = await fetchConversationById(client, id);
@@ -137,6 +137,33 @@ app.get("/api/conversation/:id", async (req, res) => {
         res.status(500).json({ error: "Internal Server Error" });
     }
 });
+// Fetch conversations for a specific user
+app.get("/api/conversations/:userId", async (req, res) => {
+    const { userId } = req.params;
+
+    try {
+        const database = client.db("conversationHistory");
+        const collection = database.collection("conversation");
+
+        // Fetch all conversations for the specified userId
+        const conversations = await collection.find({ userId }).toArray();
+
+        // Map the conversations to the desired response format
+        const response = conversations.map(conversation => ({
+            sessionId: conversation.sessionId,
+            userId: conversation.userId,
+            _id: conversation._id, // ObjectId
+            messageCount: conversation.messages.length, // Count of messages
+            timestamp: conversation.timestamp
+        }));
+
+        res.json(response); // Send the formatted response
+    } catch (error) {
+        console.error("Error fetching conversations:", error);
+        res.status(500).json({ error: "Internal Server Error" });
+    }
+});
+
 
 // Start the server
 app.listen(PORT, () => {

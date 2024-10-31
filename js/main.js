@@ -4,7 +4,6 @@ let currentChatId = null;
 const chatList = document.getElementById('chatList');
 const newChatButton = document.getElementById('newChatButton');
 
-
 // Conversation list
 function generateChatId() {
     return 'chat_' + Date.now();
@@ -34,10 +33,36 @@ function getConversationTitle(conversation) {
 function loadChatsFromLocalStorage() {
     return JSON.parse(localStorage.getItem('allChats') || '{}');
 }
+//Function fetch converstaion with userId
+async function fetchConversations(userId) {
+    try {
+        if (!userId) {
+            throw new Error("User ID is required to fetch conversations.");
+        }
+        const response = await fetch(`http://localhost:3000/api/conversations/${userId}`);
+        
+        // Check if response is ok
+        if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+
+        const conversations = await response.json();
+        console.log('Conversation fetched: ', conversations);
+        return conversations;
+
+    } catch (error) {
+        console.error("Error fetching conversations:", error);
+        //alert("Failed to fetch conversations. Please try again later.");
+        return null; // Return null to indicate failure
+    }
+}
+
+
+
 // Function to render chat list
 function renderChatList() {
     chatList.innerHTML = '';
-    const allChats = loadChatsFromLocalStorage();
+    const allChats =  fetchConversations('user1');
     
     Object.values(allChats)
         .sort((a, b) => b.timestamp - a.timestamp)
@@ -67,8 +92,8 @@ function renderChatList() {
             chatList.appendChild(chatElement);
         });
 }
-function loadChat(chatId) {
-    const allChats = loadChatsFromLocalStorage();
+ async function loadChat(chatId) {
+    const allChats = await fetchConversations('user1');
     const chat = allChats[chatId];
     if (chat) {
         currentChatId = chatId;
