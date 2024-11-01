@@ -1,3 +1,10 @@
+@font-face {
+    font-family: 'Digital';
+    src: url('../src/fonts/ARCADECLASSIC.TTF') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
 * {
     font-family: 'Arial', sans-serif;
     box-sizing: border-box;
@@ -33,7 +40,6 @@
     --bg-chat-color: #212121;
 }
 
-
 /* Navbar */
 .navbar {
     display: flex;
@@ -51,6 +57,11 @@
 
 .navbar-logo h2 {
     margin-left: 10px;
+    font-family: 'Digital', sans-serif;
+    background-image: linear-gradient(to right, #3507c0, hsl(277, 51%, 31%));
+    background-clip: text;
+    color: transparent;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
 }
 
 .navbar-logo img {
