@@ -696,3 +696,10 @@
 .show {
     display: block;
 }
+
+/* CSS for the disabled send button */
+#sendButton:disabled {
+    background-color: gray;
+    cursor: not-allowed;
+    opacity: 0.6;
+}

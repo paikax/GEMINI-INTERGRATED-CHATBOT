@@ -3,7 +3,24 @@ const conversationHistory = [];
 let currentChatId = null;
 const chatList = document.getElementById('chatList');
 const newChatButton = document.getElementById('newChatButton');
+const userInput = document.getElementById('userInput');
+const sendButton = document.getElementById('sendButton');
 
+
+function disableInput() {
+    userInput.disabled = true;
+    sendButton.disabled = true;
+    userInput.classList.add('disabled'); // Optional: Add a CSS class for a grayed-out effect
+    sendButton.classList.add('disabled'); // Optional: Add a CSS class for a grayed-out effect
+}
+
+// Function to enable input and send button
+function enableInput() {
+    userInput.disabled = false;
+    sendButton.disabled = false;
+    userInput.classList.remove('disabled'); // Optional: Remove the CSS class
+    sendButton.classList.remove('disabled'); // Optional: Remove the CSS class
+}
 
 // Conversation list
 function generateChatId() {
@@ -402,6 +419,8 @@ async function handleBotResponse(response) {
 
          // Save to local storage
          saveToLocalStorage(conversationHistory);
+
+         enableInput();
     } catch (error) {
         console.error('Error parsing response:', error);
         appendMessage("Sorry, there was an error retrieving the response.", 'bot');
@@ -511,6 +530,8 @@ document.addEventListener('DOMContentLoaded', () => {
 document.getElementById('sendButton').addEventListener('click', async function() {
     const userInput = document.getElementById('userInput');
     const message = userInput.value.trim();
+
+    disableInput();
 
     const messageElement = document.createElement('div');
         document.getElementById('chatMessages').appendChild(messageElement);
