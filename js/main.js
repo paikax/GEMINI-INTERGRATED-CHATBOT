@@ -205,6 +205,7 @@ function parseMarkdown(text) {
 
 
 async function simulateTyping(container, content, typingSpeed = 30) {
+
     const messageContent = document.createElement('div');
     messageContent.classList.add('message-content');
     container.appendChild(messageContent);
@@ -465,7 +466,7 @@ function appendMessage(message, type) {
     const avatar = document.createElement('img');
     avatar.classList.add('avatar', type === 'user' ? 'user-avatar' : 'bot-avatar');
     avatar.src = type === 'user'
-        ? 'https://png.pngtree.com/png-clipart/20200224/original/pngtree-cartoon-color-simple-male-avatar-png-image_5230557.jpg'
+        ? 'https://e7.pngegg.com/pngimages/799/987/png-clipart-computer-icons-avatar-icon-design-avatar-heroes-computer-wallpaper-thumbnail.png'
         : '../src/img/robot-assistant.png';
     avatar.alt = type === 'user' ? 'User Avatar' : 'Bot Avatar';
 
@@ -487,8 +488,8 @@ function appendMessage(message, type) {
                     segment.language || 'plaintext',
                     segment.content.trim()
                 );
-                messageWrapper.appendChild(avatar);
                 messageContainer.appendChild(codeContainer);
+
                 const codeElement = codeContainer.querySelector('code');
                 if (codeElement) {
                     hljs.highlightElement(codeElement);
@@ -504,7 +505,7 @@ function appendMessage(message, type) {
         messageElement.appendChild(messageContainer);
         addReadAloudAndCopyButtons(messageElement, message);
     }
-    
+    messageWrapper.appendChild(avatar);
     messageWrapper.appendChild(messageElement);
     chatMessages.appendChild(messageWrapper);
     messageWrapper.scrollIntoView({ behavior: 'smooth' });
