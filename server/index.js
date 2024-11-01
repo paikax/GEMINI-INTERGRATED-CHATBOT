@@ -1,12 +1,11 @@
+require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
+const passport = require("passport");
+const session = require("express-session");
+const GoogleStrategy = require("passport-google-oauth20").Strategy;
 const { GoogleGenerativeAI } = require("@google/generative-ai");
-const dotenv = require("dotenv");
 const { MongoClient, ServerApiVersion } = require("mongodb");
-
-
-
-dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -14,6 +13,7 @@ const PORT = process.env.PORT || 3000;
 app.use(cors());
 app.use(express.json());
 app.use(express.static("public")); // Serve static files from the 'public' directory
+
 const genAI = new GoogleGenerativeAI('AIzaSyD9ff9i9UzVshdB9xR1xnNx3fQDy0uqACA');
 
 // Helper function to format history for Gemini
@@ -117,3 +117,4 @@ app.post("/api/saveUser", async (req, res) => {
         res.status(500).json({ error: "Internal Server Error" });
     }
 });
+

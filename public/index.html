@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,12 +9,14 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/vs2015.min.css">
     <!-- Google API for Sign-In -->
     <script src="https://apis.google.com/js/platform.js" async defer onload="onLoad()"></script>
-    <meta name="google-signin-client_id" content="932017646849-37s7h70tcggvtkidb8v1u9hipqaa0q1p.apps.googleusercontent.com">
+    <meta name="google-signin-client_id"
+        content="932017646849-37s7h70tcggvtkidb8v1u9hipqaa0q1p.apps.googleusercontent.com">
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
         integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg=="
         crossorigin="anonymous" referrerpolicy="no-referrer" />
 </head>
+
 <body>
     <header>
         <div class="navbar">
@@ -27,9 +30,17 @@
                         <i class="fa-regular fa-moon"></i>
                         <i class="fa-regular fa-sun"></i>
                     </button>
-                    <i class="fa-solid fa-globe"></i>
+                    <div class="navbar-language">
+                        <img id="languageFlag" src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/13/United-kingdom_flag_icon_round.svg/512px-United-kingdom_flag_icon_round.svg.png" alt="Flag" width="24" height="24">
+                        <select id="languageSelect" onchange="changeLanguageIcon()">
+                          <option value="en">EN</option>
+                          <option value="vi">VN</option>
+                          <option value="ru">RU</option>
+                          <option value="ko">KR</option>
+                        </select>
+                      </div>
                     <img onclick="myFunction()" class="dropbtn"
-                        src="https://png.pngtree.com/png-clipart/20200224/original/pngtree-cartoon-color-simple-male-avatar-png-image_5230557.jpg"
+                        src="https://e7.pngegg.com/pngimages/799/987/png-clipart-computer-icons-avatar-icon-design-avatar-heroes-computer-wallpaper-thumbnail.png"
                         alt="">
                 </div>
                 <div class="profile-dropdown">
@@ -37,11 +48,6 @@
                         <div class="dropdown-item">
                             <button onclick="openPopup()">
                                 My profile
-                            </button>
-                        </div>
-                        <div class="dropdown-item">
-                            <button>
-                                Setting
                             </button>
                         </div>
                         <div class="dropdown-item">
@@ -62,7 +68,7 @@
             <div class="profile-info">
                 <div class="profile-avatar">
                     <img id="avatarImage"
-                        src="https://png.pngtree.com/png-clipart/20200224/original/pngtree-cartoon-color-simple-male-avatar-png-image_5230557.jpg"
+                        src="https://e7.pngegg.com/pngimages/799/987/png-clipart-computer-icons-avatar-icon-design-avatar-heroes-computer-wallpaper-thumbnail.png"
                         alt="Profile Avatar">
                     <form action="/upload" method="post" enctype="multipart/form-data">
                         <input type="file" name="image" accept="image/*" onchange="previewImage(event)">
@@ -70,7 +76,7 @@
                 </div>
                 <div class="profile-item">
                     <h3>Full Name:</h3>
-                    <input type="text" name="" id="" placeholder="Nguyen Van Phuoc">
+                    <input type="text" name="" id="" placeholder="Full name">
                 </div>
                 <div class="profile-item">
                     <h3>Email:</h3>
@@ -92,7 +98,7 @@
     <main class="chat-container">
         <aside class="chat-history">
             <div class="button-container">
-                <button class="add-button" id="newChatButton">New chat</button>
+                <button class="add-button translatable data-original-text" id="newChatButton">New Chat</button>
             </div>
             <ul class="chat-list" id="chatList">
             </ul>
@@ -110,7 +116,7 @@
                     </div>
                 </div>
                 <div class="input-container">
-                    <input type="text" id="userInput" placeholder="What can I help you?" class="chat-input">
+                    <input type="text" id="userInput" placeholder="How can I help you?" class="chat-input translatable data-original-text">
                     <button class="input-void">
                         <i class="fa-solid fa-microphone"></i>
                     </button>
@@ -123,9 +129,6 @@
             </div>
         </section>
     </main>
-    <footer>
-        <p>&copy; 2024 DEV G5. All rights reserved.</p>
-    </footer>
     <script>
         document.querySelector('.toggle-button').addEventListener('click', function () {
             const chatHistory = document.querySelector('.chat-history');
@@ -140,7 +143,7 @@
                 toggleIcon.alt = 'Hiện lịch sử chat';
             }
         });
-        
+
         function handleGoogleSignIn() {
             const auth2 = gapi.auth2.getAuthInstance();
             if (!auth2) {
@@ -165,14 +168,14 @@
         }
 
         function onLoad() {
-            gapi.load('auth2', function() {
+            gapi.load('auth2', function () {
                 gapi.auth2.init({
                     client_id: '932017646849-37s7h70tcggvtkidb8v1u9hipqaa0q1p.apps.googleusercontent.com'
                 });
             });
         }
-        
-        
+
+
     </script>
     <script src="https://unpkg.com/@dotlottie/player-component@latest/dist/dotlottie-player.mjs" type="module"></script>
 
@@ -180,6 +183,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
     <script src="../js/components/profile.js"></script>
     <script src="../js/main.js"></script>
+    <script src="../js/components/languages.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             hljs.configure({
@@ -188,5 +192,27 @@
             hljs.highlightAll();
         });
     </script>
+
+<script>
+    function changeLanguageIcon() {
+      const languageSelect = document.getElementById('languageSelect');
+      const languageFlag = document.getElementById('languageFlag');
+      const selectedLanguage = languageSelect.value;
+  
+      // Define flag image URLs for each language
+      const flags = {
+        en: 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/13/United-kingdom_flag_icon_round.svg/512px-United-kingdom_flag_icon_round.svg.png',
+        vi: 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/21/Flag_of_Vietnam.svg/1024px-Flag_of_Vietnam.svg.png',
+        ru: 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f3/Flag_of_Russia.svg/1024px-Flag_of_Russia.svg.png',
+        ko: 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/09/Flag_of_South_Korea.svg/1024px-Flag_of_South_Korea.svg.png'
+      };
+  
+      // Update the `src` of the flag image
+      languageFlag.src = flags[selectedLanguage];
+    }
+  </script>
+
+
 </body>
+
 </html>
