@@ -482,4 +482,172 @@ nav ul li a {
     margin: 5px 0;
     line-height: 1.5;
     white-space: pre-wrap;
+<<<<<<< Updated upstream
+=======
+}
+
+.toggle-button {
+    position: absolute;
+    top: 10px;
+    left: 0px;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    font-size: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+
+#theme-switch {
+    height: 50px;
+    width: 50px;
+    border: none;
+    border-radius: 50%;
+    background-color: var(--bg-sidebar-color);
+    color: var(--text-color);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#theme-switch i {
+    fill: var(--primary-color);
+}
+
+#theme-switch i:last-child {
+    display: none;
+}
+
+.darkmode #theme-switch i:first-child {
+    display: none;
+}
+
+.darkmode #theme-switch i:last-child {
+    display: block;
+}
+
+.animation-loading{
+    position: absolute;
+    left: -50px;
+    top: -5px;
+}
+
+.show {
+    display: block;
+}
+
+.quick-reply-container {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+    justify-content: center;
+}
+
+.quick-reply-button {
+    padding: 8px 16px;
+    border-radius: 5px;
+    border: none;
+    background-color: var(--bg-button-color);
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.quick-reply-button:hover {
+    background-color: var(--bg-button-hover);
+}
+
+/* Media Query for iPhone SE */
+@media screen and (max-width: 390px) {
+    .navbar {
+        position:fixed;
+        width:100%;
+        padding: 10px;
+    }
+
+    .navbar-logo h2 {
+        font-size: 16px;
+    }
+
+    .navbar-option i {
+        font-size: 16px;
+        padding: 6px;
+    }
+
+    .profile {
+        top: 20%;
+        left: 5%;
+        width: 90%;
+    }
+
+    .chat-container {
+        flex-direction: column;
+    }
+
+    .chat-history {
+        width: 100%;
+        padding: 0.5rem;
+    }
+
+    .chatbox {
+        flex-direction: column;
+    }
+
+    .add-button {
+        top: 30px;
+        left: 5px;
+        right: 5px;
+    }
+
+    .toggle-button {
+        width: 40px;
+        height: 40px;
+        font-size: 16px;
+        background: none;
+    }
+
+    .chat-input {
+        padding: 10px 40px;
+        
+    }
+
+    .message-container {
+        margin-bottom: 0.5rem;
+    }
+
+    .message-content {
+        margin-left: 10px;
+    }
+
+    .edit-button {
+        bottom: 2px;
+        right: 35px;
+    }
+
+    .read-aloud-button {
+        padding: 4px 6px;
+        margin-left: 10px;
+    }
+    .chat-history.hidden {
+        width: 59px;
+        height: 55px;
+        overflow: hidden;
+        margin-left: 180px;
+        margin-top: 5px;
+    }
+    .center-panel{
+        position:fixed;
+        height:780px;
+        width:390px;
+    }
+    .right-panel{
+        flex: none;
+        padding: none;
+    }
+    footer{
+        display:none;
+    }
+>>>>>>> Stashed changes
 }
