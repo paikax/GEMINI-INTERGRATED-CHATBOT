@@ -1,0 +1,72 @@
+/* Reset các kiểu mặc định của trình duyệt */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Đặt kiểu cho body */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4; /* Màu nền nhẹ */
+    color: #333; /* Màu chữ tối */
+    line-height: 1.6; /* Khoảng cách giữa các dòng */
+}
+
+/* Kiểu cho container */
+.container {
+    width: 80%;
+    max-width: 600px; /* Giới hạn chiều rộng tối đa */
+    margin: 50px auto; /* Giữa trang */
+    padding: 20px; /* Khoảng cách bên trong */
+    background: white; /* Màu nền trắng */
+    border-radius: 5px; /* Bo góc */
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Đổ bóng nhẹ */
+}
+
+/* Kiểu cho tiêu đề */
+h1 {
+    margin-bottom: 20px; /* Khoảng cách dưới tiêu đề */
+    text-align: center; /* Căn giữa tiêu đề */
+}
+
+/* Kiểu cho trường nhập */
+#chatInput {
+    width: 100%; /* Chiều rộng 100% */
+    padding: 10px; /* Khoảng cách bên trong */
+    border: 1px solid #ccc; /* Đường viền */
+    border-radius: 5px; /* Bo góc */
+    margin-bottom: 20px; /* Khoảng cách dưới trường nhập */
+}
+
+/* Kiểu cho các nút gợi ý */
+.recommend-buttons {
+    display: flex; /* Hiển thị dưới dạng flexbox */
+    flex-wrap: wrap; /* Cho phép các nút xuống dòng */
+    justify-content: space-between; /* Căn chỉnh các nút đều */
+}
+
+.recommend-btn {
+    background-color: #007bff; /* Màu nền nút */
+    color: white; /* Màu chữ trắng */
+    border: none; /* Không có đường viền */
+    border-radius: 5px; /* Bo góc */
+    padding: 10px 15px; /* Khoảng cách bên trong */
+    cursor: pointer; /* Hiển thị con trỏ tay khi di chuột */
+    margin-bottom: 10px; /* Khoảng cách dưới nút */
+    transition: background-color 0.3s; /* Hiệu ứng chuyển đổi màu nền */
+}
+
+.recommend-btn:hover {
+    background-color: #0056b3; /* Màu nền khi di chuột */
+}
+
+/* Kiểu cho phần gợi ý cụ thể hơn */
+.sub-recommendations {
+    margin-top: 20px; /* Khoảng cách trên */
+}
+
+/* Kiểu cho lớp ẩn */
+.hidden {
+    display: none; /* Ẩn phần tử */
+}

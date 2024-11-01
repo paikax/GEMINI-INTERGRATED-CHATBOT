@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>What can I help with?</title>
+    <link rel="stylesheet" href="../css/test.css">
+</head>
+<body>
+    <div class="container">
+        <h1>What can I help with?</h1>
+        <input type="text" id="chatInput" placeholder="Message chatDevG5" />
+
+        <!-- Các nút gợi ý -->
+        <div id="promptContainer" class="recommend-buttons">
+            <button class="recommend-btn" data-prompt="Code">Code</button>
+            <button class="recommend-btn" data-prompt="Get Advice">Get Advice</button>
+            <button class="recommend-btn" data-prompt="Summarize Text">Summarize Text</button>
+            <button class="recommend-btn" data-prompt="Make Plan">Make Plan</button>
+            <button class="recommend-btn" data-prompt="Help Me Write">Help Me Write</button>
+            <button class="recommend-btn" data-prompt="Surprise Me">Surprise Me</button>
+            
+            <button id="moreButton" class="recommend-btn">More</button>
+        </div>
+        
+        <!-- Hiển thị gợi ý cụ thể hơn -->
+        <div id="subRecommendations" class="sub-recommendations"></div>
+    </div>
+    <script src="../js/components/test.js"></script>
+</body>
+</html>

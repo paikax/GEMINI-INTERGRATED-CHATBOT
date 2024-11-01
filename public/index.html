@@ -90,6 +90,7 @@
         </button>
     </div>
     <main class="chat-container">
+        
         <aside class="chat-history">
             <div class="button-container">
                 <button class="add-button" id="newChatButton">New chat</button>
@@ -104,6 +105,24 @@
             <div class="left-panel">
             </div>
             <div class="center-panel">
+                <div class="container">
+                    <h1>What can I help with?</h1>
+            
+                    <!-- Các nút gợi ý -->
+                    <div id="promptContainer" class="recommend-buttons">
+                        <button class="recommend-btn" data-prompt="Code">Code</button>
+                        <button class="recommend-btn" data-prompt="Get Advice">Get Advice</button>
+                        <button class="recommend-btn" data-prompt="Summarize Text">Summarize Text</button>
+                        <button class="recommend-btn" data-prompt="Make Plan">Make Plan</button>
+                        <button class="recommend-btn" data-prompt="Help Me Write">Help Me Write</button>
+                        <button class="recommend-btn" data-prompt="Surprise Me">Surprise Me</button>
+                        
+                        <button id="moreButton" class="recommend-btn">More</button>
+                    </div>
+                    
+                    <!-- Hiển thị gợi ý cụ thể hơn -->
+                    <div id="subRecommendations" class="sub-recommendations"></div>
+                </div>
                 <div class="messages">
                     <div class="chat-messages" id="chatMessages">
                         <!-- Chat messages will be appended here -->
@@ -188,5 +207,6 @@
             hljs.highlightAll();
         });
     </script>
+    
 </body>
 </html>
