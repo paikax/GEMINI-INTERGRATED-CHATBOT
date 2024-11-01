@@ -619,7 +619,7 @@ document.getElementById('userInput').addEventListener('keypress', function (e) {
     }
 });
 
-//----------------------------------------------------------------------------
+//---------------------------------------------------------------------------
 // quick reply
 function addQuickReplyButtons(messageElement) {
     const quickReplies = [ "Not this", "Tell me more above"];
