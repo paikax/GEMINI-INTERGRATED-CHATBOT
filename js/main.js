@@ -1,12 +1,3 @@
-<<<<<<< Updated upstream
-function parseMarkdown(text) {
-    // Handle bold text with ** or __
-    text = text.replace(/\*\*(.*?)\*\*|__(.*?)__/g, '<span class="emphasized">$1$2</span>');
-    return text;
-}
-
-async function simulateTyping(container, content, typingSpeed = 30) {
-=======
 const conversationHistory = [];
 let currentChatId = null;
 const chatList = document.getElementById('chatList');
@@ -172,7 +163,6 @@ function parseMarkdown(text) {
 }
 
 async function simulateTyping(container, content, typingSpeed = 20) {
->>>>>>> Stashed changes
     const messageContent = document.createElement('div');
     messageContent.classList.add('message-content');
     container.appendChild(messageContent);
@@ -185,10 +175,6 @@ async function simulateTyping(container, content, typingSpeed = 20) {
             messageContent.appendChild(codeContainer);
             const codeElement = codeContainer.querySelector('code');
             
-<<<<<<< Updated upstream
-            for (let i = 0; i < segment.content.length; i++) {
-                codeElement.textContent += segment.content[i];
-=======
             // Clear the code element initially
 
             codeElement.textContent = '';
@@ -197,7 +183,6 @@ async function simulateTyping(container, content, typingSpeed = 20) {
 
             for (let i = 0; i < fullCode.length; i++) {
                 codeElement.textContent += fullCode[i];
->>>>>>> Stashed changes
                 hljs.highlightElement(codeElement);
                 await new Promise(resolve => setTimeout(resolve, typingSpeed / 2));
             }
@@ -269,18 +254,12 @@ function createCodeSnippet(language, code) {
         <span>Copy</span>
     `;
 
-<<<<<<< Updated upstream
-    copyButton.addEventListener('click', async () => {
-        try {
-            await navigator.clipboard.writeText(code);
-=======
     container.dataset.codeContent = code;
 
     copyButton.addEventListener('click', async () => {
         try {
             const codeToCopy = container.dataset.codeContent;
             await navigator.clipboard.writeText(codeToCopy);
->>>>>>> Stashed changes
             copyButton.innerHTML = `
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <polyline points="20 6 9 17 4 12"></polyline>
@@ -340,15 +319,6 @@ function addReadAloudAndCopyButtons(messageElement, text) {
 }
 
 function copyToClipboard(text, button) {
-<<<<<<< Updated upstream
-    navigator.clipboard.writeText(text).then(() => {
-        button.textContent = "✅ Copied!";
-        setTimeout(() => (button.textContent = "📋 Copy"), 2000); // Reset text after 2 seconds
-    }).catch(err => {
-        console.error('Failed to copy text: ', err);
-        alert("Failed to copy text.");
-    });
-=======
     if (navigator.clipboard && navigator.clipboard.writeText) {
         navigator.clipboard.writeText(text).then(() => {
             button.textContent = "✅ Copied!";
@@ -373,7 +343,6 @@ function copyToClipboard(text, button) {
             document.body.removeChild(textarea);
         }
     }
->>>>>>> Stashed changes
 }
 
 function readAloud(text) {
@@ -397,17 +366,6 @@ async function handleBotResponse(response) {
         messageElement.classList.add('chat-message', 'bot-message');
         document.getElementById('chatMessages').appendChild(messageElement);
 
-<<<<<<< Updated upstream
-        // // Add "Read Aloud" button
-        // const readButton = document.createElement('button');
-        // readButton.textContent = "🔊";
-        // readButton.classList.add('read-aloud-button');
-        // readButton.addEventListener('click', () => readAloud(combinedResponse));
-        // messageElement.appendChild(readButton);
-
-        await simulateTyping(messageElement, combinedResponse);
-        messageElement.scrollIntoView({ behavior: 'smooth' });
-=======
         await simulateTyping(messageElement, combinedResponse);
         messageElement.scrollIntoView({ behavior: 'smooth' });
         addReadAloudAndCopyButtons(messageElement, combinedResponse);
@@ -418,7 +376,6 @@ async function handleBotResponse(response) {
 
          // Save to local storage
         saveToLocalStorage(conversationHistory);
->>>>>>> Stashed changes
     } catch (error) {
         console.error('Error parsing response:', error);
         appendMessage("Sorry, there was an error retrieving the response.", 'bot');
@@ -427,14 +384,11 @@ async function handleBotResponse(response) {
 
 function appendMessage(message, type) {
     const chatMessages = document.getElementById('chatMessages');
-<<<<<<< Updated upstream
-=======
     
     // Create wrapper for message alignment
     const messageWrapper = document.createElement('div');
     messageWrapper.classList.add('message-wrapper');
     
->>>>>>> Stashed changes
     const messageElement = document.createElement('div');
     messageElement.classList.add('chat-message');
 
@@ -450,45 +404,6 @@ function appendMessage(message, type) {
     messageElement.scrollIntoView({ behavior: 'smooth' });
 }
 
-<<<<<<< Updated upstream
-//quick reply function
-function showQuickReplies(options) {
-    const quickReplyContainer = document.createElement('div');
-    quickReplyContainer.classList.add('quick-reply-container');
-
-    options.forEach(option => {
-        const quickReplyButton = document.createElement('button');
-        quickReplyButton.classList.add('quick-reply-button');
-        quickReplyButton.textContent = option;
-        
-        quickReplyButton.addEventListener('click', async () => {
-            appendMessage(option, 'user');
-
-            try {
-                const response = await fetch('http://localhost:3000/api/chat', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ input: option }),
-                });
-
-                await handleBotResponse(response);
-            } catch (error) {
-                console.error('Error:', error);
-                appendMessage('Sorry, there was an error.', 'bot');
-            }
-        });
-
-        quickReplyContainer.appendChild(quickReplyButton);
-    });
-
-    document.getElementById('chatMessages').appendChild(quickReplyContainer);
-    quickReplyContainer.scrollIntoView({ behavior: 'smooth' });
-}
-
-// Event listeners
-=======
 function addQuickReplyButtons(messageElement) {
     const quickReplies = ["Make a new one", "Not this", "Tell me more"];
     const quickReplyContainer = document.createElement('div');
@@ -537,13 +452,10 @@ document.addEventListener('DOMContentLoaded', () => {
     renderChatList();
 });
 
->>>>>>> Stashed changes
 document.getElementById('sendButton').addEventListener('click', async function() {
     const userInput = document.getElementById('userInput');
     const message = userInput.value.trim();
 
-<<<<<<< Updated upstream
-=======
     const messageElement = document.createElement('div');
     document.getElementById('chatMessages').appendChild(messageElement);
     
@@ -556,7 +468,6 @@ document.getElementById('sendButton').addEventListener('click', async function()
     loadingAnimation.setAttribute("autoplay", "true");
     messageElement.appendChild(loadingAnimation);
 
->>>>>>> Stashed changes
     if (message !== "") {
         appendMessage(message, 'user');
         userInput.value = '';
@@ -567,14 +478,10 @@ document.getElementById('sendButton').addEventListener('click', async function()
                 headers: {
                     'Content-Type': 'application/json',
                 },
-<<<<<<< Updated upstream
-                body: JSON.stringify({ input: message }),
-=======
                 body: JSON.stringify({ 
                     input: message, 
                     sessionId: currentChatId
                 }),
->>>>>>> Stashed changes
             });
 
             await handleBotResponse(response);

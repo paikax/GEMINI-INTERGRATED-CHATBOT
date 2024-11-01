@@ -33,14 +33,11 @@ app.post("/api/chat", async (req, res) => {
         res.json({ response: responseText });
 
         console.log("Full Response:", responseText);
-<<<<<<< Updated upstream
-=======
         
         // Save user message to MongoDB
         await insertMessageToMongoDB(req.body.userId, sessionId, { content: userInput, fromUser: true });
         // Save AI response to MongoDB
         await insertMessageToMongoDB(req.body.userId, sessionId, { content: responseText, fromUser: false });
->>>>>>> Stashed changes
 
         const end = Date.now();
         console.log("Response time (ms):", end - start);

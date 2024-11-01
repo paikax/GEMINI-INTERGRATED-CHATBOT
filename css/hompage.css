@@ -482,8 +482,6 @@ nav ul li a {
     margin: 5px 0;
     line-height: 1.5;
     white-space: pre-wrap;
-<<<<<<< Updated upstream
-=======
 }
 
 .toggle-button {
@@ -649,5 +647,4 @@ nav ul li a {
     footer{
         display:none;
     }
->>>>>>> Stashed changes
 }
