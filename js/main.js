@@ -3,12 +3,38 @@ const conversationHistory = [];
 let currentChatId = null;
 const chatList = document.getElementById('chatList');
 const newChatButton = document.getElementById('newChatButton');
+const userInput = document.getElementById('userInput');
+const sendButton = document.getElementById('sendButton');
 
+sendButton.disabled = true;
 
 // Conversation list
 function generateChatId() {
     return 'chat_' + Date.now();
 }
+
+userInput.addEventListener('input', () => {
+    if (userInput.value.trim() === '') {
+        sendButton.disabled = true; // Disable the button if input is empty
+    } else {
+        sendButton.disabled = false; // Enable the button if input is not empty
+    }
+});
+
+function disableInput() {
+    userInput.disabled = true;
+    sendButton.disabled = true;
+    userInput.classList.add('disabled'); // Optional: Add a CSS class for a grayed-out effect
+    sendButton.classList.add('disabled'); // Optional: Add a CSS class for a grayed-out effect
+}
+// Function to enable input and send button
+function enableInput() {
+    userInput.disabled = false;
+    sendButton.disabled = false;
+    userInput.classList.remove('disabled'); // Optional: Remove the CSS class
+    sendButton.classList.remove('disabled'); // Optional: Remove the CSS class
+}
+
 
 // Function to save chat history to local storage
 function saveChatToLocalStorage(chatId, conversation) {
@@ -41,7 +67,7 @@ function loadChatsFromLocalStorage() {
 function renderChatList() {
     chatList.innerHTML = '';
     const allChats = loadChatsFromLocalStorage();
-    
+
     Object.values(allChats)
         .sort((a, b) => b.timestamp - a.timestamp)
         .forEach(chat => {
@@ -50,23 +76,23 @@ function renderChatList() {
             if (chat.id === currentChatId) {
                 chatElement.classList.add('active');
             }
-            
+
             chatElement.innerHTML = `
                 <span class="chat-title">${chat.title}</span>
                 <button class="delete-chat-btn">×</button>
             `;
-            
+
             chatElement.addEventListener('click', (e) => {
                 if (!e.target.classList.contains('delete-chat-btn')) {
                     loadChat(chat.id);
                 }
             });
-            
+
             chatElement.querySelector('.delete-chat-btn').addEventListener('click', (e) => {
                 e.stopPropagation();
                 deleteChat(chat.id);
             });
-            
+
             chatList.appendChild(chatElement);
         });
 }
@@ -78,27 +104,39 @@ function loadChat(chatId) {
         currentChatId = chatId;
         conversationHistory.length = 0;
         conversationHistory.push(...chat.messages);
-        
+
         const chatMessages = document.getElementById('chatMessages');
         chatMessages.innerHTML = '';
-        
+
         chat.messages.forEach(message => {
             // Create wrapper for message alignment
             const messageWrapper = document.createElement('div');
             messageWrapper.classList.add('message-wrapper');
-            
+
+            // Create an avatar element
+            const avatar = document.createElement('img');
+            if (message.role === 'user') {
+                avatar.classList.add('avatar', 'user-avatar');
+                avatar.src = 'https://e7.pngegg.com/pngimages/799/987/png-clipart-computer-icons-avatar-icon-design-avatar-heroes-computer-wallpaper-thumbnail.png';
+                avatar.alt = 'User Avatar';
+            } else {
+                avatar.classList.add('avatar', 'bot-avatar');
+                avatar.src = '../src/img/robot-assistant.png';
+                avatar.alt = 'Bot Avatar';
+            }
+
             const messageElement = document.createElement('div');
-            messageElement.classList.add('chat-message', 
+            messageElement.classList.add('chat-message',
                 message.role === 'user' ? 'user-message' : 'bot-message');
-            
+
             if (message.role === 'user') {
                 messageElement.textContent = message.content;
             } else {
                 const messageContainer = document.createElement('div');
                 messageContainer.classList.add('message-content');
-                
+
                 const segments = parseContent(message.content);
-                
+
                 segments.forEach(segment => {
                     if (segment.type === 'code') {
                         const codeContainer = createCodeSnippet(
@@ -106,7 +144,7 @@ function loadChat(chatId) {
                             segment.content.trim()
                         );
                         messageContainer.appendChild(codeContainer);
-                        
+
                         const codeElement = codeContainer.querySelector('code');
                         if (codeElement) {
                             hljs.highlightElement(codeElement);
@@ -118,15 +156,15 @@ function loadChat(chatId) {
                         messageContainer.appendChild(textBlock);
                     }
                 });
-                
+
                 messageElement.appendChild(messageContainer);
                 addReadAloudAndCopyButtons(messageElement, message.content);
             }
-            
+            messageWrapper.appendChild(avatar);
             messageWrapper.appendChild(messageElement);
             chatMessages.appendChild(messageWrapper);
         });
-        
+
         renderChatList();
         chatMessages.scrollTop = chatMessages.scrollHeight;
     }
@@ -138,13 +176,13 @@ function deleteChat(chatId) {
     const allChats = loadChatsFromLocalStorage();
     delete allChats[chatId];
     localStorage.setItem('allChats', JSON.stringify(allChats));
-    
+
     if (currentChatId === chatId) {
         currentChatId = null;
         conversationHistory.length = 0;
         document.getElementById('chatMessages').innerHTML = '';
     }
-    
+
     renderChatList();
 }
 
@@ -165,24 +203,25 @@ function parseMarkdown(text) {
     return text;
 }
 
- 
-async function simulateTyping(container, content, typingSpeed = 20) {
+
+async function simulateTyping(container, content, typingSpeed = 30) {
+
     const messageContent = document.createElement('div');
     messageContent.classList.add('message-content');
     container.appendChild(messageContent);
 
     const segments = parseContent(content);
-    
+
     for (const segment of segments) {
         if (segment.type === 'code') {
             const fullCode = segment.content.trim();
             const codeContainer = createCodeSnippet(segment.language || 'plaintext', fullCode);
             messageContent.appendChild(codeContainer);
             const codeElement = codeContainer.querySelector('code');
-            
+
             // Clear the code element initially
             codeElement.textContent = '';
-            
+
             // Type out the code
             for (let i = 0; i < fullCode.length; i++) {
                 codeElement.textContent += fullCode[i];
@@ -284,7 +323,7 @@ function createCodeSnippet(language, code) {
                 <span>Copied!</span>
             `;
             copyButton.classList.add('copied');
-            
+
             setTimeout(() => {
                 copyButton.innerHTML = `
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -326,13 +365,13 @@ function addReadAloudAndCopyButtons(messageElement, text) {
     readButton.classList.add('read-aloud-button');
     readButton.textContent = "🔊";
     readButton.addEventListener('click', () => readAloud(text));
-    
+
     // Create the Copy button
     const copyButton = document.createElement('button');
     copyButton.classList.add('copy-button');
     copyButton.textContent = "📋";
     copyButton.addEventListener('click', () => copyToClipboard(text, copyButton));
-    
+
     // Append both buttons to the message element
     messageElement.appendChild(readButton);
     messageElement.appendChild(copyButton);
@@ -388,6 +427,7 @@ async function handleBotResponse(response) {
             .map(segment => JSON.parse(segment).response)
             .join(' ');
 
+
         const messageElement = document.createElement('div');
         messageElement.classList.add('chat-message', 'bot-message');
         document.getElementById('chatMessages').appendChild(messageElement);
@@ -397,11 +437,13 @@ async function handleBotResponse(response) {
         messageElement.scrollIntoView({ behavior: 'smooth' });
         addReadAloudAndCopyButtons(messageElement, combinedResponse);
 
-         // Add bot response to history
-         conversationHistory.push({ role: 'bot', content: combinedResponse, datetime: new Date().toISOString() });
+        addQuickReplyButtons(messageElement);
+        // Add bot response to history
+        conversationHistory.push({ role: 'bot', content: combinedResponse, datetime: new Date().toISOString() });
 
-         // Save to local storage
-         saveToLocalStorage(conversationHistory);
+        // Save to local storage
+        saveToLocalStorage(conversationHistory);
+        enableInput();
     } catch (error) {
         console.error('Error parsing response:', error);
         appendMessage("Sorry, there was an error retrieving the response.", 'bot');
@@ -415,11 +457,19 @@ async function handleBotResponse(response) {
 
 function appendMessage(message, type) {
     const chatMessages = document.getElementById('chatMessages');
-    
+
     // Create wrapper for message alignment
     const messageWrapper = document.createElement('div');
     messageWrapper.classList.add('message-wrapper');
-    
+
+    // Add avatar for user or bot
+    const avatar = document.createElement('img');
+    avatar.classList.add('avatar', type === 'user' ? 'user-avatar' : 'bot-avatar');
+    avatar.src = type === 'user'
+        ? 'https://e7.pngegg.com/pngimages/799/987/png-clipart-computer-icons-avatar-icon-design-avatar-heroes-computer-wallpaper-thumbnail.png'
+        : '../src/img/robot-assistant.png';
+    avatar.alt = type === 'user' ? 'User Avatar' : 'Bot Avatar';
+
     // Create message element
     const messageElement = document.createElement('div');
     messageElement.classList.add('chat-message', `${type}-message`);
@@ -429,9 +479,9 @@ function appendMessage(message, type) {
     } else {
         const messageContainer = document.createElement('div');
         messageContainer.classList.add('message-content');
-        
+
         const segments = parseContent(message);
-        
+
         segments.forEach(segment => {
             if (segment.type === 'code') {
                 const codeContainer = createCodeSnippet(
@@ -439,7 +489,7 @@ function appendMessage(message, type) {
                     segment.content.trim()
                 );
                 messageContainer.appendChild(codeContainer);
-                
+
                 const codeElement = codeContainer.querySelector('code');
                 if (codeElement) {
                     hljs.highlightElement(codeElement);
@@ -451,11 +501,11 @@ function appendMessage(message, type) {
                 messageContainer.appendChild(textBlock);
             }
         });
-        
+
         messageElement.appendChild(messageContainer);
         addReadAloudAndCopyButtons(messageElement, message);
     }
-
+    messageWrapper.appendChild(avatar);
     messageWrapper.appendChild(messageElement);
     chatMessages.appendChild(messageWrapper);
     messageWrapper.scrollIntoView({ behavior: 'smooth' });
@@ -497,22 +547,27 @@ function sanitizeStoredMessages() {
 document.addEventListener('DOMContentLoaded', () => {
     // Set up new chat button
     newChatButton.addEventListener('click', startNewChat);
-    
+
     // Initialize with a new chat if none exists
     if (!currentChatId) {
         startNewChat();
     }
-    
+
     // Render existing chats
     renderChatList();
 });
 
 // Event listeners
-document.getElementById('sendButton').addEventListener('click', async function() {
+document.getElementById('sendButton').addEventListener('click', async function () {
     const userInput = document.getElementById('userInput');
     const message = userInput.value.trim();
+    disableInput();
 
-    const messageElement = document.createElement('div');
+    if (message !== "") {
+        appendMessage(message, 'user');
+        userInput.value = '';
+
+        const messageElement = document.createElement('div');
         document.getElementById('chatMessages').appendChild(messageElement);
         const loadingAnimation = document.createElement('dotlottie-player');
         loadingAnimation.src = "https://lottie.host/2058cb37-e662-47ef-b20b-b33972803913/QayEIxoE9G.json";
@@ -522,11 +577,6 @@ document.getElementById('sendButton').addEventListener('click', async function()
         loadingAnimation.setAttribute("loop", "true");
         loadingAnimation.setAttribute("autoplay", "true");
         messageElement.appendChild(loadingAnimation);
-
-    if (message !== "") {
-        appendMessage(message, 'user');
-        userInput.value = '';
-
         // Add user message to history
         conversationHistory.push({ role: 'user', content: message, datetime: new Date().toISOString() });
 
@@ -536,30 +586,68 @@ document.getElementById('sendButton').addEventListener('click', async function()
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ 
-                    input: message, 
+                body: JSON.stringify({
+                    input: message,
                     history: conversationHistory // Send history as part of the request
                 }),
             });
 
             messageElement.removeChild(loadingAnimation);
-            await handleBotResponse(response); 
+            await handleBotResponse(response);
         } catch (error) {
             console.error('Error:', error);
             appendMessage('Sorry, there was an error.', 'bot');
-            messageElement.removeChild(loadingAnimation); 
+            messageElement.removeChild(loadingAnimation);
         }
 
         messageElement.scrollIntoView({ behavior: 'smooth' });
     }
 });
 
-document.getElementById('userInput').addEventListener('keypress', function(e) {
+document.getElementById('userInput').addEventListener('keypress', function (e) {
     if (e.key === 'Enter') {
         document.getElementById('sendButton').click();
     }
 });
 
+//----------------------------------------------------------------------------
+// quick reply
+function addQuickReplyButtons(messageElement) {
+    const quickReplies = ["Make a new one", "Not this", "Tell me more"];
+    const quickReplyContainer = document.createElement('div');
+    quickReplyContainer.classList.add('quick-reply-container');
+
+    quickReplies.forEach(reply => {
+        const button = document.createElement('button');
+        button.classList.add('quick-reply-button');
+        button.textContent = reply;
+        button.addEventListener('click', () => {
+            appendMessage(reply, 'user');
+            conversationHistory.push({ role: 'user', content: reply, datetime: new Date().toISOString() });
+            sendUserInput(reply);
+        });
+        quickReplyContainer.appendChild(button);
+    });
+
+    messageElement.appendChild(quickReplyContainer);
+}
+
+function sendUserInput(input) {
+    fetch('http://localhost:3000/api/chat', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            input: input,
+            sessionId: currentChatId
+        }),
+    })
+    .then(response => handleBotResponse(response))
+    .catch(error => {
+        console.error('Error:', error);
+        appendMessage('Sorry, there was an error.', 'bot');
+    });
+}
 
 
-// History

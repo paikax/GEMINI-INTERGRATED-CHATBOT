@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,11 +10,12 @@
     <script src="https://apis.google.com/js/platform.js" async defer></script> <!-- Google API Script -->
     <meta name="google-signin-client_id" content="932017646849-ulovcd8ed6v4o43bn0kqjab5gg28pvcr.apps.googleusercontent.com">
 </head>
+
 <body>
     <header>
         <nav>
             <ul>
-                <li><button class="login-button" onclick="signIn()">Login</button></li>
+                <li><button class="login-button" id="loginBtn">Login</button></li>
                 <li><img src="../src/img/robot-assistant.png" alt="" class="robot-image"></li>
                 <h2 class="logo-heading">DevG5</h2>
             </ul>
@@ -26,17 +28,23 @@
         <section class="features">
             <div class="feature gemini">
                 <h2 class="gemini-heading">Gemini</h2>
-                <p class="gemini-description">Enhance your ability to create and enhance conversational activities with Google AI to start writing content, planning, learning, and more</p>
-                <button class="login-button-2" onclick="signIn()">Sign in</button>
+                <p class="gemini-description">Enhance your ability to create and enhance conversational activities with
+                    Google AI to start writing content, planning, learning, and more</p>
+                <button class="login-button-2">Sign in</button>
             </div>
             <div class="feature nitro">
                 <div class="swiper-container">
                     <div class="swiper-wrapper">
-                        <div class="swiper-slide"><img src="../src/img/nitro.gif" alt="Nitro Image" class="feature-image"></div>
-                        <div class="swiper-slide"><img src="../src/img/SlideAI2.png" alt="Another Image" class="feature-image"></div>
-                        <div class="swiper-slide"><img src="../src/img/SlideAI3.jpg" alt="Another Image" class="feature-image"></div>
-                        <div class="swiper-slide"><img src="../src/img/SlideAI4.jpg" alt="Another Image" class="feature-image"></div>
-                        <div class="swiper-slide"><img src="../src/img/SlideAI5.png" alt="Another Image" class="feature-image"></div>    
+                        <div class="swiper-slide"><img src="../src/img/nitro.gif" alt="Nitro Image"
+                                class="feature-image"></div>
+                        <div class="swiper-slide"><img src="../src/img/SlideAI2.png" alt="Another Image"
+                                class="feature-image"></div>
+                        <div class="swiper-slide"><img src="../src/img/SlideAI3.jpg" alt="Another Image"
+                                class="feature-image"></div>
+                        <div class="swiper-slide"><img src="../src/img/SlideAI4.jpg" alt="Another Image"
+                                class="feature-image"></div>
+                        <div class="swiper-slide"><img src="../src/img/SlideAI5.png" alt="Another Image"
+                                class="feature-image"></div>
                         <!-- Thêm nhiều slide hơn nếu cần -->
                     </div>
                     <!-- Thêm các nút điều khiển -->
@@ -81,35 +89,7 @@
                 crossFade: true
             }
         });
-
-        // Google Sign-In function
-        function signIn() {
-            const params = {
-                prompt: 'select_account',
-            };
-            gapi.auth2.getAuthInstance().signIn(params).then(function(googleUser) {
-                // Successful sign-in
-                const profile = googleUser.getBasicProfile();
-                console.log('ID: ' + profile.getId()); // Do not send to your backend! Use an ID token instead.
-                console.log('Name: ' + profile.getName());
-                console.log('Image URL: ' + profile.getImageUrl());
-                console.log('Email: ' + profile.getEmail());
-                // You can also redirect the user or do something with the received user info
-            }).catch(function(error) {
-                console.error('Error signing in:', error);
-            });
-        }
-
-        // Initialize Google Auth
-        function initClient() {
-            gapi.load('auth2', function() {
-                gapi.auth2.init({
-                    client_id: 'YOUR_GOOGLE_CLIENT_ID.apps.googleusercontent.com', // Replace with your client ID
-                });
-            });
-        }
-
-        window.onload = initClient; // Initialize Google Auth on window load
     </script>
 </body>
+
 </html>
