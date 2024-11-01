@@ -3,12 +3,38 @@ const conversationHistory = [];
 let currentChatId = null;
 const chatList = document.getElementById('chatList');
 const newChatButton = document.getElementById('newChatButton');
+const userInput = document.getElementById('userInput');
+const sendButton = document.getElementById('sendButton');
 
+sendButton.disabled = true;
 
 // Conversation list
 function generateChatId() {
     return 'chat_' + Date.now();
 }
+
+userInput.addEventListener('input', () => {
+    if (userInput.value.trim() === '') {
+        sendButton.disabled = true; // Disable the button if input is empty
+    } else {
+        sendButton.disabled = false; // Enable the button if input is not empty
+    }
+});
+
+function disableInput() {
+    userInput.disabled = true;
+    sendButton.disabled = true;
+    userInput.classList.add('disabled'); // Optional: Add a CSS class for a grayed-out effect
+    sendButton.classList.add('disabled'); // Optional: Add a CSS class for a grayed-out effect
+}
+// Function to enable input and send button
+function enableInput() {
+    userInput.disabled = false;
+    sendButton.disabled = false;
+    userInput.classList.remove('disabled'); // Optional: Remove the CSS class
+    sendButton.classList.remove('disabled'); // Optional: Remove the CSS class
+}
+
 
 // Function to save chat history to local storage
 function saveChatToLocalStorage(chatId, conversation) {
@@ -410,11 +436,13 @@ async function handleBotResponse(response) {
         messageElement.scrollIntoView({ behavior: 'smooth' });
         addReadAloudAndCopyButtons(messageElement, combinedResponse);
 
+        addQuickReplyButtons(messageElement);
         // Add bot response to history
         conversationHistory.push({ role: 'bot', content: combinedResponse, datetime: new Date().toISOString() });
 
         // Save to local storage
         saveToLocalStorage(conversationHistory);
+        enableInput();
     } catch (error) {
         console.error('Error parsing response:', error);
         appendMessage("Sorry, there was an error retrieving the response.", 'bot');
@@ -532,7 +560,7 @@ document.addEventListener('DOMContentLoaded', () => {
 document.getElementById('sendButton').addEventListener('click', async function () {
     const userInput = document.getElementById('userInput');
     const message = userInput.value.trim();
-
+    disableInput();
 
     if (message !== "") {
         appendMessage(message, 'user');
@@ -582,4 +610,43 @@ document.getElementById('userInput').addEventListener('keypress', function (e) {
 });
 
 //----------------------------------------------------------------------------
-//login via gg
+// quick reply
+function addQuickReplyButtons(messageElement) {
+    const quickReplies = ["Make a new one", "Not this", "Tell me more"];
+    const quickReplyContainer = document.createElement('div');
+    quickReplyContainer.classList.add('quick-reply-container');
+
+    quickReplies.forEach(reply => {
+        const button = document.createElement('button');
+        button.classList.add('quick-reply-button');
+        button.textContent = reply;
+        button.addEventListener('click', () => {
+            appendMessage(reply, 'user');
+            conversationHistory.push({ role: 'user', content: reply, datetime: new Date().toISOString() });
+            sendUserInput(reply);
+        });
+        quickReplyContainer.appendChild(button);
+    });
+
+    messageElement.appendChild(quickReplyContainer);
+}
+
+function sendUserInput(input) {
+    fetch('http://localhost:3000/api/chat', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            input: input,
+            sessionId: currentChatId
+        }),
+    })
+    .then(response => handleBotResponse(response))
+    .catch(error => {
+        console.error('Error:', error);
+        appendMessage('Sorry, there was an error.', 'bot');
+    });
+}
+
+

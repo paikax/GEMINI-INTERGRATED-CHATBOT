@@ -1,12 +1,13 @@
 {
   "name": "gemini-intergrated-chatbot",
   "version": "1.0.0",
+  "main": "index.js",
   "directories": {
     "test": "test"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon ./js/components/loginViaGg.js"
+    "start": "nodemon ./server/index.js"
   },
   "keywords": [],
   "author": "",
