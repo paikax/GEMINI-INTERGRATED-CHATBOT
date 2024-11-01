@@ -1,15 +1,22 @@
-@font-face{
+@font-face {
     font-family: 'Digital';
-    src: url('./font/ARCADECLASSIC.TTF') format('truetype');
+    src: url('../src/fonts/ARCADECLASSIC.TTF') format('truetype');
     font-weight: normal;
     font-style: normal;
 }
+
 body {
     font-family: Arial, sans-serif;
     margin: 0;
     padding: 0;
     background-color: white; /* Màu nền trắng */
     color: black; /* Màu chữ đen */
+    height: 100vh;
+    overflow: hidden;
+}
+
+main {
+    height: 100%;
 }
 
 header {
@@ -17,6 +24,11 @@ header {
     color: black; /* Màu chữ đen */
     padding: 1rem 0;
     border-bottom: 1px solid #ccc; /* Đường viền dưới để phân cách */
+    position: fixed;
+    width: 100%;
+    z-index: 1000; /* Ensure header stays on top */;
+    height: 35px;
+
 }
 
 nav ul {
@@ -61,11 +73,12 @@ nav ul li a {
     left: 10px; /* Cách phía trái 10px */
     margin-left: 2rem;
 }
+
 .logo-heading {
     width: 100px; /* Điều chỉnh kích thước của hình ảnh */
     height: auto; /* Đảm bảo tỷ lệ khung hình không bị thay đổi */
     position: absolute; /* Đặt hình ảnh ở vị trí tuyệt đối */
-    top: 10px; /* Cách phía trên 10px */
+    top: 18px; /* Cách phía trên 10px */
     left: 10px; /* Cách phía trái 10px */
     margin-left: 6.5rem;
     font-family: 'Digital', sans-serif;
@@ -77,6 +90,7 @@ nav ul li a {
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
     font-size: 2rem;
     margin-top: auto;
+
 }
 
 .login-button-2 {
@@ -88,27 +102,22 @@ nav ul li a {
     cursor: pointer;
     font-size: 16px;
     text-decoration: none;
-    margin-left: 4rem;
+    margin-left: 5rem;
+    font-weight: bold;
 }
 
 .login-button-2:hover {
     background-color: #c8d4ec; /* Màu nền của button khi hover */
 }
 
-.hero {
-    background-image: url('hero-background.jpg');
-    background-size: cover;
-    background-position: center;
-    color: black; /* Màu chữ đen */
-    text-align: center;
-    padding: 5rem 1rem;
-}
-
 .features {
     display: flex;
     justify-content: center; /* Căn phần tử ở giữa */
     align-items: center; /* Căn giữa theo chiều dọc */
-    padding: 2rem 1rem;
+    padding: 1rem 1rem;
+    height: 100%;
+    position: fixed;
+    width: 100%;
 }
 
 .feature {
@@ -128,6 +137,7 @@ nav ul li a {
     border-radius: 15px; /* Bo tròn các góc của hình ảnh */
     margin-top: -8rem; /* Dịch chuyển hình ảnh lên trên */
 }
+
 .feature.gemini {
     margin-left: -15rem; /* Dịch chuyển toàn bộ phần này sang trái */
 }
@@ -135,6 +145,7 @@ nav ul li a {
 .feature.nitro {
     margin-left: 15rem; /* Dịch chuyển toàn bộ phần này sang phải */
 }
+
 .gemini-heading {
     font-family: 'Montserrat', sans-serif;
     font-size: 5rem;
@@ -153,6 +164,7 @@ nav ul li a {
     margin-top: -2rem; /* Dịch chuyển đoạn văn bản lên trên */
     text-align: center;
 }
+
 .swiper-container {
     width: auto;
     height: auto; /* Điều chỉnh chiều cao của slide */
@@ -166,6 +178,9 @@ footer {
     padding: 0.5rem 0; /* Giảm padding để làm footer nhỏ lại */
     font-size: 14px; /* Giảm kích thước chữ */
     border-top: 1px solid #ccc; /* Đường viền trên để phân cách */
+    position: fixed;
+    bottom: 0;
+    width: 100%;
 }
 
 .message-wrapper {
@@ -315,3 +330,865 @@ footer {
     border-radius: 8px;
     overflow: hidden;
 }
+
+.slide-ai2-image,
+.slide-ai3-image,
+.slide-ai4-image,
+.slide-ai5-image {
+    margin-top: 35px; /* Adjust the value as needed */
+}
+
+/* Responsive styles */
+
+/* Styles for iPad */
+@media (min-width: 768px) and (max-width: 1024px) {
+    /* CSS cho iPad dọc */
+    body {
+        font-size: 14px;
+    }
+
+    .header, .footer {
+        padding: 15px;
+    }
+
+    .container {
+        padding: 15px;
+    }
+    
+    .gemini-heading {
+        font-size: 3rem;
+        position: fixed; /* Use fixed position */
+        bottom: 355px; /* Adjust the value as needed */
+        left: 50%;
+        transform: translateX(-50%);
+        text-align: center;
+    }
+
+    .gemini-description {
+        position: fixed; /* Use fixed position */
+        bottom: 20%; /* Adjust the value as needed */
+        left: 50%;
+        transform: translateX(-50%);
+        width: 350px;
+        text-align: center;
+    }
+    .login-button-2 {
+        padding: 0.5rem 1rem;
+        position: fixed; /* Use fixed position */
+        bottom: 16%; /* Adjust the value as needed */
+        left: 38%;
+        transform: translateX(-50%);
+        text-align: center;
+        width: 100px;
+        height: 50px;
+        font-size: 18px;
+        font-weight: bold;
+
+    }
+    
+    .swiper-slide {
+        padding: 5px;
+    }
+
+    .feature-image {
+        width: 480px;
+        height: 480px;
+        position: fixed; /* Use fixed position */
+        top: -470px; /* Move images to the top */
+        left: 30px;
+        transform: translateX(-50%); /* Center the images horizontally */
+        margin-top: 20px;
+        display: flex;
+    }
+    .slide-ai2-image,
+    .slide-ai3-image,
+    .slide-ai4-image,
+    .slide-ai5-image {  
+        position: fixed; /* Use fixed position */
+        top: -470px; /* Move images to the top */
+        left: 30px;
+        transform: translateX(-50%); /* Center the images horizontally */
+        width: 500px; /* Set the width */
+        height: 480px; /* Set the height */
+        object-fit: cover; /* Ensure the image covers the area without distortion */
+        /* Adjust the margin as needed */
+    }
+
+    .features {
+        flex-direction: column;
+        position: fixed;
+        max-width: 100%;
+        margin: 1rem 0;
+        
+    }
+
+    
+}
+/* Styles for mobile */
+@media (max-width: 480px) {
+    body {
+        font-size: 12px;
+    }
+
+    .header, .footer {
+        padding: 10px;
+    }
+
+    .header {
+        padding: 100px 10px; /* Increase the height of the header */
+    }
+
+    .container {
+        padding: 10px;
+    }
+
+
+    .gemini-heading {
+        font-size: 3rem;
+        position: fixed; /* Use fixed position */
+        bottom: 350px; /* Adjust the value as needed */
+        left: 50%;
+        transform: translateX(-50%);
+        text-align: center;
+    }
+
+    .gemini-description {
+        position: fixed; /* Use fixed position */
+        bottom: 22%; /* Adjust the value as needed */
+        left: 50%;
+        transform: translateX(-50%);
+        width: 350px;
+        text-align: center;
+    }
+
+ .login-button-2 {
+        font-size: 12px;
+        padding: 0.5rem 1rem;
+        position: fixed; /* Use fixed position */
+        bottom: 20%; /* Adjust the value as needed */
+        left: 28%;
+        transform: translateX(-50%);
+        text-align: center;
+    }
+
+    .swiper-slide {
+        padding: 5px;
+    }
+
+    .feature-image {
+        width: 70%;
+        height: auto;
+        position: fixed; /* Use fixed position */
+        top: -400px; /* Move images to the top */
+        left: -10%;
+        transform: translateX(-50%); /* Center the images horizontally */
+        margin-top: 20px;
+        display: flex;
+    }
+    .slide-ai2-image,
+    .slide-ai3-image,
+    .slide-ai4-image,
+    .slide-ai5-image {  
+        position: fixed; /* Use fixed position */
+        top: -400px; /* Move images to the top */
+        left: -8%;
+        transform: translateX(-50%); /* Center the images horizontally */
+        width: 300px; /* Set the width */
+        height: 300px; /* Set the height */
+        object-fit: cover; /* Ensure the image covers the area without distortion */
+        /* Adjust the margin as needed */
+    }
+
+    .features {
+        flex-direction: column;
+        position: fixed;
+        max-width: 100%;
+        margin: 1rem 0;
+        
+    }
+
+}
+
+/* Styles for mobile */
+    
+
+@media (max-width: 480px) {
+    /* CSS cho điện thoại nhỏ */
+    body {
+        font-size: 12px;
+    }
+
+    .header, .footer {
+        padding: 10px;
+    }
+
+    .header {
+        padding: 100px 10px; /* Increase the height of the header */
+    }
+
+    .container {
+        padding: 10px;
+    }
+
+
+    .gemini-heading {
+        font-size: 3rem;
+        position: fixed; /* Use fixed position */
+        bottom: 350px; /* Adjust the value as needed */
+        left: 50%;
+        transform: translateX(-50%);
+        text-align: center;
+    }
+
+    .gemini-description {
+        position: fixed; /* Use fixed position */
+        bottom: 24%; /* Adjust the value as needed */
+        left: 50%;
+        transform: translateX(-50%);
+        width: 350px;
+        text-align: center;
+    }
+
+ .login-button-2 {
+        font-size: 12px;
+        padding: 0.5rem 1rem;
+        position: fixed; /* Use fixed position */
+        bottom: 22%; /* Adjust the value as needed */
+        left: 26%;
+        transform: translateX(-50%);
+        text-align: center;
+        font-weight: bold;
+    }
+    
+    .swiper-slide {
+        padding: 5px;
+    }
+
+    .feature-image {
+        width: 300px;
+        height: 300px;
+        position: fixed; /* Use fixed position */
+        top: -400px; /* Move images to the top */
+        left: 8%;
+        transform: translateX(-50%); /* Center the images horizontally */
+        margin-top: 20px;
+        display: flex;
+    }
+    .slide-ai2-image,
+.slide-ai3-image,
+.slide-ai4-image,
+.slide-ai5-image {  
+    position: fixed; /* Use fixed position */
+    top: -400px; /* Move images to the top */
+    right: 30%; /* Adjust the value to move images to the left */
+    transform: translateX(-50%); /* Center the images horizontally */
+    width: 300px; /* Set the width */
+    height: 300px; /* Set the height */
+    object-fit: cover; /* Ensure the image covers the area without distortion */
+    /* Adjust the margin as needed */
+}
+
+.features {
+    flex-direction: column;
+    position: fixed;
+    max-width: 100%;
+    margin: 1rem 0;
+}
+  }
+@font-face {
+    font-family: 'Digital';
+    src: url('../src/fonts/ARCADECLASSIC.TTF') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: white; /* Màu nền trắng */
+    color: black; /* Màu chữ đen */
+    height: 100vh;
+    overflow: hidden;
+}
+
+main {
+    height: 100%;
+}
+
+header {
+    background-color: white; /* Màu nền trắng */
+    color: black; /* Màu chữ đen */
+    padding: 1rem 0;
+    border-bottom: 1px solid #ccc; /* Đường viền dưới để phân cách */
+    position: fixed;
+    width: 100%;
+    z-index: 1000; /* Ensure header stays on top */;
+    height: 35px;
+
+}
+
+nav ul {
+    list-style: none;
+    display: flex;
+    justify-content: flex-end; /* Căn phần tử về phía bên phải */
+    align-items: center; /* Căn giữa theo chiều dọc */
+    padding: 0;
+    margin: 0;
+}
+
+nav ul li {
+    margin: 0 1rem;
+}
+
+nav ul li a {
+    color: black; /* Màu chữ đen */
+    text-decoration: none;
+}
+
+.login-button {
+    background-color: #1054d4; /* Màu nền của button */
+    color: white; /* Màu chữ của button */
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 12px; /* Bo tròn các góc của button */
+    cursor: pointer;
+    font-size: 16px;
+    text-decoration: none;
+    margin-right: 2rem;
+}
+
+.login-button:hover {
+    background-color: #0056b3; /* Màu nền của button khi hover */
+}
+
+.robot-image {
+    width: 50px; /* Điều chỉnh kích thước của hình ảnh */
+    height: auto; /* Đảm bảo tỷ lệ khung hình không bị thay đổi */
+    position: absolute; /* Đặt hình ảnh ở vị trí tuyệt đối */
+    top: 10px; /* Cách phía trên 10px */
+    left: 10px; /* Cách phía trái 10px */
+    margin-left: 2rem;
+}
+
+.logo-heading {
+    width: 100px; /* Điều chỉnh kích thước của hình ảnh */
+    height: auto; /* Đảm bảo tỷ lệ khung hình không bị thay đổi */
+    position: absolute; /* Đặt hình ảnh ở vị trí tuyệt đối */
+    top: 18px; /* Cách phía trên 10px */
+    left: 10px; /* Cách phía trái 10px */
+    margin-left: 6.5rem;
+    font-family: 'Digital', sans-serif;
+    background-image: linear-gradient(to right, #3507c0, hsl(277, 51%, 31%));
+    -webkit-background-clip: text;
+    -moz-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+    font-size: 2rem;
+    margin-top: auto;
+
+}
+
+.login-button-2 {
+    background-color: #d8e4fc; /* Màu nền của button */
+    color: black; /* Màu chữ của button */
+    border: none;
+    padding: 1rem 2rem;
+    border-radius: 12px; /* Bo tròn các góc của button */
+    cursor: pointer;
+    font-size: 16px;
+    text-decoration: none;
+    margin-left: 5rem;
+    font-weight: bold;
+}
+
+.login-button-2:hover {
+    background-color: #c8d4ec; /* Màu nền của button khi hover */
+}
+
+.features {
+    display: flex;
+    justify-content: center; /* Căn phần tử ở giữa */
+    align-items: center; /* Căn giữa theo chiều dọc */
+    padding: 1rem 1rem;
+    height: 100%;
+    position: fixed;
+    width: 100%;
+}
+
+.feature {
+    text-align: left; /* Căn chữ về phía bên trái */
+    max-width: 300px;
+    color: black; /* Màu chữ đen */
+    font-size: 25px;
+    margin-top: -2rem;
+    flex: 1; /* Chia đều không gian cho các phần tử */
+    margin: 0 1rem; /* Khoảng cách giữa các phần tử */
+}
+
+.feature-image {
+    width: 150%;
+    height: 100%;
+    object-fit: cover; /* Đảm bảo hình ảnh bao phủ toàn bộ slide */
+    border-radius: 15px; /* Bo tròn các góc của hình ảnh */
+    margin-top: -8rem; /* Dịch chuyển hình ảnh lên trên */
+}
+
+.feature.gemini {
+    margin-left: -15rem; /* Dịch chuyển toàn bộ phần này sang trái */
+}
+
+.feature.nitro {
+    margin-left: 15rem; /* Dịch chuyển toàn bộ phần này sang phải */
+}
+
+.gemini-heading {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 5rem;
+    font-weight: bold;
+    text-align: center;
+    background-image: linear-gradient(to right, #5884ec, #d0647c);
+    -webkit-background-clip: text;
+    -moz-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+    margin-top: -3rem;
+}
+
+.gemini-description {
+    margin-top: -2rem; /* Dịch chuyển đoạn văn bản lên trên */
+    text-align: center;
+}
+
+.swiper-container {
+    width: auto;
+    height: auto; /* Điều chỉnh chiều cao của slide */
+    margin-right: 7;
+}
+
+footer {
+    background-color: white; /* Màu nền trắng */
+    color: black; /* Màu chữ đen */
+    text-align: center;
+    padding: 0.5rem 0; /* Giảm padding để làm footer nhỏ lại */
+    font-size: 14px; /* Giảm kích thước chữ */
+    border-top: 1px solid #ccc; /* Đường viền trên để phân cách */
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+}
+
+.message-wrapper {
+    width: 100%;
+    padding: 8px 15px;
+    display: flex;
+    flex-direction: column;
+}
+
+.chat-message {
+    max-width: 70%;
+    padding: 10px;
+    border-radius: 8px;
+    margin: 4px 0;
+}
+
+.user-message {
+    background-color: #007bff;
+    color: white;
+    align-self: flex-end;
+    margin-left: auto;
+}
+
+.bot-message {
+    background-color: #f8f9fa;
+    color: #212529;
+    align-self: flex-start;
+    margin-right: auto;
+}
+
+.message-content {
+    width: 100%;
+}
+
+.text-block {
+    margin-bottom: 8px;
+}
+
+.text-block:last-child {
+    margin-bottom: 0;
+}
+
+/* Code snippet container styles */
+.code-snippet-container {
+    margin: 10px 0;
+    background: #2d2d2d;
+    border-radius: 6px;
+    overflow: hidden;
+}
+
+.code-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 12px;
+    background: #1e1e1e;
+}
+
+.code-language {
+    color: #abb2bf;
+    font-size: 0.9em;
+}
+
+.copy-button {
+    background: none;
+    border: none;
+    color: #abb2bf;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 8px;
+    border-radius: 4px;
+    transition: background-color 0.2s;
+}
+
+.copy-button:hover {
+    background-color: #363636;
+}
+
+.code-content {
+    padding: 12px;
+    overflow-x: auto;
+}
+
+.code-content pre {
+    margin: 0;
+}
+
+.code-content code {
+    font-family: 'Fira Code', monospace;
+    font-size: 0.9em;
+    line-height: 1.5;
+}
+
+/* Chat container styles */
+.chat-container {
+    display: flex;
+    height: calc(100vh - 60px); /* Adjust based on your header height */
+}
+
+/* Message container styles */
+.chat-messages {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    padding: 20px;
+}
+
+.message-wrapper {
+    display: flex;
+    width: 100%;
+}
+
+/* User message styling */
+.user-message {
+    margin-left: auto;
+    margin-right: 20px;
+    background-color: #007bff;
+    color: white;
+    border-radius: 15px 15px 0 15px;
+    padding: 10px 15px;
+    max-width: 70%;
+    word-wrap: break-word;
+}
+
+/* Bot message styling */
+.bot-message {
+    margin-right: auto;
+    margin-left: 20px;
+    background-color: #f1f1f1;
+    color: black;
+    border-radius: 15px 15px 15px 0;
+    padding: 10px 15px;
+    max-width: 70%;
+    word-wrap: break-word;
+}
+
+/* Message content container */
+.message-content {
+    width: 100%;
+}
+
+/* Code snippet container adjustments */
+.code-snippet-container {
+    margin: 10px 0;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.slide-ai2-image,
+.slide-ai3-image,
+.slide-ai4-image,
+.slide-ai5-image {
+    margin-top: 35px; /* Adjust the value as needed */
+}
+
+/* Responsive styles */
+
+/* Styles for iPad */
+@media (min-width: 768px) and (max-width: 1024px) {
+    /* CSS cho iPad dọc */
+    body {
+        font-size: 14px;
+    }
+
+    .header, .footer {
+        padding: 15px;
+    }
+
+    .container {
+        padding: 15px;
+    }
+    
+    .gemini-heading {
+        font-size: 3rem;
+        position: fixed; /* Use fixed position */
+        bottom: 355px; /* Adjust the value as needed */
+        left: 50%;
+        transform: translateX(-50%);
+        text-align: center;
+    }
+
+    .gemini-description {
+        position: fixed; /* Use fixed position */
+        bottom: 20%; /* Adjust the value as needed */
+        left: 50%;
+        transform: translateX(-50%);
+        width: 350px;
+        text-align: center;
+    }
+    .login-button-2 {
+        padding: 0.5rem 1rem;
+        position: fixed; /* Use fixed position */
+        bottom: 16%; /* Adjust the value as needed */
+        left: 38%;
+        transform: translateX(-50%);
+        text-align: center;
+        width: 100px;
+        height: 50px;
+        font-size: 18px;
+        font-weight: bold;
+
+    }
+    
+    .swiper-slide {
+        padding: 5px;
+    }
+
+    .feature-image {
+        width: 480px;
+        height: 480px;
+        position: fixed; /* Use fixed position */
+        top: -470px; /* Move images to the top */
+        left: 30px;
+        transform: translateX(-50%); /* Center the images horizontally */
+        margin-top: 20px;
+        display: flex;
+    }
+    .slide-ai2-image,
+    .slide-ai3-image,
+    .slide-ai4-image,
+    .slide-ai5-image {  
+        position: fixed; /* Use fixed position */
+        top: -470px; /* Move images to the top */
+        left: 30px;
+        transform: translateX(-50%); /* Center the images horizontally */
+        width: 500px; /* Set the width */
+        height: 480px; /* Set the height */
+        object-fit: cover; /* Ensure the image covers the area without distortion */
+        /* Adjust the margin as needed */
+    }
+
+    .features {
+        flex-direction: column;
+        position: fixed;
+        max-width: 100%;
+        margin: 1rem 0;
+        
+    }
+
+    
+}
+/* Styles for mobile */
+@media (max-width: 480px) {
+    body {
+        font-size: 12px;
+    }
+
+    .header, .footer {
+        padding: 10px;
+    }
+
+    .header {
+        padding: 100px 10px; /* Increase the height of the header */
+    }
+
+    .container {
+        padding: 10px;
+    }
+
+
+    .gemini-heading {
+        font-size: 3rem;
+        position: fixed; /* Use fixed position */
+        bottom: 350px; /* Adjust the value as needed */
+        left: 50%;
+        transform: translateX(-50%);
+        text-align: center;
+    }
+
+    .gemini-description {
+        position: fixed; /* Use fixed position */
+        bottom: 22%; /* Adjust the value as needed */
+        left: 50%;
+        transform: translateX(-50%);
+        width: 350px;
+        text-align: center;
+    }
+
+ .login-button-2 {
+        font-size: 12px;
+        padding: 0.5rem 1rem;
+        position: fixed; /* Use fixed position */
+        bottom: 20%; /* Adjust the value as needed */
+        left: 28%;
+        transform: translateX(-50%);
+        text-align: center;
+    }
+
+    .swiper-slide {
+        padding: 5px;
+    }
+
+    .feature-image {
+        width: 70%;
+        height: auto;
+        position: fixed; /* Use fixed position */
+        top: -400px; /* Move images to the top */
+        left: -10%;
+        transform: translateX(-50%); /* Center the images horizontally */
+        margin-top: 20px;
+        display: flex;
+    }
+    .slide-ai2-image,
+    .slide-ai3-image,
+    .slide-ai4-image,
+    .slide-ai5-image {  
+        position: fixed; /* Use fixed position */
+        top: -400px; /* Move images to the top */
+        left: -8%;
+        transform: translateX(-50%); /* Center the images horizontally */
+        width: 300px; /* Set the width */
+        height: 300px; /* Set the height */
+        object-fit: cover; /* Ensure the image covers the area without distortion */
+        /* Adjust the margin as needed */
+    }
+
+    .features {
+        flex-direction: column;
+        position: fixed;
+        max-width: 100%;
+        margin: 1rem 0;
+        
+    }
+
+}
+
+/* Styles for mobile */
+    
+
+@media (max-width: 480px) {
+    /* CSS cho điện thoại nhỏ */
+    body {
+        font-size: 12px;
+    }
+
+    .header, .footer {
+        padding: 10px;
+    }
+
+    .header {
+        padding: 100px 10px; /* Increase the height of the header */
+    }
+
+    .container {
+        padding: 10px;
+    }
+
+
+    .gemini-heading {
+        font-size: 3rem;
+        position: fixed; /* Use fixed position */
+        bottom: 350px; /* Adjust the value as needed */
+        left: 50%;
+        transform: translateX(-50%);
+        text-align: center;
+    }
+
+    .gemini-description {
+        position: fixed; /* Use fixed position */
+        bottom: 24%; /* Adjust the value as needed */
+        left: 50%;
+        transform: translateX(-50%);
+        width: 350px;
+        text-align: center;
+    }
+
+ .login-button-2 {
+        font-size: 12px;
+        padding: 0.5rem 1rem;
+        position: fixed; /* Use fixed position */
+        bottom: 22%; /* Adjust the value as needed */
+        left: 26%;
+        transform: translateX(-50%);
+        text-align: center;
+        font-weight: bold;
+    }
+    
+    .swiper-slide {
+        padding: 5px;
+    }
+
+    .feature-image {
+        width: 300px;
+        height: 300px;
+        position: fixed; /* Use fixed position */
+        top: -400px; /* Move images to the top */
+        left: 8%;
+        transform: translateX(-50%); /* Center the images horizontally */
+        margin-top: 20px;
+        display: flex;
+    }
+    .slide-ai2-image,
+.slide-ai3-image,
+.slide-ai4-image,
+.slide-ai5-image {  
+    position: fixed; /* Use fixed position */
+    top: -400px; /* Move images to the top */
+    right: 30%; /* Adjust the value to move images to the left */
+    transform: translateX(-50%); /* Center the images horizontally */
+    width: 300px; /* Set the width */
+    height: 300px; /* Set the height */
+    object-fit: cover; /* Ensure the image covers the area without distortion */
+    /* Adjust the margin as needed */
+}
+
+.features {
+    flex-direction: column;
+    position: fixed;
+    max-width: 100%;
+    margin: 1rem 0;
+}
+  }

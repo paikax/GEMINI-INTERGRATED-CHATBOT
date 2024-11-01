@@ -356,7 +356,7 @@
     overflow-y: auto;
     padding-bottom: 1rem;
     height: 100%;
-    width: 90%;
+    width: 100%;
     margin: 0 auto;
 }
 .input-container {
@@ -414,7 +414,8 @@
     display: flex;  
     margin: 10px 0;
 }
-.message-wrapper:nth-child(odd){
+.message-wrapper:nth-child(odd)
+{
     display: flex;
     justify-content: flex-end;
 }
@@ -647,6 +648,20 @@
     background-color: var(--bg-button-hover);
 }
 
+.bot-logo {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    object-fit: cover;
+    border-radius: 50%;
+    margin: 0 5px;
+}
+
+.message-frombot{
+    display: flex;
+    justify-content:flex-start;
+}
+
 /* Media Query for iPhone SE */
 @media screen and (max-width: 393px) {
     .navbar {
@@ -722,7 +737,7 @@
         width: 59px;
         height: 55px;
         overflow: hidden;
-        margin-left: 180px;
+        margin-left: 150px;
         margin-top: 5px;
     }
     .center-panel{

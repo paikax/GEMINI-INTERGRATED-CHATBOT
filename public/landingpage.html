@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,48 +7,39 @@
     <link rel="stylesheet" href="../css/landingpage.css">
     <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css">
 </head>
-
 <body>
     <header>
         <nav>
             <ul>
-                <li><button class="login-button" id="loginBtn">Login</button></li>
                 <li><img src="../src/img/robot-assistant.png" alt="" class="robot-image"></li>
                 <h2 class="logo-heading">DevG5</h2>
             </ul>
         </nav>
     </header>
-    <main>
-        <section class="hero">
-            <!-- Nội dung của hero -->
-        </section>
+        <!-- <section class="hero">
+        </section> -->
         <section class="features">
             <div class="feature gemini">
                 <h2 class="gemini-heading">Gemini</h2>
-                <p class="gemini-description">Enhance your ability to create and enhance conversational activities with
-                    Google AI to start writing content, planning, learning, and more</p>
-                <button class="login-button-2">Sign in</button>
+                <p class="gemini-description">Enhance your ability to create and enhance conversational activities with Google AI to start writing content, planning, learning, and more</p>
+                <button class="login-button-2" onclick="window.location.href='index.html'">Start chat</button>
             </div>
             <div class="feature nitro">
                 <div class="swiper-container">
                     <div class="swiper-wrapper">
-                        <div class="swiper-slide"><img src="../src/img/nitro.gif" alt="Nitro Image"
-                                class="feature-image"></div>
-                        <div class="swiper-slide"><img src="../src/img/SlideAI2.png" alt="Another Image"
-                                class="feature-image"></div>
-                        <div class="swiper-slide"><img src="../src/img/SlideAI3.jpg" alt="Another Image"
-                                class="feature-image"></div>
-                        <div class="swiper-slide"><img src="../src/img/SlideAI4.jpg" alt="Another Image"
-                                class="feature-image"></div>
-                        <div class="swiper-slide"><img src="../src/img/SlideAI5.png" alt="Another Image"
-                                class="feature-image"></div>
+                        <div class="swiper-slide"><img src="../src/img/nitro.gif" alt="Nitro Image" class="feature-image"></div>
+                            <div class="swiper-slide"><img src="../src/img/SlideAI2.png" alt="Another Image" class="feature-image slide-ai2-image"></div>
+                            <div class="swiper-slide"><img src="../src/img/SlideAI3.jpg" alt="Another Image" class="feature-image slide-ai3-image"></div>
+                            <div class="swiper-slide"><img src="../src/img/SlideAI4.jpg" alt="Another Image" class="feature-image slide-ai4-image"></div>
+                            <div class="swiper-slide"><img src="../src/img/SlideAI5.png" alt="Another Image" class="feature-image slide-ai5-image"></div>
+                            <!-- Thêm nhiều slide hơn nếu cần -->
+                        </div>
                         <!-- Thêm nhiều slide hơn nếu cần -->
                     </div>
                     <!-- Thêm các nút điều khiển -->
                 </div>
             </div>
         </section>
-    </main>
     <footer>
         <p>&copy; 2024 DEV G5. All rights reserved.</p>
     </footer>
@@ -71,7 +61,5 @@
             }
         });
     </script>
-
 </body>
-
 </html>

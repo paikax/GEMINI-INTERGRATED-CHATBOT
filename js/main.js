@@ -426,18 +426,27 @@ async function handleBotResponse(response) {
         const combinedResponse = segments
             .map(segment => JSON.parse(segment).response)
             .join(' ');
-
-
+            
+        const messageWrapper = document.createElement('div');
+        messageWrapper.classList.add('message-frombot');    
         const messageElement = document.createElement('div');
         messageElement.classList.add('chat-message', 'bot-message');
-        document.getElementById('chatMessages').appendChild(messageElement);
+        document.getElementById('chatMessages').appendChild(messageWrapper);
 
+        // Add IT logo
+        const logoElement = document.createElement('img');
+        logoElement.src = 'https://raw.githubusercontent.com/BenZimCO/video/cbce971a97a8ec300d22ba33b4c54f58c0f094fd/robot-assistant.png'; // Update the path to your logo
+        logoElement.classList.add('bot-logo');
 
-        await simulateTyping(messageElement, combinedResponse);
+        messageWrapper.appendChild(logoElement);
+        messageWrapper.appendChild(messageElement);
+
+        await simulateTyping( messageElement, combinedResponse);
         messageElement.scrollIntoView({ behavior: 'smooth' });
         addReadAloudAndCopyButtons(messageElement, combinedResponse);
 
         addQuickReplyButtons(messageElement);
+
         // Add bot response to history
         conversationHistory.push({ role: 'bot', content: combinedResponse, datetime: new Date().toISOString() });
 
@@ -467,7 +476,7 @@ function appendMessage(message, type) {
     avatar.classList.add('avatar', type === 'user' ? 'user-avatar' : 'bot-avatar');
     avatar.src = type === 'user'
         ? 'https://e7.pngegg.com/pngimages/799/987/png-clipart-computer-icons-avatar-icon-design-avatar-heroes-computer-wallpaper-thumbnail.png'
-        : '../src/img/robot-assistant.png';
+        : 'https://raw.githubusercontent.com/BenZimCO/video/cbce971a97a8ec300d22ba33b4c54f58c0f094fd/robot-assistant.png';
     avatar.alt = type === 'user' ? 'User Avatar' : 'Bot Avatar';
 
     // Create message element
@@ -649,5 +658,3 @@ function sendUserInput(input) {
         appendMessage('Sorry, there was an error.', 'bot');
     });
 }
-
-
