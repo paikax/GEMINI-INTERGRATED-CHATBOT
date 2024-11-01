@@ -622,7 +622,7 @@ document.getElementById('userInput').addEventListener('keypress', function (e) {
 //----------------------------------------------------------------------------
 // quick reply
 function addQuickReplyButtons(messageElement) {
-    const quickReplies = ["Make a new one", "Not this", "Tell me more"];
+    const quickReplies = [ "Not this", "Tell me more above"];
     const quickReplyContainer = document.createElement('div');
     quickReplyContainer.classList.add('quick-reply-container');
 
