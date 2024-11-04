@@ -29,7 +29,7 @@ function formatHistory(history) {
 
 
 // MongoDB connection setup
-const mongoUrl = "mongodb+srv://nguyentb1148:PPhCj6Vm7DDQWatq@geminichatboxclonedb.q6ybh.mongodb.net/?retryWrites=true&w=majority&appName=GeminiChatboxCloneDb";
+const mongoUrl = "mongodb+srv://paikax2060:String123@handmadecraft.u2mx9jm.mongodb.net/?retryWrites=true&w=majority&appName=HandMadeCraft";
 const client = new MongoClient(mongoUrl, {
     serverApi: {
         version: ServerApiVersion.v1,
