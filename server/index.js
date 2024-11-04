@@ -86,6 +86,7 @@ function generateRandomString(length) {
 
 
 
+
 // ------------------------------------------------------------------
 
 
@@ -122,7 +123,6 @@ app.post("/api/chat", async (req, res) => {
 });
 
 
-
 // Start the server
 app.listen(PORT, () => {
     console.log(`Server is running on http://localhost:${PORT}`);
@@ -130,7 +130,7 @@ app.listen(PORT, () => {
 });
 
 app.post("/api/register", async (req, res) => {
-    const { email, password } = req.body;
+    const { email, fullName, gender, password } = req.body;
 
     try {
         const database = client.db("DEV-G5");
@@ -149,7 +149,10 @@ app.post("/api/register", async (req, res) => {
         // Create a new user
         const newUser = {
             email,
+            fullName, 
+            gender,
             password: hashedPassword,
+
         };
 
         const result = await usersCollection.insertOne(newUser);
@@ -183,32 +186,93 @@ app.post("/api/login", async (req, res) => {
         }
 
         // Successful login
-        res.status(200).json({ message: "Login successful", userId: user._id });
+        const userData = {
+            userId: user._id,
+            fullName: user.fullName,
+            gender: user.gender,
+            email: user.email,
+        };
+
+        // Successful login
+        res.status(200).json({ message: "Login successful", user: userData });
     } catch (error) {
         console.error("Error logging in:", error);
         res.status(500).json({ error: "Internal Server Error" });
     }
 });
 
-app.post("/api/update-profile", async (req, res) => {
-    const { email, profileData } = req.body;
+app.get("/api/user/:userId", async (req, res) => {
+    const userId = req.params.userId;
+    try {
+        const user = await fetchUserFromDatabase(userId); // Implement this function to retrieve user data
+        if (user) {
+            res.json(user); // Send user data as JSON
+        } else {
+            res.status(404).json({ message: "User not found" });
+        }
+    } catch (error) {
+        console.error("Error fetching user:", error);
+        res.status(500).json({ message: "Internal server error" });
+    }
+});
+
+async function fetchUserFromDatabase(userId) {
+    try {
+        const database = client.db("DEV-G5"); // Connect to the 'DEV-G5' database
+        const usersCollection = database.collection("users"); // Access the 'users' collection
+
+        // Fetch the user document by userId
+        const user = await usersCollection.findOne({ _id: new ObjectId(userId) });
+
+        // Return the user data, omitting the password for security
+        if (user) {
+            const { password, ...userData } = user; // Exclude the password field
+            return userData; // Return user data without the password
+        } else {
+            return null; // User not found
+        }
+    } catch (error) {
+        console.error("Error fetching user from database:", error);
+        throw new Error("Database query failed"); // Throw an error if there's an issue
+    }
+}
+
+app.put("/api/user/:userId", async (req, res) => {
+    const userId = req.params.userId;
+    const { fullName, gender } = req.body;
 
     try {
         const database = client.db("DEV-G5");
         const usersCollection = database.collection("users");
 
-        const result = await usersCollection.updateOne(
-            { email: email },
-            { $set: { profile: profileData } }
+        // Update the user's profile
+        const updateResult = await usersCollection.updateOne(
+            { _id: new ObjectId(userId) },
+            { $set: { fullName, gender } }
         );
 
-        if (result.modifiedCount === 1) {
+        if (updateResult.modifiedCount > 0) {
             res.status(200).json({ message: "Profile updated successfully" });
         } else {
-            res.status(404).json({ error: "User not found" });
+            res.status(400).json({ message: "No changes made or user not found" });
         }
     } catch (error) {
-        console.error("Error updating profile:", error);
-        res.status(500).json({ error: "Internal Server Error" });
+        console.error("Error updating user profile:", error);
+        res.status(500).json({ message: "Internal server error" });
     }
 });
+
+app.post('/api/logout', (req, res) => {
+    // For JWT, you might just clear the token on the client side,
+    // but if you're managing sessions, you might want to destroy the session.
+    // Example:
+    req.session.destroy(err => {
+        if (err) {
+            return res.status(500).json({ message: 'Could not log out.' });
+        }
+        res.status(200).json({ message: 'Logged out successfully.' });
+    });
+});
+
+
+
