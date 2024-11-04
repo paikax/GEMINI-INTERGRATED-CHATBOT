@@ -13,7 +13,7 @@ app.use(cors());
 app.use(express.json());
 app.use(express.static("public")); // Serve static files from the 'public' directory
 
-const genAI = new GoogleGenerativeAI('AIzaSyD9ff9i9UzVshdB9xR1xnNx3fQDy0uqACA');
+const genAI = new GoogleGenerativeAI('AIzaSyAz6OUXvjFemUABdeFqCsFOoC-2k0ioH1k');
 
 
 
@@ -83,7 +83,6 @@ async function fetchMessagesFromMongoDB(sessionId) {
 function generateRandomString(length) {
     return Math.random().toString(36).substring(2, 2 + length);
 }
-
 
 
 

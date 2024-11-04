@@ -204,7 +204,7 @@ function parseMarkdown(text) {
 }
 
 
-async function simulateTyping(container, content, typingSpeed = 30) {
+async function simulateTyping(container, content, typingSpeed = 7) {
 
     const messageContent = document.createElement('div');
     messageContent.classList.add('message-content');
