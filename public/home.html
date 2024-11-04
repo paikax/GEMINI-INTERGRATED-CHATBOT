@@ -53,7 +53,7 @@
                             </button>
                         </div>
                         <div class="dropdown-item">
-                            <button>
+                            <button onclick="logoutUser()">
                                 Logout
                             </button>
                         </div>
@@ -114,6 +114,22 @@
             <div class="left-panel">
             </div>
             <div class="center-panel">
+                <div>
+                    <h1 id="helpSection">What can I help with?</h1>
+                    <!-- Các nút gợi ý -->
+                    <div id="promptContainer" class="recommend-buttons">
+                        <button class="recommend-btn" data-prompt="Code">Code</button>
+                        <button class="recommend-btn" data-prompt="Get Advice">Get Advice</button>
+                        <button class="recommend-btn" data-prompt="Summarize Text">Summarize Text</button>
+                        <button class="recommend-btn" data-prompt="Make Plan">Make Plan</button>
+                        <button class="recommend-btn" data-prompt="Help Me Write">Help Me Write</button>
+                        <button class="recommend-btn" data-prompt="Surprise Me">Surprise Me</button>
+                        <button id="moreButton" class="recommend-btn">More</button>
+                    </div>
+
+                    <!-- Hiển thị gợi ý cụ thể hơn -->
+                    <div id="subRecommendations" class="sub-recommendations"></div>
+                </div>
                 <div class="messages">
                     <div class="chat-messages" id="chatMessages">
                         <!-- Chat messages will be appended here -->
@@ -158,20 +174,7 @@
             hljs.highlightAll();
         });
     </script>
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            const chatInput = document.getElementById("userInput");
-            const sendButton = document.getElementById("sendButton");
 
-            chatInput.addEventListener("input", function () {
-                if (chatInput.value.trim() !== "") {
-                    sendButton.style.opacity = "1";
-                } else {
-                    sendButton.style.opacity = "0";
-                }
-            });
-        });
-    </script>
     <script>
         function changeLanguageIcon() {
             const languageSelect = document.getElementById('languageSelect');
@@ -196,6 +199,7 @@
     <script src="../js/components/profile.js"></script>
     <script src="../js/main.js"></script>
     <script src="../js/components/languages.js"></script>
+    <script src="../js/components/Recom.js"></script>
 </body>
 
 </html>

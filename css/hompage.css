@@ -376,7 +376,6 @@
     border: none;
     outline: none;
 }
-
 .input-void{
     position: absolute ;
     top: 5px;
@@ -398,8 +397,6 @@
     background-color: var(--bg-iconchat-color);
     color: var(--text-color);
     border: none;
-    opacity: 0;
-    transition: opacity 0.5s ease;
 }
 .input-send:hover, .input-void:hover{
     background-color: var(--bg-iconchat-hover);
@@ -421,11 +418,6 @@
 {
     display: flex;
     justify-content: flex-end;
-}
-.message-wrapper:nth-child(even)
-{
-    display: flex;
-    justify-content: flex-start;
 }
 .user-avatar{
     order: 2;
@@ -629,6 +621,11 @@
     display: block;
 }
 
+#sendButton:disabled {
+    background-color: gray;
+    cursor: not-allowed;
+    opacity: 0.6;
+}
 
 .quick-reply-container {
     display: flex;
@@ -664,8 +661,359 @@
     display: flex;
     justify-content:flex-start;
 }
+.hide {
+    display: none;
+}
+
+#promptContainer {
+    display: flex;
+    flex-wrap: wrap;
+    margin-top:10px;
+    justify-content:center;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.recommend-btn {
+    padding: 10px 15px;
+    width:130px;
+    height:50px;
+    border: none;
+    outline: none;
+    color: #fff;
+    background: #111;
+    cursor: pointer;
+    position: relative;
+    z-index: 0;
+    border-radius: 10px;
+}
+
+.recommend-btn:before {
+    content: '';
+    background: linear-gradient(45deg, #ff0000, #ff7300, #fffb00, #48ff00, #00ffd5, #002bff, #7a00ff, #ff00c8, #ff0000);
+    position: absolute;
+    top: -2px;
+    left:-2px;
+    background-size: 400%;
+    z-index: -1;
+    filter: blur(5px);
+    width: calc(100% + 4px);
+    height: calc(100% + 4px);
+    animation: glowing 20s linear infinite;
+    opacity: 0;
+    transition: opacity .3s ease-in-out;
+    border-radius: 10px;
+}
+
+.recommend-btn:active {
+    color: #000
+}
+
+.recommend-btn:active:after {
+    background: transparent;
+}
+
+.recommend-btn:hover:before {
+    opacity: 1;
+}
+
+.recommend-btn:after {
+    z-index: -1;
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: #111;
+    left: 0;
+    top: 0;
+    border-radius: 10px;
+}
+
+@keyframes glowing {
+    0% { background-position: 0 0; }
+    50% { background-position: 400% 0; }
+    100% { background-position: 0 0; }
+}
+#subRecommendations {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr); /* Four equal columns */
+    gap: 10px;
+    margin: 0 auto 20px; /* Center horizontally */
+    width: 900px; /* Adjust to your desired width */
+    max-width: 100%; /* Prevents overflow */
+}
+
+#subRecommendations > button { /* Assuming each item is a div */
+    height: 50px; /* Fixed height for all items */
+    width: 400px; /* Ensures items take full width of grid cell */
+    display: flex; /* Center content */
+    align-items: center; /* Center vertically */
+    justify-content: center; /* Center horizontally */
+    border: none;
+    outline: none;
+    color: #fff;
+    background: #f0f0f0;
+    cursor: pointer;
+    position: relative;
+    z-index: 0;
+    border-radius: 10px;
+    border: 1px solid black;
+}
+
+#subRecommendations > button:active {
+    color: #000
+}
+
+#subRecommendations > button:active:after {
+    background: transparent;
+}
+
+#subRecommendations > button:hover:before {
+    opacity: 1;
+}
+
+#subRecommendations > button:before {
+    content: '';
+    background: linear-gradient(45deg, #ff0000, #ff7300, #fffb00, #48ff00, #00ffd5, #002bff, #7a00ff, #ff00c8, #ff0000);
+    position: absolute;
+    top: -2px;
+    left:-2px;
+    background-size: 400%;
+    z-index: -1;
+    filter: blur(5px);
+    width: calc(100% + 4px);
+    height: calc(100% + 4px);
+    animation: glowing 20s linear infinite;
+    opacity: 0;
+    transition: opacity .3s ease-in-out;
+    border-radius: 10px;
+}
+
+#subRecommendations > button:after {
+    z-index: -1;
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: #bcb9b9;
+    left: 0;
+    top: 0;
+    border-radius: 10px;
+}
+
+
+#helpSection {
+    text-align: center;
+    text-decoration: underline;
+    font-size: 32px;
+    font-family: monospace;
+    letter-spacing: 5px;
+}
+#helpSection {
+    background: linear-gradient(to right, #6666ff, #0099ff , #00ff00, #ff3399, #6666ff);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    animation: rainbow_animation 6s ease-in-out infinite;
+    background-size: 400% 100%;
+}
+
+@keyframes rainbow_animation {
+    0%,100% {
+        background-position: 0 0;
+    }
+
+    50% {
+        background-position: 100% 0;
+    }
+}
 
 /* Media Query for iPhone SE */
+@media screen and (max-width: 1449px) {
+    .navbar {
+        position:fixed;
+        width:100%;
+        padding: 10px;
+    }
+    .navbar-logo h2 {
+        font-size: 16px;
+    }
+
+    .navbar-option i {
+        font-size: 16px;
+        padding: 6px;
+    }
+
+    .chat-container {
+        flex-direction: column;
+    }
+
+    .chat-history {
+        width: 100%;
+        padding: 0.5rem;
+    }
+
+    .chatbox {
+        flex-direction: column;
+    }
+
+    .add-button {
+        top: 30px;
+        left: 5px;
+        right: 5px;
+    }
+
+    .toggle-button {
+        width: 40px;
+        height: 40px;
+        font-size: 16px;
+        background: none;
+    }
+
+    .chat-input {
+        padding: auto;
+        
+    }
+
+    .message-container {
+        margin-bottom: 0.5rem;
+    }
+
+    .message-content {
+        margin-left: 10px;
+    }
+
+    .edit-button {
+        bottom: 2px;
+        right: 35px;
+    }
+
+    .read-aloud-button {
+        padding: 4px 6px;
+        margin-left: 10px;
+    }
+    .chat-history.hidden {
+        width: 59px;
+        height: 55px;
+        overflow: hidden;
+        margin-left: 150px;
+        margin-top: 5px;
+    }
+    .center-panel{
+        margin:auto;
+        position:fixed;
+        height: 1236px;
+        width: 1024px;
+    }
+    .right-panel{
+        flex: none;
+        padding: none;
+    }
+    .left-panel{
+        flex: none;
+        padding: none;
+    }
+    footer{
+        display:none;
+    }
+}
+
+@media screen and (max-width: 449px) {
+    .navbar {
+        position:fixed;
+        width:100%;
+        padding: 10px;
+    }
+    .navbar-logo h2 {
+        font-size: 16px;
+    }
+
+    .navbar-option i {
+        font-size: 16px;
+        padding: 6px;
+    }
+
+    .profile {
+        top: 20%;
+        left: 5%;
+        width: 90%;
+    }
+
+    .chat-container {
+        flex-direction: column;
+    }
+
+    .chat-history {
+        width: 100%;
+        padding: 0.5rem;
+    }
+
+    .chatbox {
+        flex-direction: column;
+    }
+
+    .add-button {
+        top: 30px;
+        left: 5px;
+        right: 5px;
+    }
+
+    .toggle-button {
+        width: 40px;
+        height: 40px;
+        font-size: 16px;
+        background: none;
+    }
+
+    .chat-input {
+        padding: 10px 40px;
+        
+    }
+
+    .message-container {
+        margin-bottom: 0.5rem;
+    }
+
+    .message-content {
+        margin-left: 10px;
+    }
+
+    .edit-button {
+        bottom: 2px;
+        right: 35px;
+    }
+
+    .read-aloud-button {
+        padding: 4px 6px;
+        margin-left: 10px;
+    }
+    .chat-history.hidden {
+        width: 59px;
+        height: 55px;
+        overflow: hidden;
+        margin-left: 150px;
+        margin-top: 5px;
+    }
+    .center-panel{
+        position:fixed;
+        height: 860px;
+        width: 440px;
+    }
+    .right-panel{
+        flex: none;
+        padding: none;
+    }
+    .left-panel{
+        flex: none;
+        padding: none;
+    }
+    footer{
+        display:none;
+    }
+}
+
+
+
 @media screen and (max-width: 393px) {
     .navbar {
         position:fixed;
