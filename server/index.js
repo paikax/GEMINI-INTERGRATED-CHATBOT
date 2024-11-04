@@ -91,39 +91,37 @@ function generateRandomString(length) {
 
 app.post("/api/chat", async (req, res) => {
     const userInput = req.body.input;
-    const history = req.body.history || [];
-    const sessionId = req.body.sessionId;
+    const sessionId = req.body.sessionId; // Expecting sessionId from client
+    const history = await fetchMessagesFromMongoDB(sessionId); // Fetching chat history
     const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
     const start = Date.now();
-    let responseText = ""; // Initialize an empty string to accumulate responses
+    let responseText = "";
 
     try {
         const allHistory = history.map((item) => item.content);
-        // Using generateContentStream to collect all parts into one string
         const result = await model.generateContentStream([...allHistory, userInput]);
 
-        // Collect all chunks into responseText
         for await (const chunk of result.stream) {
-            responseText += chunk.text(); // Concatenate text from each chunk
+            responseText += chunk.text();
         }
 
-        // Send the complete response once all chunks are processed
         res.json({ response: responseText });
-
         console.log("Full Response:", responseText);
-
-         // Save user message to MongoDB
-         await insertMessageToMongoDB(req.body.userId, sessionId, { content: userInput, fromUser: true });
-         // Save AI response to MongoDB
-         await insertMessageToMongoDB(req.body.userId, sessionId, { content: responseText, fromUser: false });
+        
+        // Save user message to MongoDB
+        await insertMessageToMongoDB(req.body.userId, sessionId, { content: userInput, fromUser: true });
+        // Save AI response to MongoDB
+        await insertMessageToMongoDB(req.body.userId, sessionId, { content: responseText, fromUser: false });
 
         const end = Date.now();
         console.log("Response time (ms):", end - start);
     } catch (error) {
         console.error("Error:", error);
-        res.status(500).json({ error: "Internal Server Error" }); // hi
+        res.status(500).json({ error: "Internal Server Error" });
     }
 });
+
+
 
 // Start the server
 app.listen(PORT, () => {
