@@ -31,15 +31,17 @@
                         <i class="fa-regular fa-sun"></i>
                     </button>
                     <div class="navbar-language">
-                        <img id="languageFlag" src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/13/United-kingdom_flag_icon_round.svg/512px-United-kingdom_flag_icon_round.svg.png" alt="Flag" width="24" height="24">
+                        <img id="languageFlag"
+                            src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/13/United-kingdom_flag_icon_round.svg/512px-United-kingdom_flag_icon_round.svg.png"
+                            alt="Flag" width="24" height="24">
                         <select id="languageSelect" onchange="changeLanguageIcon()">
-                          <option value="en">EN</option>
-                          <option value="vi">VN</option>
-                          <option value="ru">RU</option>
-                          <option value="ko">KR</option>
+                            <option value="en">EN</option>
+                            <option value="vi">VN</option>
+                            <option value="ru">RU</option>
+                            <option value="ko">KR</option>
                         </select>
-                      </div>
-                    <img onclick="myFunction()" class="dropbtn"
+                    </div>
+                    <img onclick="myFunction()" class="dropbtn" id="previewImage"
                         src="https://e7.pngegg.com/pngimages/799/987/png-clipart-computer-icons-avatar-icon-design-avatar-heroes-computer-wallpaper-thumbnail.png"
                         alt="">
                 </div>
@@ -71,29 +73,31 @@
                         src="https://e7.pngegg.com/pngimages/799/987/png-clipart-computer-icons-avatar-icon-design-avatar-heroes-computer-wallpaper-thumbnail.png"
                         alt="Profile Avatar">
                     <form action="/upload" method="post" enctype="multipart/form-data">
-                        <input type="file" name="image" accept="image/*" onchange="previewImage(event)">
+                        <input id="imageInput" type="file" name="image" accept="image/*" onchange="previewImage(event)">
                     </form>
                 </div>
                 <div class="profile-item">
                     <h3 class="translatable data-original-text">Full Name:</h3>
-                    <input type="text" name="" id="" placeholder="Full Name" class="translatable data-original-text">
+                    <input type="text" name="" id="userName" placeholder="Full Name" class="translatable data-original-text">
                 </div>
                 <div class="profile-item">
                     <h3 class="translatable data-original-text">Email:</h3>
-                    <input type="text" name="" id="" placeholder="email@gmail.com" >
+                    <input type="text" name="" id="userEmailInput" placeholder="email@gmail.com" readonly>
                 </div>
                 <div class="profile-gender">
                     <h3 class="translatable data-original-text">Gender:</h3>
-                    <select  id="gender" name="gender" required>
+                    <select id="gender" name="gender" required>
                         <option value="male" class="translatable data-original-text">Male</option>
                         <option value="female" class="translatable data-original-text">Female</option>
                     </select>
                 </div>
             </div>
         </div>
-        <button class="profile-btnSubmit">
+        <button class="profile-btnSubmit" id="updateProfileButton">
             Submit
         </button>
+        <div id="updateFeedback" style="display: none; margin-top: 10px;"></div>
+
     </div>
     <main class="chat-container">
         <aside class="chat-history">
@@ -116,7 +120,8 @@
                     </div>
                 </div>
                 <div class="input-container">
-                    <input type="text" id="userInput" placeholder="How can I help you?" class="chat-input translatable data-original-text">
+                    <input type="text" id="userInput" placeholder="How can I help you?"
+                        class="chat-input translatable data-original-text">
                     <button class="input-void">
                         <i class="fa-solid fa-microphone"></i>
                     </button>
@@ -143,16 +148,8 @@
                 toggleIcon.alt = 'Hiện lịch sử chat';
             }
         });
-
-
     </script>
-    <script src="https://unpkg.com/@dotlottie/player-component@latest/dist/dotlottie-player.mjs" type="module"></script>
 
-
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
-    <script src="../js/components/profile.js"></script>
-    <script src="../js/main.js"></script>
-    <script src="../js/components/languages.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             hljs.configure({
@@ -161,27 +158,44 @@
             hljs.highlightAll();
         });
     </script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const chatInput = document.getElementById("userInput");
+            const sendButton = document.getElementById("sendButton");
 
-<script>
-    function changeLanguageIcon() {
-      const languageSelect = document.getElementById('languageSelect');
-      const languageFlag = document.getElementById('languageFlag');
-      const selectedLanguage = languageSelect.value;
-  
-      // Define flag image URLs for each language
-      const flags = {
-        en: 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/13/United-kingdom_flag_icon_round.svg/512px-United-kingdom_flag_icon_round.svg.png',
-        vi: 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/21/Flag_of_Vietnam.svg/1024px-Flag_of_Vietnam.svg.png',
-        ru: 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f3/Flag_of_Russia.svg/1024px-Flag_of_Russia.svg.png',
-        ko: 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/09/Flag_of_South_Korea.svg/1024px-Flag_of_South_Korea.svg.png'
-      };
-  
-      // Update the `src` of the flag image
-      languageFlag.src = flags[selectedLanguage];
-    }
-  </script>
+            chatInput.addEventListener("input", function () {
+                if (chatInput.value.trim() !== "") {
+                    sendButton.style.opacity = "1";
+                } else {
+                    sendButton.style.opacity = "0";
+                }
+            });
+        });
+    </script>
+    <script>
+        function changeLanguageIcon() {
+            const languageSelect = document.getElementById('languageSelect');
+            const languageFlag = document.getElementById('languageFlag');
+            const selectedLanguage = languageSelect.value;
 
+            // Define flag image URLs for each language
+            const flags = {
+                en: 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/13/United-kingdom_flag_icon_round.svg/512px-United-kingdom_flag_icon_round.svg.png',
+                vi: 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/21/Flag_of_Vietnam.svg/1024px-Flag_of_Vietnam.svg.png',
+                ru: 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f3/Flag_of_Russia.svg/1024px-Flag_of_Russia.svg.png',
+                ko: 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/09/Flag_of_South_Korea.svg/1024px-Flag_of_South_Korea.svg.png'
+            };
 
+            // Update the `src` of the flag image
+            languageFlag.src = flags[selectedLanguage];
+        }
+    </script>
+
+    <script src="https://unpkg.com/@dotlottie/player-component@latest/dist/dotlottie-player.mjs" type="module"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+    <script src="../js/components/profile.js"></script>
+    <script src="../js/main.js"></script>
+    <script src="../js/components/languages.js"></script>
 </body>
 
 </html>

@@ -577,6 +577,7 @@ document.getElementById('sendButton').addEventListener('click', async function (
         userInput.value = '';
 
         const messageElement = document.createElement('div');
+        
         document.getElementById('chatMessages').appendChild(messageElement);
         const loadingAnimation = document.createElement('dotlottie-player');
         loadingAnimation.src = "https://lottie.host/2058cb37-e662-47ef-b20b-b33972803913/QayEIxoE9G.json";

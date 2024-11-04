@@ -1,10 +1,12 @@
 require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
-const bcrypt = require("bcrypt");
+const passport = require("passport");
+const session = require("express-session");
+const GoogleStrategy = require("passport-google-oauth20").Strategy;
 const { GoogleGenerativeAI } = require("@google/generative-ai");
-const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
-
+const { MongoClient, ServerApiVersion,  ObjectId } = require("mongodb");
+const bcrypt = require("bcrypt");
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -15,7 +17,15 @@ app.use(express.static("public")); // Serve static files from the 'public' direc
 
 const genAI = new GoogleGenerativeAI('AIzaSyD9ff9i9UzVshdB9xR1xnNx3fQDy0uqACA');
 
-
+// Helper function to format history for Gemini
+function formatHistory(history) {
+    if (!history || !Array.isArray(history)) return [];
+    
+    return history.map(msg => ({
+        role: msg.role === 'user' ? 'user' : 'model',
+        parts: msg.content
+    }));
+}
 
 
 // MongoDB connection setup
@@ -27,6 +37,7 @@ const client = new MongoClient(mongoUrl, {
         deprecationErrors: true,
     }
 });
+
 // Function to connect to MongoDB
 async function connectDB() {
     try {
@@ -38,61 +49,12 @@ async function connectDB() {
     }
 }
 
-async function insertMessageToMongoDB(userId, sessionId, message) {
-    try {
-        const database = client.db("conversationHistory");
-        const collection = database.collection("conversation");
-        
-        const existingConversation = await collection.findOne({ sessionId });
-        
-        if (existingConversation) {
-            await collection.updateOne(
-                { sessionId },
-                { $push: { messages: message } }
-            );
-            console.log("New message added to existing conversation");
-        } else {
-            const newConversation = {
-                _id: new ObjectId(),
-                sessionId,
-                userId,
-                messages: [message],
-                timestamp: new Date().toISOString(),
-            };
-            await collection.insertOne(newConversation);
-            console.log("New conversation created");
-        }
-    } catch (error) {
-        console.error("Error inserting message into conversation:", error);
-    }
-}
-
-async function fetchMessagesFromMongoDB(sessionId) {
-    try {
-        const database = client.db("conversationHistory");
-        const collection = database.collection("conversation");
-        
-        const conversation = await collection.findOne({ sessionId });
-        return conversation ? conversation.messages : [];
-    } catch (error) {
-        console.error("Error fetching messages from MongoDB:", error);
-        return [];
-    }
-}
-
-function generateRandomString(length) {
-    return Math.random().toString(36).substring(2, 2 + length);
-}
-
-
-
 // ------------------------------------------------------------------
 
 
 app.post("/api/chat", async (req, res) => {
     const userInput = req.body.input;
     const history = req.body.history || [];
-    const sessionId = req.body.sessionId;
     const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
     const start = Date.now();
     let responseText = ""; // Initialize an empty string to accumulate responses
@@ -112,11 +74,6 @@ app.post("/api/chat", async (req, res) => {
 
         console.log("Full Response:", responseText);
 
-         // Save user message to MongoDB
-         await insertMessageToMongoDB(req.body.userId, sessionId, { content: userInput, fromUser: true });
-         // Save AI response to MongoDB
-         await insertMessageToMongoDB(req.body.userId, sessionId, { content: responseText, fromUser: false });
-
         const end = Date.now();
         console.log("Response time (ms):", end - start);
     } catch (error) {
@@ -132,7 +89,7 @@ app.listen(PORT, () => {
 });
 
 app.post("/api/register", async (req, res) => {
-    const { email, password } = req.body;
+    const { email, fullName, gender, password } = req.body;
 
     try {
         const database = client.db("DEV-G5");
@@ -151,7 +108,10 @@ app.post("/api/register", async (req, res) => {
         // Create a new user
         const newUser = {
             email,
+            fullName, 
+            gender,
             password: hashedPassword,
+
         };
 
         const result = await usersCollection.insertOne(newUser);
@@ -185,32 +145,90 @@ app.post("/api/login", async (req, res) => {
         }
 
         // Successful login
-        res.status(200).json({ message: "Login successful", userId: user._id });
+        const userData = {
+            userId: user._id,
+            fullName: user.fullName,
+            gender: user.gender,
+            email: user.email,
+        };
+
+        // Successful login
+        res.status(200).json({ message: "Login successful", user: userData });
     } catch (error) {
         console.error("Error logging in:", error);
         res.status(500).json({ error: "Internal Server Error" });
     }
 });
 
-app.post("/api/update-profile", async (req, res) => {
-    const { email, profileData } = req.body;
+app.get("/api/user/:userId", async (req, res) => {
+    const userId = req.params.userId;
+    try {
+        const user = await fetchUserFromDatabase(userId); // Implement this function to retrieve user data
+        if (user) {
+            res.json(user); // Send user data as JSON
+        } else {
+            res.status(404).json({ message: "User not found" });
+        }
+    } catch (error) {
+        console.error("Error fetching user:", error);
+        res.status(500).json({ message: "Internal server error" });
+    }
+});
+
+async function fetchUserFromDatabase(userId) {
+    try {
+        const database = client.db("DEV-G5"); // Connect to the 'DEV-G5' database
+        const usersCollection = database.collection("users"); // Access the 'users' collection
+
+        // Fetch the user document by userId
+        const user = await usersCollection.findOne({ _id: new ObjectId(userId) });
+
+        // Return the user data, omitting the password for security
+        if (user) {
+            const { password, ...userData } = user; // Exclude the password field
+            return userData; // Return user data without the password
+        } else {
+            return null; // User not found
+        }
+    } catch (error) {
+        console.error("Error fetching user from database:", error);
+        throw new Error("Database query failed"); // Throw an error if there's an issue
+    }
+}
+
+app.put("/api/user/:userId", async (req, res) => {
+    const userId = req.params.userId;
+    const { fullName, gender } = req.body;
 
     try {
         const database = client.db("DEV-G5");
         const usersCollection = database.collection("users");
 
-        const result = await usersCollection.updateOne(
-            { email: email },
-            { $set: { profile: profileData } }
+        // Update the user's profile
+        const updateResult = await usersCollection.updateOne(
+            { _id: new ObjectId(userId) },
+            { $set: { fullName, gender } }
         );
 
-        if (result.modifiedCount === 1) {
+        if (updateResult.modifiedCount > 0) {
             res.status(200).json({ message: "Profile updated successfully" });
         } else {
-            res.status(404).json({ error: "User not found" });
+            res.status(400).json({ message: "No changes made or user not found" });
         }
     } catch (error) {
-        console.error("Error updating profile:", error);
-        res.status(500).json({ error: "Internal Server Error" });
+        console.error("Error updating user profile:", error);
+        res.status(500).json({ message: "Internal server error" });
     }
+});
+
+app.post('/api/logout', (req, res) => {
+    // For JWT, you might just clear the token on the client side,
+    // but if you're managing sessions, you might want to destroy the session.
+    // Example:
+    req.session.destroy(err => {
+        if (err) {
+            return res.status(500).json({ message: 'Could not log out.' });
+        }
+        res.status(200).json({ message: 'Logged out successfully.' });
+    });
 });

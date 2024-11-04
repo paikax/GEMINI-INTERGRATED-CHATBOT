@@ -376,6 +376,7 @@
     border: none;
     outline: none;
 }
+
 .input-void{
     position: absolute ;
     top: 5px;
@@ -397,6 +398,8 @@
     background-color: var(--bg-iconchat-color);
     color: var(--text-color);
     border: none;
+    opacity: 0;
+    transition: opacity 0.5s ease;
 }
 .input-send:hover, .input-void:hover{
     background-color: var(--bg-iconchat-hover);
@@ -418,6 +421,11 @@
 {
     display: flex;
     justify-content: flex-end;
+}
+.message-wrapper:nth-child(even)
+{
+    display: flex;
+    justify-content: flex-start;
 }
 .user-avatar{
     order: 2;
@@ -621,11 +629,6 @@
     display: block;
 }
 
-#sendButton:disabled {
-    background-color: gray;
-    cursor: not-allowed;
-    opacity: 0.6;
-}
 
 .quick-reply-container {
     display: flex;
