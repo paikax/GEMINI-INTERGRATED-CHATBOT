@@ -1,11 +1,10 @@
 require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
-const passport = require("passport");
-const session = require("express-session");
-const GoogleStrategy = require("passport-google-oauth20").Strategy;
+const bcrypt = require("bcrypt");
 const { GoogleGenerativeAI } = require("@google/generative-ai");
 const { MongoClient, ServerApiVersion } = require("mongodb");
+
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -16,25 +15,17 @@ app.use(express.static("public")); // Serve static files from the 'public' direc
 
 const genAI = new GoogleGenerativeAI('AIzaSyD9ff9i9UzVshdB9xR1xnNx3fQDy0uqACA');
 
-// Helper function to format history for Gemini
-function formatHistory(history) {
-    if (!history || !Array.isArray(history)) return [];
-    
-    return history.map(msg => ({
-        role: msg.role === 'user' ? 'user' : 'model',
-        parts: msg.content
-    }));
-}
+
 
 
 // MongoDB connection setup
-const mongoUrl = "mongodb+srv://nguyentb1148:PPhCj6Vm7DDQWatq@geminichatboxclonedb.q6ybh.mongodb.net/?retryWrites=true&w=majority&appName=GeminiChatboxCloneDb";
+const mongoUrl = "mongodb+srv://paikax2060:String123@handmadecraft.u2mx9jm.mongodb.net/?retryWrites=true&w=majority&appName=HandMadeCraft";
 const client = new MongoClient(mongoUrl, {
     serverApi: {
         version: ServerApiVersion.v1,
         strict: true,
         deprecationErrors: true,
-    }
+    },
 });
 
 // Function to connect to MongoDB
@@ -87,34 +78,86 @@ app.listen(PORT, () => {
     connectDB(); // Connect to MongoDB when server starts
 });
 
-app.post("/api/saveUser", async (req, res) => {
-    const userInfo = req.body;
+app.post("/api/register", async (req, res) => {
+    const { email, password } = req.body;
 
     try {
-        const database = client.db("DEV-G5"); // replace with your database name
-        const usersCollection = database.collection("users"); // replace with your collection name
+        const database = client.db("DEV-G5");
+        const usersCollection = database.collection("users");
 
-        // Check if user already exists
-        const existingUser = await usersCollection.findOne({ googleId: userInfo.id });
+        // Check if the user already exists
+        const existingUser = await usersCollection.findOne({ email });
 
         if (existingUser) {
-            // User already exists, return existing user data
-            return res.status(200).json(existingUser);
-        } else {
-            // Insert new user
-            const newUser = {
-                googleId: userInfo.id,
-                name: userInfo.name,
-                email: userInfo.email,
-                imageUrl: userInfo.imageUrl,
-            };
-
-            const result = await usersCollection.insertOne(newUser);
-            res.status(201).json(result.ops[0]); // Return the newly created user
+            return res.status(400).json({ error: "email is already exists" });
         }
+
+        // Hash the password before storing it
+        const hashedPassword = await bcrypt.hash(password, 10);
+
+        // Create a new user
+        const newUser = {
+            email,
+            password: hashedPassword,
+        };
+
+        const result = await usersCollection.insertOne(newUser);
+        res.status(201).json({ message: "User registered successfully", userId: result.insertedId });
     } catch (error) {
-        console.error("Error saving user info:", error);
+        console.error("Error registering user:", error);
         res.status(500).json({ error: "Internal Server Error" });
     }
 });
 
+// Login route
+app.post("/api/login", async (req, res) => {
+    const { email, password } = req.body;
+
+    try {
+        const database = client.db("DEV-G5");
+        const usersCollection = database.collection("users");
+
+        // Find the user by username
+        const user = await usersCollection.findOne({ email });
+
+        if (!user) {
+            return res.status(400).json({ error: "Invalid email or password" });
+        }
+
+        // Compare the password with the hashed password in the database
+        const match = await bcrypt.compare(password, user.password);
+
+        if (!match) {
+            return res.status(400).json({ error: "Invalid username or password" });
+        }
+
+        // Successful login
+        res.status(200).json({ message: "Login successful", userId: user._id });
+    } catch (error) {
+        console.error("Error logging in:", error);
+        res.status(500).json({ error: "Internal Server Error" });
+    }
+});
+
+app.post("/api/update-profile", async (req, res) => {
+    const { email, profileData } = req.body;
+
+    try {
+        const database = client.db("DEV-G5");
+        const usersCollection = database.collection("users");
+
+        const result = await usersCollection.updateOne(
+            { email: email },
+            { $set: { profile: profileData } }
+        );
+
+        if (result.modifiedCount === 1) {
+            res.status(200).json({ message: "Profile updated successfully" });
+        } else {
+            res.status(404).json({ error: "User not found" });
+        }
+    } catch (error) {
+        console.error("Error updating profile:", error);
+        res.status(500).json({ error: "Internal Server Error" });
+    }
+});
