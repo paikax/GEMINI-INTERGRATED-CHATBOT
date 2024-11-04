@@ -5,6 +5,10 @@ const chatList = document.getElementById('chatList');
 const newChatButton = document.getElementById('newChatButton');
 const userInput = document.getElementById('userInput');
 const sendButton = document.getElementById('sendButton');
+const suggestionBox = document.getElementById('suggestionBox');
+const promptContainer = document.getElementById("promptContainer");
+const subRecommendations = document.getElementById("subRecommendations");
+const helpSection = document.getElementById("helpSection");
 
 sendButton.disabled = true;
 
@@ -164,7 +168,8 @@ function loadChat(chatId) {
             messageWrapper.appendChild(messageElement);
             chatMessages.appendChild(messageWrapper);
         });
-
+        promptContainer.style.display = "none"; // Show the prompt container
+        closeSubRecommendations();
         renderChatList();
         chatMessages.scrollTop = chatMessages.scrollHeight;
     }
@@ -192,6 +197,8 @@ function startNewChat() {
     conversationHistory.length = 0;
     document.getElementById('chatMessages').innerHTML = '';
     renderChatList();
+    promptContainer.style.display = "flex"; // Show the prompt container
+    openSubRecommendations();
 }
 
 
@@ -204,7 +211,7 @@ function parseMarkdown(text) {
 }
 
 
-async function simulateTyping(container, content, typingSpeed = 30) {
+async function simulateTyping(container, content, typingSpeed = 5) {
 
     const messageContent = document.createElement('div');
     messageContent.classList.add('message-content');
@@ -426,12 +433,19 @@ async function handleBotResponse(response) {
         const combinedResponse = segments
             .map(segment => JSON.parse(segment).response)
             .join(' ');
-            
+
+        // Remove the loading animation
+        const chatMessages = document.getElementById('chatMessages');
+        const loadingAnimation = chatMessages.querySelector('dotlottie-player');
+        if (loadingAnimation) {
+            chatMessages.removeChild(loadingAnimation);
+        }
+        
         const messageWrapper = document.createElement('div');
-        messageWrapper.classList.add('message-frombot');    
+        messageWrapper.classList.add('message-wrapper');    
         const messageElement = document.createElement('div');
         messageElement.classList.add('chat-message', 'bot-message');
-        document.getElementById('chatMessages').appendChild(messageWrapper);
+        chatMessages.appendChild(messageWrapper);
 
         // Add IT logo
         const logoElement = document.createElement('img');
@@ -441,7 +455,7 @@ async function handleBotResponse(response) {
         messageWrapper.appendChild(logoElement);
         messageWrapper.appendChild(messageElement);
 
-        await simulateTyping( messageElement, combinedResponse);
+        await simulateTyping(messageElement, combinedResponse);
         messageElement.scrollIntoView({ behavior: 'smooth' });
         addReadAloudAndCopyButtons(messageElement, combinedResponse);
 
@@ -576,8 +590,7 @@ document.getElementById('sendButton').addEventListener('click', async function (
         appendMessage(message, 'user');
         userInput.value = '';
 
-        const messageElement = document.createElement('div');
-        document.getElementById('chatMessages').appendChild(messageElement);
+        // Create loading animation element
         const loadingAnimation = document.createElement('dotlottie-player');
         loadingAnimation.src = "https://lottie.host/2058cb37-e662-47ef-b20b-b33972803913/QayEIxoE9G.json";
         loadingAnimation.style.width = "50px";
@@ -585,7 +598,11 @@ document.getElementById('sendButton').addEventListener('click', async function (
         loadingAnimation.setAttribute("background", "transparent");
         loadingAnimation.setAttribute("loop", "true");
         loadingAnimation.setAttribute("autoplay", "true");
-        messageElement.appendChild(loadingAnimation);
+
+        // Append the loading animation to the chat
+        const chatMessages = document.getElementById('chatMessages');
+        chatMessages.appendChild(loadingAnimation);
+        
         // Add user message to history
         conversationHistory.push({ role: 'user', content: message, datetime: new Date().toISOString() });
 
@@ -601,17 +618,21 @@ document.getElementById('sendButton').addEventListener('click', async function (
                 }),
             });
 
-            messageElement.removeChild(loadingAnimation);
-            await handleBotResponse(response);
+            await handleBotResponse(response, loadingAnimation);
         } catch (error) {
             console.error('Error:', error);
             appendMessage('Sorry, there was an error.', 'bot');
-            messageElement.removeChild(loadingAnimation);
+            
+            // Remove the loading animation on error
+            if (loadingAnimation) {
+                chatMessages.removeChild(loadingAnimation);
+            }
         }
 
-        messageElement.scrollIntoView({ behavior: 'smooth' });
+        loadingWrapper.scrollIntoView({ behavior: 'smooth' });
     }
 });
+
 
 document.getElementById('userInput').addEventListener('keypress', function (e) {
     if (e.key === 'Enter') {
@@ -621,6 +642,27 @@ document.getElementById('userInput').addEventListener('keypress', function (e) {
 
 //----------------------------------------------------------------------------
 // quick reply
+function sendUserInput(input) {
+    // Add the user's quick reply to the conversation history
+    conversationHistory.push({ role: 'user', content: input, datetime: new Date().toISOString() });
+
+    fetch('http://localhost:3000/api/chat', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            input: input,
+            history: conversationHistory // Send the complete history
+        }),
+    })
+    .then(response => handleBotResponse(response))
+    .catch(error => {
+        console.error('Error:', error);
+        appendMessage('Sorry, there was an error.', 'bot');
+    });
+}
+
 function addQuickReplyButtons(messageElement) {
     const quickReplies = ["Make a new one", "Not this", "Tell me more"];
     const quickReplyContainer = document.createElement('div');
@@ -632,8 +674,7 @@ function addQuickReplyButtons(messageElement) {
         button.textContent = reply;
         button.addEventListener('click', () => {
             appendMessage(reply, 'user');
-            conversationHistory.push({ role: 'user', content: reply, datetime: new Date().toISOString() });
-            sendUserInput(reply);
+            sendUserInput(reply); // Use the updated function
         });
         quickReplyContainer.appendChild(button);
     });
@@ -641,20 +682,14 @@ function addQuickReplyButtons(messageElement) {
     messageElement.appendChild(quickReplyContainer);
 }
 
-function sendUserInput(input) {
-    fetch('http://localhost:3000/api/chat', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-            input: input,
-            sessionId: currentChatId
-        }),
-    })
-    .then(response => handleBotResponse(response))
-    .catch(error => {
-        console.error('Error:', error);
-        appendMessage('Sorry, there was an error.', 'bot');
-    });
+//----------------------------------------------------------------------------------
+//recommendation do not touch this code plz 
+function openSubRecommendations() {
+    subRecommendations.style.display = "flex";
+    helpSection.classList.remove("hide");
+}
+
+function closeSubRecommendations() {
+    subRecommendations.style.display = "none";
+    helpSection.classList.add("hide");
 }
