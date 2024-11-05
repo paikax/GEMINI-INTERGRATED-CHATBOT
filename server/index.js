@@ -18,7 +18,19 @@ app.use(express.static("public")); // Serve static files from the 'public' direc
 const genAI = new GoogleGenerativeAI('AIzaSyD9ff9i9UzVshdB9xR1xnNx3fQDy0uqACA');
 
 
-
+const conversationSchema = {
+    _id: ObjectId,
+    sessionId: String,
+    userId: String,  // Add userId field
+    messages: [{
+        content: String,
+        fromUser: Boolean,
+        timestamp: Date
+    }],
+    title: String,
+    createdAt: Date,
+    updatedAt: Date
+};
 
 // MongoDB connection setup
 const mongoUrl = "mongodb+srv://paikax2060:String123@handmadecraft.u2mx9jm.mongodb.net/?retryWrites=true&w=majority&appName=HandMadeCraft";
@@ -48,21 +60,28 @@ async function insertMessageToMongoDB(userId, sessionId, message) {
         const database = client.db("conversationHistory");
         const collection = database.collection("conversation");
         
-        const existingConversation = await collection.findOne({ sessionId });
+        const existingConversation = await collection.findOne({ 
+            sessionId,
+            userId // Add userId to query
+        });
         
         if (existingConversation) {
             await collection.updateOne(
-                { sessionId },
-                { $push: { messages: message } }
+                { sessionId, userId },
+                { 
+                    $push: { messages: message },
+                    $set: { updatedAt: new Date() }
+                }
             );
             console.log("New message added to existing conversation");
         } else {
             const newConversation = {
-                _id: new ObjectId(),
                 sessionId,
                 userId,
                 messages: [message],
-                timestamp: new Date().toISOString(),
+                createdAt: new Date(),
+                updatedAt: new Date(),
+                title: message.content.substring(0, 30) // Create initial title from first message
             };
             await collection.insertOne(newConversation);
             console.log("New conversation created");
@@ -72,12 +91,15 @@ async function insertMessageToMongoDB(userId, sessionId, message) {
     }
 }
 
-async function fetchMessagesFromMongoDB(sessionId) {
+async function fetchMessagesFromMongoDB(userId, sessionId) {
     try {
         const database = client.db("conversationHistory");
         const collection = database.collection("conversation");
         
-        const conversation = await collection.findOne({ sessionId });
+        const conversation = await collection.findOne({ 
+            sessionId,
+            userId // Add userId to query
+        });
         return conversation ? conversation.messages : [];
     } catch (error) {
         console.error("Error fetching messages from MongoDB:", error);
@@ -93,31 +115,60 @@ function generateRandomString(length) {
 
 // ------------------------------------------------------------------
 
+app.get("/api/conversations/:userId", async (req, res) => {
+    try {
+        const database = client.db("conversationHistory");
+        const collection = database.collection("conversation");
+        
+        const conversations = await collection
+            .find({ userId: req.params.userId })
+            .sort({ updatedAt: -1 })
+            .toArray();
+            
+        res.json(conversations);
+    } catch (error) {
+        console.error("Error fetching conversations:", error);
+        res.status(500).json({ error: "Internal Server Error" });
+    }
+});
+
 
 app.post("/api/chat", async (req, res) => {
-    const userInput = req.body.input;
-    const sessionId = req.body.sessionId; // Expecting sessionId from client
-    const history = await fetchMessagesFromMongoDB(sessionId); // Fetching chat history
+    const { input, userId, sessionId, history } = req.body;
+    
+    if (!userId) {
+        return res.status(401).json({ error: "User not authenticated" });
+    }
+
+    
     const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
     const start = Date.now();
     let responseText = "";
 
     try {
         const allHistory = history.map((item) => item.content);
-        const result = await model.generateContentStream([...allHistory, userInput]);
+        console.log("Conversation history: ", allHistory);
+        const result = await model.generateContentStream([...allHistory, input]);
 
         for await (const chunk of result.stream) {
             responseText += chunk.text();
         }
 
-        res.json({ response: responseText });
-        console.log("Full Response:", responseText);
+        // Save messages with timestamps
+        await insertMessageToMongoDB(userId, sessionId, { 
+            content: input, 
+            fromUser: true,
+            timestamp: new Date()
+        });
         
-        // Save user message to MongoDB
-        await insertMessageToMongoDB(req.body.userId, sessionId, { content: userInput, fromUser: true });
-        // Save AI response to MongoDB
-        await insertMessageToMongoDB(req.body.userId, sessionId, { content: responseText, fromUser: false });
+        await insertMessageToMongoDB(userId, sessionId, { 
+            content: responseText, 
+            fromUser: false,
+            timestamp: new Date()
+        });
 
+        res.json({ response: responseText });
+        
         const end = Date.now();
         console.log("Response time (ms):", end - start);
     } catch (error) {
@@ -125,6 +176,45 @@ app.post("/api/chat", async (req, res) => {
         res.status(500).json({ error: "Internal Server Error" });
     }
 });
+
+app.post("/api/conversations", async (req, res) => {
+    const { userId, sessionId, message } = req.body;
+    
+    if (!userId || !sessionId || !message) {
+        return res.status(400).json({ error: "Missing required fields" });
+    }
+
+    try {
+        await insertMessageToMongoDB(userId, sessionId, message);
+        res.status(201).json({ message: "Chat saved successfully" });
+    } catch (error) {
+        console.error("Error saving chat to MongoDB:", error);
+        res.status(500).json({ error: "Failed to save chat to database" });
+    }
+});
+
+app.delete('/api/delete-chat/:chatId', async (req, res) => {
+    const { chatId } = req.params;
+
+    try {
+        const database = client.db("conversationHistory");
+        const collection = database.collection("conversation");
+
+        // Attempt to delete the chat message based on the chatId
+        const result = await collection.deleteOne({ _id: new ObjectId(chatId) });
+
+        if (result.deletedCount === 0) {
+            return res.status(404).json({ error: 'Chat not found' });
+        }
+
+        res.status(200).json({ message: 'Chat deleted successfully' });
+    } catch (error) {
+        console.error('Error deleting chat from database:', error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+});
+
+
 
 // Start the server
 app.listen(PORT, () => {

@@ -1,6 +1,5 @@
 
 const conversationHistory = [];
-let currentChatId = null;
 const chatList = document.getElementById('chatList');
 const newChatButton = document.getElementById('newChatButton');
 const userInput = document.getElementById('userInput');
@@ -39,18 +38,63 @@ function enableInput() {
     sendButton.classList.remove('disabled'); // Optional: Remove the CSS class
 }
 
+function saveCurrentChatIdToLocalStorage(chatId) {
+    localStorage.setItem("currentChatId", chatId);
+}
+
+function getCurrentChatIdFromLocalStorage() {
+    const currentChatId = localStorage.getItem("currentChatId")
+    if (currentChatId === 'null') return null;
+    return currentChatId;
+}
+
+
 
 // Function to save chat history to local storage
-function saveChatToLocalStorage(chatId, conversation) {
-    const allChats = JSON.parse(localStorage.getItem('allChats') || '{}');
-    allChats[chatId] = {
-        id: chatId,
-        title: getConversationTitle(conversation),
-        messages: conversation,
-        timestamp: Date.now()
-    };
-    localStorage.setItem('allChats', JSON.stringify(allChats));
+// function saveChatToLocalStorage(chatId, conversation) {
+//     const allChats = JSON.parse(localStorage.getItem('allChats')) || {};
+//     allChats[chatId] = {
+//         id: chatId,
+//         title: getConversationTitle(conversation),
+//         messages: conversation,
+//         timestamp: Date.now()
+//     };
+//     localStorage.setItem('allChats', JSON.stringify(allChats));
+// }
+
+
+// Function to save chat history to MongoDB
+async function saveChatToDatabase(chatId, conversation, userId) {
+    try {
+        // Transform the conversation messages to the MongoDB format
+        const messages = conversation.map(msg => ({
+            content: msg.content,
+            fromUser: msg.role === 'user',
+            timestamp: new Date(msg.datetime)
+        }));
+
+        const response = await fetch('http://localhost:3000/api/conversations', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                userId: userId,
+                sessionId: chatId,
+                message: messages[messages.length - 1], // Send only the last message
+                title: getConversationTitle(conversation),
+                timestamp: Date.now(),
+            }),
+        });
+
+        if (!response.ok) {
+            throw new Error('Failed to save chat to database');
+        }
+    } catch (error) {
+        console.error("Error saving chat to MongoDB:", error);
+    }
 }
+
 
 // Function to get a title from the first user message
 function getConversationTitle(conversation) {
@@ -62,23 +106,50 @@ function getConversationTitle(conversation) {
     return 'New Chat';
 }
 
-// Function to load chat history from local storage
-function loadChatsFromLocalStorage() {
-    return JSON.parse(localStorage.getItem('allChats') || '{}');
+
+async function loadChatsFromMongoDB(userId) {
+    try {
+        const response = await fetch(`http://localhost:3000/api/conversations/${userId}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        });
+
+        if (!response.ok) {
+            throw new Error('Failed to load chats');
+        }
+
+        const chats = await response.json();
+
+        return chats; // Return the fetched chats from MongoDB
+    } catch (error) {
+        console.error("Error loading chats from MongoDB:", error);
+        return []; // Return an empty array if there's an error
+    }
 }
 
-// Function to render chat list
-function renderChatList() {
-    chatList.innerHTML = '';
-    const allChats = loadChatsFromLocalStorage();
 
-    Object.values(allChats)
-        .sort((a, b) => b.timestamp - a.timestamp)
+
+
+// Function to render chat list
+async function renderChatList() {
+    
+    chatList.innerHTML = '';
+    const userId = localStorage.getItem('userId');
+    const allChats = await loadChatsFromMongoDB(userId); // Fetch chats from MongoDB
+
+    allChats
+        .sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt)) // Sort by updatedAt
         .forEach(chat => {
             const chatElement = document.createElement('li');
             chatElement.classList.add('chat-item');
-            if (chat.id === currentChatId) {
+            
+            const currentChatId = getCurrentChatIdFromLocalStorage();
+            if (chat.sessionId === currentChatId) {
                 chatElement.classList.add('active');
+            } else {
+                chatElement.classList.remove('active');
             }
 
             chatElement.innerHTML = `
@@ -88,67 +159,73 @@ function renderChatList() {
 
             chatElement.addEventListener('click', (e) => {
                 if (!e.target.classList.contains('delete-chat-btn')) {
-                    loadChat(chat.id);
+                  saveCurrentChatIdToLocalStorage(chat.sessionId);
+                  loadChat(chat._id);
+                  renderChatList(); // Re-render the chat list to update the active state
                 }
-            });
-
+              });
             chatElement.querySelector('.delete-chat-btn').addEventListener('click', (e) => {
                 e.stopPropagation();
-                deleteChat(chat.id);
+                deleteChat(chat._id); // Use the MongoDB ID for deleting the chat
             });
 
             chatList.appendChild(chatElement);
         });
 }
 
-function loadChat(chatId) {
-    const allChats = loadChatsFromLocalStorage();
-    const chat = allChats[chatId];
-    if (chat) {
-        currentChatId = chatId;
-        conversationHistory.length = 0;
-        conversationHistory.push(...chat.messages);
+// Function to load a specific chat based on chat ID
+async function loadChat(chatId) {
+    const userId = localStorage.getItem('userId');
+    const allChats = await loadChatsFromMongoDB(userId);
 
+
+    // Find the specific chat using its MongoDB ID
+    const chat = allChats.find(chat => chat._id === chatId);
+
+    if (chat) {
+        // Clear existing conversation history and messages
+        conversationHistory.length = 0;
         const chatMessages = document.getElementById('chatMessages');
         chatMessages.innerHTML = '';
 
+        // Process and display each message
         chat.messages.forEach(message => {
             // Create wrapper for message alignment
             const messageWrapper = document.createElement('div');
             messageWrapper.classList.add('message-wrapper');
 
-            // Create an avatar element
+            // Create and set up avatar
             const avatar = document.createElement('img');
-            if (message.role === 'user') {
-                avatar.classList.add('avatar', 'user-avatar');
-                avatar.src = 'https://e7.pngegg.com/pngimages/799/987/png-clipart-computer-icons-avatar-icon-design-avatar-heroes-computer-wallpaper-thumbnail.png';
-                avatar.alt = 'User Avatar';
-            } else {
-                avatar.classList.add('avatar', 'bot-avatar');
-                avatar.src = '../src/img/robot-assistant.png';
-                avatar.alt = 'Bot Avatar';
-            }
+            avatar.classList.add('avatar', message.fromUser ? 'user-avatar' : 'bot-avatar');
+            avatar.src = message.fromUser 
+                ? 'https://e7.pngegg.com/pngimages/799/987/png-clipart-computer-icons-avatar-icon-design-avatar-heroes-computer-wallpaper-thumbnail.png' 
+                : '../src/img/robot-assistant.png';
+            avatar.alt = message.fromUser ? 'User Avatar' : 'Bot Avatar';
 
+            // Create message element
             const messageElement = document.createElement('div');
-            messageElement.classList.add('chat-message',
-                message.role === 'user' ? 'user-message' : 'bot-message');
+            messageElement.classList.add('chat-message', message.fromUser ? 'user-message' : 'bot-message');
 
-            if (message.role === 'user') {
+            if (message.fromUser) {
+                // Handle user message
                 messageElement.textContent = message.content;
+                
+                // Add to conversation history
+                conversationHistory.push({
+                    role: 'user',
+                    content: message.content,
+                    datetime: message.timestamp
+                });
             } else {
+                // Handle bot message
                 const messageContainer = document.createElement('div');
                 messageContainer.classList.add('message-content');
 
                 const segments = parseContent(message.content);
-
                 segments.forEach(segment => {
                     if (segment.type === 'code') {
-                        const codeContainer = createCodeSnippet(
-                            segment.language || 'plaintext',
-                            segment.content.trim()
-                        );
+                        const codeContainer = createCodeSnippet(segment.language || 'plaintext', segment.content.trim());
                         messageContainer.appendChild(codeContainer);
-
                         const codeElement = codeContainer.querySelector('code');
                         if (codeElement) {
                             hljs.highlightElement(codeElement);
@@ -163,43 +240,72 @@ function loadChat(chatId) {
 
                 messageElement.appendChild(messageContainer);
                 addReadAloudAndCopyButtons(messageElement, message.content);
+
+                // Add to conversation history
+                conversationHistory.push({
+                    role: 'bot',
+                    content: message.content,
+                    datetime: message.timestamp
+                });
             }
+
+            // Assemble and append the message
             messageWrapper.appendChild(avatar);
             messageWrapper.appendChild(messageElement);
             chatMessages.appendChild(messageWrapper);
         });
-        promptContainer.style.display = "none"; // Show the prompt container
+
+        // Hide prompt container and close recommendations
+        promptContainer.style.display = "none";
         closeSubRecommendations();
-        renderChatList();
+        
+        // Scroll to the bottom of chat
         chatMessages.scrollTop = chatMessages.scrollHeight;
     }
 }
 
 
-// Function to delete a chat
-function deleteChat(chatId) {
-    const allChats = loadChatsFromLocalStorage();
-    delete allChats[chatId];
-    localStorage.setItem('allChats', JSON.stringify(allChats));
 
-    if (currentChatId === chatId) {
-        currentChatId = null;
-        conversationHistory.length = 0;
-        document.getElementById('chatMessages').innerHTML = '';
+async function deleteChat(chatId) {
+    const confirmation = confirm("Are you sure you want to delete this chat?");
+    if (!confirmation) return;
+
+    const userId = localStorage.getItem("userId");
+    const allChats = await loadChatsFromMongoDB(userId);
+
+
+    // Assuming allChats is an array and you want to remove an item by ID
+    const chatIndex = allChats.findIndex(chat => chat.chatId === chatId);
+    if (chatIndex > -1) {
+        allChats.splice(chatIndex, 1); // Remove the chat
+        localStorage.setItem('allChats', JSON.stringify(allChats));
     }
 
-    renderChatList();
+    try {
+        const response = await fetch(`http://localhost:3000/api/delete-chat/${chatId}`, {
+            method: 'DELETE',
+        });
+
+        console.log('Response status:', response.status); // Log the response status for debugging
+
+        if (!response.ok) {
+            throw new Error('Failed to delete chat from server');
+        }
+
+        if (getCurrentChatIdFromLocalStorage() === chatId) {
+            saveCurrentChatIdToLocalStorage(null);
+            conversationHistory.length = 0;
+            document.getElementById('chatMessages').innerHTML = '';
+        }
+
+        renderChatList(userId); // Pass userId to renderChatList
+
+    } catch (error) {
+        console.error('Error deleting chat:', error);
+    }
 }
 
-// Function to start a new chat
-function startNewChat() {
-    currentChatId = generateChatId();
-    conversationHistory.length = 0;
-    document.getElementById('chatMessages').innerHTML = '';
-    renderChatList();
-    promptContainer.style.display = "flex"; // Show the prompt container
-    openSubRecommendations();
-}
+
 
 
 function parseMarkdown(text) {
@@ -424,9 +530,9 @@ function saveToLocalStorage(history = []) {
     localStorage.setItem('conversation', JSON.stringify(history));
 }
 
-async function handleBotResponse(response) {
+
+async function handleBotResponse(response, userId) {
     const text = await response.text();
-    console.log('Raw Response:', text);
 
     try {
         const segments = text.match(/{"response":".*?"}/g);
@@ -462,20 +568,22 @@ async function handleBotResponse(response) {
         addQuickReplyButtons(messageElement);
 
         // Add bot response to history
-        conversationHistory.push({ role: 'bot', content: combinedResponse, datetime: new Date().toISOString() });
+        conversationHistory.push({
+            role: 'bot',
+            content: combinedResponse,
+            datetime: new Date().toISOString()
+        });
 
         // Save to local storage
         saveToLocalStorage(conversationHistory);
         enableInput();
+
+        renderChatList();
     } catch (error) {
         console.error('Error parsing response:', error);
         appendMessage("Sorry, there was an error retrieving the response.", 'bot');
     }
 
-    if (currentChatId) {
-        saveChatToLocalStorage(currentChatId, conversationHistory);
-        renderChatList();
-    }
 }
 
 function appendMessage(message, type) {
@@ -532,11 +640,8 @@ function appendMessage(message, type) {
     messageWrapper.appendChild(messageElement);
     chatMessages.appendChild(messageWrapper);
     messageWrapper.scrollIntoView({ behavior: 'smooth' });
-
-    if (currentChatId) {
-        saveChatToLocalStorage(currentChatId, conversationHistory);
-        renderChatList();
-    }
+    saveChatToDatabase(getCurrentChatIdFromLocalStorage(), conversationHistory);
+    renderChatList();
 }
 
 
@@ -568,22 +673,48 @@ function sanitizeStoredMessages() {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-    // Set up new chat button
-    newChatButton.addEventListener('click', startNewChat);
-
     // Initialize with a new chat if none exists
-    if (!currentChatId) {
+    if (!getCurrentChatIdFromLocalStorage()) {
         startNewChat();
     }
+
+    // Set up new chat button
+    newChatButton.addEventListener('click', () => startNewChat('newChatButton'));
 
     // Render existing chats
     renderChatList();
 });
 
+function startNewChat(newChatButton) {
+    // Generate new chat ID only if we don't have one
+    if (!getCurrentChatIdFromLocalStorage() || newChatButton) {
+        saveCurrentChatIdToLocalStorage(generateChatId())
+    } 
+
+    // Clear conversation history
+    conversationHistory.length = 0;
+    document.getElementById('chatMessages').innerHTML = '';
+    renderChatList();
+    promptContainer.style.display = "flex";
+    openSubRecommendations();
+}
+
 // Event listeners
 document.getElementById('sendButton').addEventListener('click', async function () {
     const userInput = document.getElementById('userInput');
     const message = userInput.value.trim();
+    const userId = localStorage.getItem('userId');
+
+    if (!userId) {
+        alert('Please log in to send messages');
+        return;
+    }
+
+    
+
+
+
+    
     disableInput();
 
     if (message !== "") {
@@ -604,7 +735,12 @@ document.getElementById('sendButton').addEventListener('click', async function (
         chatMessages.appendChild(loadingAnimation);
         
         // Add user message to history
-        conversationHistory.push({ role: 'user', content: message, datetime: new Date().toISOString() });
+        conversationHistory.push({ 
+            role: 'user', 
+            content: message, 
+            datetime: new Date().toISOString(),
+            userId: userId
+        });
 
         try {
             const response = await fetch('http://localhost:3000/api/chat', {
@@ -614,25 +750,23 @@ document.getElementById('sendButton').addEventListener('click', async function (
                 },
                 body: JSON.stringify({
                     input: message,
-                    history: conversationHistory // Send history as part of the request
+                    userId: userId,
+                    sessionId: getCurrentChatIdFromLocalStorage(), // Using the same chatId throughout
+                    history: conversationHistory
                 }),
             });
 
-            await handleBotResponse(response, loadingAnimation);
+            await handleBotResponse(response, userId);
         } catch (error) {
             console.error('Error:', error);
             appendMessage('Sorry, there was an error.', 'bot');
             
-            // Remove the loading animation on error
             if (loadingAnimation) {
                 chatMessages.removeChild(loadingAnimation);
             }
         }
-
-        loadingWrapper.scrollIntoView({ behavior: 'smooth' });
     }
 });
-
 
 document.getElementById('userInput').addEventListener('keypress', function (e) {
     if (e.key === 'Enter') {

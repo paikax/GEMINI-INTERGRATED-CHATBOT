@@ -166,13 +166,13 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 
-    sendButton.onclick = () => {
-        if (userInput.value.trim() !== "") {
-            alert(`Message sent: ${userInput.value}`);
-            userInput.value = "";
-            sendButton.disabled = true;
-        }
-    };
+    // sendButton.onclick = () => {
+    //     if (userInput.value.trim() !== "") {
+    //         alert(`Message sent: ${userInput.value}`);
+    //         userInput.value = "";
+    //         sendButton.disabled = true;
+    //     }
+    // };
 
     function openSubRecommendations() {
         subRecommendations.style.display = "flex";
