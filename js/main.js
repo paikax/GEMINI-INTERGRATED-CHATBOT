@@ -45,7 +45,6 @@ function saveChatToLocalStorage(chatId, conversation) {
     const allChats = JSON.parse(localStorage.getItem('allChats') || '{}');
     allChats[chatId] = {
         id: chatId,
-        userId: userId,
         title: getConversationTitle(conversation),
         messages: conversation,
         timestamp: Date.now()
