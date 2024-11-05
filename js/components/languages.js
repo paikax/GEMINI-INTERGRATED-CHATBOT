@@ -6,6 +6,7 @@ function setLanguageInURL(lang) {
     const urlParams = new URLSearchParams(window.location.search);
     urlParams.set('lang', lang);
     window.history.replaceState({}, '', `${window.location.pathname}?${urlParams}`);
+    window.location.reload(); // Trigger page reload
 }
 
 // Hàm dịch khi tải trang
