@@ -12,6 +12,71 @@ sign_in_btn.addEventListener("click", () => {
   container.classList.remove("sign-up-mode");
 });
 
+function validateRegistrationForm(email, password, confirmPassword, fullName, gender) {
+    const errorElement = document.getElementById('regError');
+    errorElement.style.display = 'none';
+
+    if (!email || !password || !confirmPassword || !fullName || !gender) {
+        errorElement.textContent = 'All fields are required.';
+        errorElement.style.display = 'block';
+        return false;
+    }
+
+    // Email validation (basic regex for demonstration)
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailPattern.test(email)) {
+        errorElement.textContent = 'Please enter a valid email address.';
+        errorElement.style.display = 'block';
+        return false;
+    }
+
+    // Full name length validation
+    if (fullName.length < 3) {
+        errorElement.textContent = 'Full name must be at least 3 characters long.';
+        errorElement.style.display = 'block';
+        return false;
+    }
+
+    // Password length validation
+    if (password.length < 6) {
+        errorElement.textContent = 'Password must be at least 6 characters long.';
+        errorElement.style.display = 'block';
+        return false;
+    }
+
+    // Password match validation
+    if (password !== confirmPassword) {
+        errorElement.textContent = 'Passwords do not match.';
+        errorElement.style.display = 'block';
+        return false;
+    }
+
+    return true;
+}
+
+// Login form validation
+function validateLoginForm(email, password) {
+    const errorElement = document.getElementById('loginError');
+    errorElement.style.display = 'none';
+
+    if (!email || !password) {
+        errorElement.textContent = 'Email and password are required.';
+        errorElement.style.display = 'block';
+        return false;
+    }
+
+    // Email validation
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailPattern.test(email)) {
+        errorElement.textContent = 'Please enter a valid email address.';
+        errorElement.style.display = 'block';
+        return false;
+    }
+
+    return true;
+}
+
+
  // Registration form submission
  document.getElementById('registerForm').addEventListener('submit', async (e) => {
     e.preventDefault();
@@ -21,12 +86,7 @@ sign_in_btn.addEventListener("click", () => {
     const fullName = document.getElementById('regFullName').value;
     const gender = document.getElementById('regGender').value;
 
-    // Check if password and confirm password match
-    if (password !== confirmPassword) {
-        document.getElementById('regError').textContent = 'Passwords do not match';
-        document.getElementById('regError').style.display = 'block';
-        return;
-    }
+    if (!validateRegistrationForm(email, password, confirmPassword, fullName, gender)) return;
 
     try {
         const response = await fetch('http://localhost:3000/api/register', {
@@ -63,6 +123,8 @@ document.getElementById('loginForm').addEventListener('submit', async (e) => {
     e.preventDefault();
     const email = document.getElementById('loginEmail').value;
     const password = document.getElementById('loginPassword').value;
+
+    if (!validateLoginForm(email, password)) return;
 
     try {
         console.log("calling")
