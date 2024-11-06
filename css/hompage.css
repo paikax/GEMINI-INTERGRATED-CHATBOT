@@ -405,8 +405,8 @@
     flex-grow: 1;
     display: flex;
     flex-direction: column;
-    word-wrap: break-word;
-    overflow-wrap: break-word;
+    /* word-wrap: break-word;
+    overflow-wrap: break-word; */
     position: relative;
 }
 
