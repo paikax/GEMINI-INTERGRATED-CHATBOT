@@ -1052,7 +1052,12 @@
 }
 @media screen and (max-width: 393px) {
     .dropdown-content{
-        top: 4px;
+        position: absolute;
+       top: 4px;
+        background-color: white;
+        display: flex;
+         z-index: 2;
+         border-radius: 10px;
     }
     #subRecommendations {
         grid-template-columns: 1fr; /* Single column layout */
