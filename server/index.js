@@ -218,7 +218,7 @@ app.delete('/api/delete-chat/:chatId', async (req, res) => {
 
 // Start the server
 app.listen(PORT, () => {
-    console.log(`Server is running on http://localhost:${PORT}`);
+    console.log(`webpage is running on -> https://paikax.github.io/GEMINI-INTERGRATED-CHATBOT/`);
     connectDB(); // Connect to MongoDB when server starts
 });
 

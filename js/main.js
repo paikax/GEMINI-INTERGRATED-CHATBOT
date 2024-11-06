@@ -73,7 +73,7 @@ async function saveChatToDatabase(chatId, conversation, userId) {
             timestamp: new Date(msg.datetime)
         }));
 
-        const response = await fetch('http://localhost:3000/api/conversations', {
+        const response = await fetch('https://gemini-intergrated-chatbot.onrender.com/api/conversations', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -282,7 +282,7 @@ async function deleteChat(chatId) {
     }
 
     try {
-        const response = await fetch(`http://localhost:3000/api/delete-chat/${chatId}`, {
+        const response = await fetch(`https://gemini-intergrated-chatbot.onrender.com/api/delete-chat/${chatId}`, {
             method: 'DELETE',
         });
 
@@ -743,7 +743,7 @@ document.getElementById('sendButton').addEventListener('click', async function (
         });
 
         try {
-            const response = await fetch('http://localhost:3000/api/chat', {
+            const response = await fetch('https://gemini-intergrated-chatbot.onrender.com/api/chat', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -777,23 +777,59 @@ document.getElementById('userInput').addEventListener('keypress', function (e) {
 //----------------------------------------------------------------------------
 // quick reply
 function sendUserInput(input) {
-    // Add the user's quick reply to the conversation history
-    conversationHistory.push({ role: 'user', content: input, datetime: new Date().toISOString() });
+    const userId = localStorage.getItem('userId');
+    
+    if (!userId) {
+        alert('Please log in to send messages');
+        return;
+    }
 
-    fetch('http://localhost:3000/api/chat', {
+    // Add the user's quick reply to the conversation history
+    conversationHistory.push({ 
+        role: 'user', 
+        content: input, 
+        datetime: new Date().toISOString(),
+        userId: userId
+    });
+
+    // Create loading animation
+    const chatMessages = document.getElementById('chatMessages');
+    const loadingAnimation = document.createElement('dotlottie-player');
+    loadingAnimation.src = "https://lottie.host/2058cb37-e662-47ef-b20b-b33972803913/QayEIxoE9G.json";
+    loadingAnimation.style.width = "50px";
+    loadingAnimation.style.height = "50px";
+    loadingAnimation.setAttribute("background", "transparent");
+    loadingAnimation.setAttribute("loop", "true");
+    loadingAnimation.setAttribute("autoplay", "true");
+    chatMessages.appendChild(loadingAnimation);
+
+    // Disable input while processing
+    disableInput();
+
+    fetch('https://gemini-intergrated-chatbot.onrender.com/api/chat', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
         },
         body: JSON.stringify({
             input: input,
-            history: conversationHistory // Send the complete history
+            userId: userId,
+            sessionId: getCurrentChatIdFromLocalStorage(),
+            history: conversationHistory
         }),
     })
-    .then(response => handleBotResponse(response))
+    .then(response => handleBotResponse(response, userId))
     .catch(error => {
         console.error('Error:', error);
         appendMessage('Sorry, there was an error.', 'bot');
+        
+        // Remove loading animation on error
+        if (loadingAnimation) {
+            chatMessages.removeChild(loadingAnimation);
+        }
+        
+        // Re-enable input on error
+        enableInput();
     });
 }
 
@@ -807,8 +843,25 @@ function addQuickReplyButtons(messageElement) {
         button.classList.add('quick-reply-button');
         button.textContent = reply;
         button.addEventListener('click', () => {
+            // Add user message to display
             appendMessage(reply, 'user');
-            sendUserInput(reply); // Use the updated function
+            
+            // Handle different quick replies
+            if (reply === "Tell me more") {
+                // Get the last bot message from conversation history
+                const lastBotMessage = [...conversationHistory]
+                    .reverse()
+                    .find(msg => msg.role === 'bot');
+                
+                if (lastBotMessage) {
+                    const followUpMessage = `Can you elaborate more on: "${lastBotMessage.content}"`;
+                    sendUserInput(followUpMessage);
+                } else {
+                    sendUserInput(reply);
+                }
+            } else {
+                sendUserInput(reply);
+            }
         });
         quickReplyContainer.appendChild(button);
     });
