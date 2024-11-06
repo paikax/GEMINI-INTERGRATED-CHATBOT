@@ -145,7 +145,7 @@ document.getElementById('loginForm').addEventListener('submit', async (e) => {
             localStorage.setItem('userId', data.user.userId);
             
             // Redirect to dashboard or home page
-             window.location.href = "http://127.0.0.1:5500/public/home.html";
+             window.location.href = "https://paikax.github.io/GEMINI-INTERGRATED-CHATBOT/public/home.html";
         } else {
             document.getElementById('loginError').textContent = data.error || 'Login failed';
             document.getElementById('loginError').style.display = 'block';

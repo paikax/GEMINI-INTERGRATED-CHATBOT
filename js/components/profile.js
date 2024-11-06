@@ -158,5 +158,5 @@ function logoutUser() {
     // localStorage.removeItem('userEmail');
 
 
-    window.location.href = 'http://127.0.0.1:5500/index.html';
+    window.location.href = 'https://paikax.github.io/GEMINI-INTERGRATED-CHATBOT/index.html';
 }
