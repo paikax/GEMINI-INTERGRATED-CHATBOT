@@ -350,7 +350,10 @@
     justify-content: space-between;
     padding: 1rem;
     width: 100%;
-    max-width: 60%;
+    height: auto;
+    max-width: 100%;
+    margin: 0 auto;
+    box-sizing: border-box;
 }
 .messages {
     flex-grow: 1;
@@ -831,8 +834,32 @@
     }
 }
 
-/* Media Query for iPhone SE */
 @media screen and (max-width: 1449px) {
+    #subRecommendations {
+        display: grid;
+        grid-template-columns: 1fr; /* Single column layout */
+        gap: 10px;
+        margin: 0 auto 20px;
+        width: 250px; /* Adjust width as needed */
+        max-width: 100%;
+    }
+    
+    #subRecommendations > button {
+        height: 50px;
+        width: 100%; /* Take full width of the grid cell */
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: none;
+        outline: none;
+        color: #fff;
+        background: #f0f0f0;
+        cursor: pointer;
+        position: relative;
+        z-index: 0;
+        border-radius: 10px;
+        border: 1px solid black;
+    }
     .navbar {
         position:fixed;
         width:100%;
@@ -841,73 +868,65 @@
     .navbar-logo h2 {
         font-size: 16px;
     }
-
     .navbar-option i {
         font-size: 16px;
         padding: 6px;
     }
-
     .chat-container {
+        height:100vh;
         flex-direction: column;
-        width: 70%;
     }
-
     .chat-history {
         width: 100%;
         padding: 0.5rem;
     }
-
     .chatbox {
         flex-direction: column;
     }
-
     .add-button {
         top: 30px;
         left: 5px;
         right: 5px;
     }
-
     .toggle-button {
         width: 40px;
         height: 40px;
         font-size: 16px;
         background: none;
     }
-
     .chat-input {
         padding: auto;
         
     }
-
     .message-container {
         margin-bottom: 0.5rem;
     }
-
     .message-content {
         margin-left: 10px;
     }
-
     .edit-button {
         bottom: 2px;
         right: 35px;
     }
-
     .read-aloud-button {
         padding: 4px 6px;
         margin-left: 10px;
     }
     .chat-history.hidden {
+        position:relative;
         width: 59px;
         height: 55px;
         overflow: hidden;
         margin-left: 150px;
         margin-top: 5px;
+        z-index:1;
     }
     .center-panel{
-        margin:auto;
-        position:fixed;
-        height: 1236px;
-        width: 1024px;
+        position: relative;
+        width: 100%;
+        height: auto;
+        max-width: 100%;
+        overflow-y: auto; /* Add this line */
     }
     .right-panel{
         flex: none;
@@ -915,14 +934,38 @@
     }
     .left-panel{
         flex: none;
-        padding: none;
+        padding: 30px;
     }
     footer{
         display:none;
     }
 }
-
 @media screen and (max-width: 449px) {
+    #subRecommendations {
+        display: grid;
+        grid-template-columns: 1fr; /* Single column layout */
+        gap: 10px;
+        margin: 0 auto 20px;
+        width: 250px; /* Adjust width as needed */
+        max-width: 100%;
+    }
+    
+    #subRecommendations > button {
+        height: 50px;
+        width: 100%; /* Take full width of the grid cell */
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: none;
+        outline: none;
+        color: #fff;
+        background: #f0f0f0;
+        cursor: pointer;
+        position: relative;
+        z-index: 0;
+        border-radius: 10px;
+        border: 1px solid black;
+    }
     .navbar {
         position:fixed;
         width:100%;
@@ -931,67 +974,57 @@
     .navbar-logo h2 {
         font-size: 16px;
     }
-
     .navbar-option i {
         font-size: 16px;
         padding: 6px;
     }
-
     .profile {
         top: 20%;
         left: 5%;
         width: 90%;
     }
-
     .chat-container {
+        height:100vh;
         flex-direction: column;
     }
-
     .chat-history {
         width: 100%;
         padding: 0.5rem;
     }
-
     .chatbox {
         flex-direction: column;
     }
-
     .add-button {
         top: 30px;
         left: 5px;
         right: 5px;
     }
-
     .toggle-button {
         width: 40px;
         height: 40px;
         font-size: 16px;
         background: none;
     }
-
     .chat-input {
         padding: 10px 40px;
         
     }
-
     .message-container {
         margin-bottom: 0.5rem;
     }
-
     .message-content {
         margin-left: 10px;
     }
-
     .edit-button {
         bottom: 2px;
         right: 35px;
     }
-
     .read-aloud-button {
         padding: 4px 6px;
         margin-left: 10px;
     }
     .chat-history.hidden {
+        position:relative;
         width: 59px;
         height: 55px;
         overflow: hidden;
@@ -999,9 +1032,11 @@
         margin-top: 5px;
     }
     .center-panel{
-        position:fixed;
-        height: 860px;
-        width: 440px;
+        position: relative;
+        width: 100%;
+        height: auto;
+        max-width: 100%;
+        overflow-y: auto; /* Add this line */
     }
     .right-panel{
         flex: none;
@@ -1009,96 +1044,117 @@
     }
     .left-panel{
         flex: none;
-        padding: none;
+        padding: 30px;
     }
     footer{
         display:none;
     }
 }
-
-
-
 @media screen and (max-width: 393px) {
+    #subRecommendations {
+        display: grid;
+        grid-template-columns: 1fr; /* Single column layout */
+        gap: 10px;
+        margin: 0 auto 20px;
+        width: 250px; /* Adjust width as needed */
+        max-width: 100%;
+    }
+    
+    #subRecommendations > button {
+        height: 50px;
+        width: 100%; /* Take full width of the grid cell */
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: none;
+        outline: none;
+        color: #fff;
+        background: #f0f0f0;
+        cursor: pointer;
+        position: relative;
+        z-index: 0;
+        border-radius: 10px;
+        border: 1px solid black;
+    }
     .navbar {
         position:fixed;
         width:100%;
         padding: 10px;
     }
-
     .navbar-logo h2 {
         font-size: 16px;
     }
-
     .navbar-option i {
         font-size: 16px;
         padding: 6px;
     }
-
     .profile {
         top: 20%;
         left: 5%;
         width: 90%;
     }
-
     .chat-container {
+        height:100vh;
         flex-direction: column;
     }
-
     .chat-history {
+        position:absolute;
         width: 100%;
+        z-index:2;
         padding: 0.5rem;
     }
-
     .chatbox {
         flex-direction: column;
     }
-
     .add-button {
         top: 30px;
         left: 5px;
         right: 5px;
     }
-
     .toggle-button {
         width: 40px;
         height: 40px;
         font-size: 16px;
         background: none;
     }
-
     .chat-input {
         padding: 10px 40px;
         
     }
-
     .message-container {
         margin-bottom: 0.5rem;
     }
-
     .message-content {
         margin-left: 10px;
     }
-
     .edit-button {
         bottom: 2px;
         right: 35px;
     }
-
     .read-aloud-button {
         padding: 4px 6px;
         margin-left: 10px;
     }
     .chat-history.hidden {
+        position:relative;
         width: 59px;
         height: 55px;
         overflow: hidden;
-        margin-left: 150px;
+        margin-left: 120px;
         margin-top: 5px;
+        z-index:1;
     }
     .center-panel{
-        position:fixed;
-        height:780px;
-        width:390px;
+        position: relative;
+        width: 100%;
+        height: auto;
+        max-width: 100%;
+        overflow-y: auto; /* Add this line */
+        z-index:1;
+    }
+    .left-panel{
+        flex: none;
+        padding: 30px;
     }
     .right-panel{
         flex: none;
@@ -1108,7 +1164,6 @@
         display:none;
     }
 }
-
 @media screen and (min-width:450px) and (max-width:1024px) {
     .profile{
         width: 50%;
