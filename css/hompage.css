@@ -1134,13 +1134,13 @@
         margin-left: 10px;
     }
     .chat-history.hidden {
-        position:relative;
+        position:fixed;
         width: 59px;
         height: 55px;
         overflow: hidden;
         margin-left: 120px;
         margin-top: 5px;
-        z-index:1;
+        z-index:2;
     }
     .center-panel{
         position: relative;
