@@ -1051,6 +1051,9 @@
     }
 }
 @media screen and (max-width: 393px) {
+    .dropdown-content{
+        top: 4px;
+    }
     #subRecommendations {
         grid-template-columns: 1fr; /* Single column layout */
         gap: 10px;
@@ -1134,13 +1137,13 @@
         margin-left: 10px;
     }
     .chat-history.hidden {
-        position:relative;
+        position:fixed;
         width: 59px;
         height: 55px;
         overflow: hidden;
         margin-left: 120px;
         margin-top: 5px;
-        z-index:1;
+        z-index:2;
     }
     .center-panel{
         position: relative;
