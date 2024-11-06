@@ -1051,14 +1051,30 @@
     }
 }
 @media screen and (max-width: 393px) {
-    .dropdown-content{
+    .dropdown-content {
         position: absolute;
-       top: 4px;
+        top: 4px;
         background-color: white;
-        display: flex;
-         z-index: 2;
-         border-radius: 10px;
+        display: none;
+        z-index: 1;
+        border-radius: 10px;
     }
+    
+    .dropdown-item button {
+        display: flex;
+        justify-content: center;
+        width: 90px;
+        padding: 10px 12px;
+        border: none;
+        cursor: pointer;
+        background-color: white;
+        border-radius: 10px;
+    }
+    
+    .dropdown-item button:hover {
+        background-color: #f1edeb;
+    }
+    
     #subRecommendations {
         grid-template-columns: 1fr; /* Single column layout */
         gap: 10px;
