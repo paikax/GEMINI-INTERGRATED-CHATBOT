@@ -33,7 +33,7 @@ header {
     width: 100%;
     z-index: 1000;
     /* Ensure header stays on top */
-    ;
+   
     height: 35px;
 
 }
@@ -1219,134 +1219,22 @@ footer {
 
 }
 
-/* Styles for mobile */
 @media (max-width: 480px) {
-    body {
-        font-size: 12px;
-    }
-
-    .header,
-    .footer {
-        padding: 10px;
-    }
-
-    .header {
-        padding: 100px 10px;
-        /* Increase the height of the header */
-    }
-
-    .container {
-        padding: 10px;
-    }
-
-
-    .gemini-heading {
-        font-size: 3rem;
-        position: fixed;
-        /* Use fixed position */
-        bottom: 350px;
-        /* Adjust the value as needed */
-        left: 50%;
-        transform: translateX(-50%);
-        text-align: center;
-    }
-
-    .gemini-description {
-        position: fixed;
-        /* Use fixed position */
-        bottom: 22%;
-        /* Adjust the value as needed */
-        left: 50%;
-        transform: translateX(-50%);
-        width: 350px;
-        text-align: center;
-    }
-
-    .login-button-2 {
-        font-size: 12px;
-        padding: 0.5rem 1rem;
-        position: fixed;
-        /* Use fixed position */
-        bottom: 20%;
-        /* Adjust the value as needed */
-        left: 28%;
-        transform: translateX(-50%);
-        text-align: center;
-    }
-
-    .swiper-slide {
-        padding: 5px;
-    }
-
-    .feature-image {
-        width: 70%;
-        height: auto;
-        position: fixed;
-        /* Use fixed position */
-        top: -400px;
-        /* Move images to the top */
-        left: -10%;
-        transform: translateX(-50%);
-        /* Center the images horizontally */
-        margin-top: 20px;
-        display: flex;
-    }
-
-    .slide-ai2-image,
-    .slide-ai3-image,
-    .slide-ai4-image,
-    .slide-ai5-image {
-        position: fixed;
-        /* Use fixed position */
-        top: -400px;
-        /* Move images to the top */
-        left: -8%;
-        transform: translateX(-50%);
-        /* Center the images horizontally */
-        width: 300px;
-        /* Set the width */
-        height: 300px;
-        /* Set the height */
-        object-fit: cover;
-        /* Ensure the image covers the area without distortion */
-        /* Adjust the margin as needed */
-    }
-
-    .features {
-        flex-direction: column;
-        position: fixed;
-        max-width: 100%;
-        margin: 1rem 0;
-
-    }
-
-}
-
-/* Styles for mobile */
-
-
-@media (max-width: 480px) {
-
     /* CSS cho điện thoại nhỏ */
     body {
         font-size: 12px;
     }
-
     .header,
     .footer {
         padding: 10px;
     }
-
     .header {
         padding: 100px 10px;
         /* Increase the height of the header */
     }
-
     .container {
         padding: 10px;
     }
-
-
     .gemini-heading {
         font-size: 3rem;
         position: fixed;
@@ -1357,35 +1245,32 @@ footer {
         transform: translateX(-50%);
         text-align: center;
     }
-
     .gemini-description {
         position: fixed;
         /* Use fixed position */
-        bottom: 24%;
+        bottom: 20%;
         /* Adjust the value as needed */
         left: 50%;
         transform: translateX(-50%);
         width: 350px;
         text-align: center;
+        font-size: 1.2rem;
     }
-
     .login-button-2 {
-        font-size: 12px;
-        padding: 0.5rem 1rem;
+        font-size: 14px;
+        padding: 0.6rem 1.2rem;
         position: fixed;
         /* Use fixed position */
-        bottom: 22%;
+        bottom: 15%;
         /* Adjust the value as needed */
         left: 30%;
         transform: translateX(-50%);
         text-align: center;
         font-weight: bold;
     }
-
     .swiper-slide {
         padding: 5px;
     }
-
     .feature-image {
         width: 300px;
         height: 300px;
@@ -1399,7 +1284,6 @@ footer {
         margin-top: 20px;
         display: flex;
     }
-
     .slide-ai2-image,
     .slide-ai3-image,
     .slide-ai4-image,
@@ -1420,11 +1304,10 @@ footer {
         /* Ensure the image covers the area without distortion */
         /* Adjust the margin as needed */
     }
-
     .features {
         flex-direction: column;
         position: fixed;
         max-width: 100%;
-        margin: 1rem 0;
+        margin: 8rem 0;
     }
 }
