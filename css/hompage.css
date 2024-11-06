@@ -1052,7 +1052,6 @@
 }
 @media screen and (max-width: 393px) {
     #subRecommendations {
-        display: grid;
         grid-template-columns: 1fr; /* Single column layout */
         gap: 10px;
         margin: 0 auto 20px;
@@ -1063,7 +1062,6 @@
     #subRecommendations > button {
         height: 50px;
         width: 100%; /* Take full width of the grid cell */
-        display: flex;
         align-items: center;
         justify-content: center;
         border: none;
