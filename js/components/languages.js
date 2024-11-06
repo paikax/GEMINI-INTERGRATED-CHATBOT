@@ -17,29 +17,42 @@ async function applyTranslation() {
     if (langFromUrl && langFromUrl !== 'en') {
         currentLang = langFromUrl;
         document.getElementById('languageSelect').value = currentLang;
+        changeLanguageIcon();
         await translatePage(currentLang);
     } else {
         // Nếu không, đặt mặc định là tiếng Anh và hiển thị văn bản gốc
         resetToOriginalTexts();
     }
 }
+function changeLanguageIcon() {
+    const languageSelect = document.getElementById('languageSelect');
+    const languageFlag = document.getElementById('languageFlag');
+    const selectedLanguage = languageSelect.value;
+
+    // Define flag image URLs for each language
+    const flags = {
+        en: 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/13/United-kingdom_flag_icon_round.svg/512px-United-kingdom_flag_icon_round.svg.png',
+        vi: 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/21/Flag_of_Vietnam.svg/1024px-Flag_of_Vietnam.svg.png',
+        ru: 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f3/Flag_of_Russia.svg/1024px-Flag_of_Russia.svg.png',
+        ko: 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/09/Flag_of_South_Korea.svg/1024px-Flag_of_South_Korea.svg.png'
+    };
+
+    // Update the `src` of the flag image
+    languageFlag.src = flags[selectedLanguage];
+}
 
 // Gán sự kiện thay đổi ngôn ngữ
-document.getElementById('languageSelect').addEventListener('change', async () => {
+document.getElementById('languageSelect').addEventListener('change', () => {
     const select = document.getElementById('languageSelect');
     const targetLang = select.value;
 
-    // Kiểm tra nếu ngôn ngữ đích là tiếng Anh
     if (targetLang === 'en') {
-        resetToOriginalTexts();
-    } else if (targetLang !== currentLang) {
-        await translatePage(targetLang); // Dịch trang
-        currentLang = targetLang;
+        window.location.href = `${window.location.pathname}`;
+    } else {
+        window.location.href = `${window.location.pathname}?lang=${targetLang}`;
     }
-
-    // Đồng bộ hóa URL với ngôn ngữ mới
-    setLanguageInURL(currentLang);
 });
+
 
 // Tải dịch khi tải trang
 applyTranslation();
