@@ -65,7 +65,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 async function fetchUserProfile(userId) {
     try {
-        const response = await fetch(`http://localhost:3000/api/user/${userId}`, {
+        const response = await fetch(`https://gemini-intergrated-chatbot.onrender.com/api/user/${userId}`, {
             headers: {
 
             }
@@ -102,7 +102,7 @@ document.getElementById('updateProfileButton').addEventListener('click', async (
 
     if (userId) {
         // Fetch current user profile for comparison
-        const response = await fetch(`http://localhost:3000/api/user/${userId}`);
+        const response = await fetch(`https://gemini-intergrated-chatbot.onrender.com/api/user/${userId}`);
         const currentProfile = await response.json();
 
         // Check if the input values are the same as the current values
@@ -119,7 +119,7 @@ document.getElementById('updateProfileButton').addEventListener('click', async (
         };
 
         try {
-            const updateResponse = await fetch(`http://localhost:3000/api/user/${userId}`, {
+            const updateResponse = await fetch(`https://gemini-intergrated-chatbot.onrender.com/api/user/${userId}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',

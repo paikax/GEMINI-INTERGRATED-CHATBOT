@@ -109,7 +109,7 @@ function getConversationTitle(conversation) {
 
 async function loadChatsFromMongoDB(userId) {
     try {
-        const response = await fetch(`http://localhost:3000/api/conversations/${userId}`, {
+        const response = await fetch(`https://gemini-intergrated-chatbot.onrender.com/api/conversations/${userId}`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',

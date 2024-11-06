@@ -89,7 +89,7 @@ function validateLoginForm(email, password) {
     if (!validateRegistrationForm(email, password, confirmPassword, fullName, gender)) return;
 
     try {
-        const response = await fetch('http://localhost:3000/api/register', {
+        const response = await fetch('https://gemini-intergrated-chatbot.onrender.com/api/register', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -128,7 +128,7 @@ document.getElementById('loginForm').addEventListener('submit', async (e) => {
 
     try {
         console.log("calling")
-        const response = await fetch('http://localhost:3000/api/login', {
+        const response = await fetch('https://gemini-intergrated-chatbot.onrender.com/api/login', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
